@@ -37,7 +37,7 @@ public class ExamRoomAllocationController {
 	@ApiOperation(value = "Health Check", notes = "This is the health check service.")
 	public ResponseEntity<String> healthCheck() {
 		final String methodName = "healthCheck()";
-		logger.info("{}: Checking Health of Shop Service", methodName);
+		logger.info("{}: Checking Health of Service", methodName);
 		String healthCheck = new String();
 		try {
 			healthCheck = examRoomAllocationService.healthCheck();
