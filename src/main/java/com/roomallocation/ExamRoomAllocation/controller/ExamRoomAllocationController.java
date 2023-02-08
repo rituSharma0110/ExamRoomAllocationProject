@@ -31,7 +31,7 @@ public class ExamRoomAllocationController {
 
 	@Autowired
 	private ExamRoomAllocationService examRoomAllocationService;
-	
+	                                           
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
 	@GetMapping(value = HEALTHCHECK_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "Health Check", notes = "This is the health check service.")
@@ -47,5 +47,22 @@ public class ExamRoomAllocationController {
 		}
 		return new ResponseEntity<String>(healthCheck,HttpStatus.OK);
 	}
-
+	
+	@CrossOrigin(origins = "*", allowedHeaders = "*")
+	@GetMapping(value = "/generateSeatingArrangement")
+	@ApiOperation(value = "Generate Seating Arrangement pdf", notes = "This is for generating excel/pdf of seating arrangement")
+	public ResponseEntity<String> generateSeatingArrangement(){
+		final String methodName = "generateSeatingArrangement()";
+		logger.info("{} : Generate Seating Arrangemtn ",  methodName);
+		String response = new String();
+		try {
+			response = examRoomAllocationService.generateSeatingArrangement();
+		} catch (Exception e) {
+			return new ResponseEntity<String>(response,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<String>(response,HttpStatus.OK);
+	}
+	
+	
+	
 }
