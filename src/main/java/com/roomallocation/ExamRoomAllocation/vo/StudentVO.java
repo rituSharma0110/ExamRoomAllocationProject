@@ -1,32 +1,24 @@
 package com.roomallocation.ExamRoomAllocation.vo;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import io.github.millij.poi.ss.model.annotations.Sheet;
-import io.github.millij.poi.ss.model.annotations.SheetColumn;
 
-@Sheet
 public class StudentVO {
-	@SheetColumn("Student Name")
 	private String name;
 	
-	@SheetColumn("Roll Number")
 	private String rollNumber;
 	
-	@SheetColumn("Subjects")
 	private ArrayList<String> courses;
 	
-	@SheetColumn("Branch")
 	private String branch;
 	
-	@SheetColumn("Specialization")
 	private String specialization;
 	
-	@SheetColumn("Entity")
 	private String faculty;
 	
-	@SheetColumn("Gender")
 	private String gender;
+	
 	public String getName() {
 		return name;
 	}
@@ -42,8 +34,8 @@ public class StudentVO {
 	public ArrayList<String> getCourses() {
 		return courses;
 	}
-	public void setCourses(ArrayList<String> courses) {
-		this.courses = courses;
+	public void setCourses(List<String> subjects) {
+		this.courses = (ArrayList<String>) subjects;
 	}
 	public String getBranch() {
 		return branch;
