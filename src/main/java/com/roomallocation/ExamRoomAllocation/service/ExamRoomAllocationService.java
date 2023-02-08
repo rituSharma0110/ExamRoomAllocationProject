@@ -3,6 +3,8 @@ package com.roomallocation.ExamRoomAllocation.service;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -25,6 +27,8 @@ public class ExamRoomAllocationService {
 	BuildProperties buildProperties;
 	
 	private static final Logger logger = (Logger) LoggerFactory.getLogger(ExamRoomAllocationService.class);
+	
+	HashSet<String> courseSet = new HashSet<>();
 
 	public String healthCheck() {
 		// TODO Auto-generated method stub
@@ -69,6 +73,8 @@ public class ExamRoomAllocationService {
 							 subjects.add(cell.getStringCellValue());
 							 student.setCourses(subjects);
 							 
+							 courseSet.add(cell.getStringCellValue());
+							 
 						 }
 						 
 						 if(firstCell.getStringCellValue().equals("Entity")) {
@@ -104,6 +110,9 @@ public class ExamRoomAllocationService {
 				
 			  }
 //			  logger.info(studentList.get(1).getCourses().toString());
+			  
+			  logger.info(Arrays.toString(courseSet.toArray()));
+			  
 	  
 		} catch (Exception e) {
 			  logger.error(e.getMessage());
