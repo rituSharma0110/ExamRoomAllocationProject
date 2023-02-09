@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.stereotype.Service;
 
+import com.roomallocation.ExamRoomAllocation.util.GenerateExcelUtil;
 import com.roomallocation.ExamRoomAllocation.vo.StudentVO;
 
 
@@ -25,6 +26,9 @@ public class ExamRoomAllocationService {
 	
 	@Autowired
 	BuildProperties buildProperties;
+	
+	@Autowired
+	GenerateExcelUtil excelUtil;
 	
 	private static final Logger logger = (Logger) LoggerFactory.getLogger(ExamRoomAllocationService.class);
 	
@@ -49,6 +53,10 @@ public class ExamRoomAllocationService {
 			  FileInputStream excelFile = new FileInputStream(new File(FILE_NAME));
 			  HSSFWorkbook workbook = new HSSFWorkbook(excelFile);
 			  HSSFSheet worksheet = workbook.getSheetAt(0);
+			  
+			  // this is for getting year -- any other way??
+			  int yearInd = FILE_NAME.indexOf("SM");
+			  String year = FILE_NAME.substring(yearInd+2,yearInd+3);
 			  
 			  int rows = worksheet.getLastRowNum();
 			  System.out.println(rows);
@@ -111,7 +119,11 @@ public class ExamRoomAllocationService {
 			  }
 //			  logger.info(studentList.get(1).getCourses().toString());
 			  
-			  logger.info(Arrays.toString(courseSet.toArray()));
+//			  logger.info(Arrays.toString(courseSet.toArray()));
+			  ArrayList<String> courseList = new ArrayList<>(courseSet);
+			  excelUtil.createSortedExcel(courseList, studentList, Integer.valueOf(year));
+			  
+			  
 			  
 	  
 		} catch (Exception e) {
