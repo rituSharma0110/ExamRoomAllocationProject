@@ -1,0 +1,61 @@
+body{
+	background-image: linear-gradient(to right, rgb(0, 128, 192), rgb(62, 62, 62));
+	background-size: cover;
+	margin:0px;
+	text-align: center;
+}
+
+header{
+	background-color: #000;
+	color: #fff;
+	padding: 10px;
+}
+.heading {
+   color: #fff;
+   font-size: 50px;
+}
+
+.label{
+	color: #fff;
+	font-size: 18px;
+}
+
+#myfile{
+	display: block;
+	margin: 10px auto;
+}
+
+input::file-selector-button {
+  background-color: rgb(192, 192, 192);
+  background-position-x: 0%;
+  background-size: 200%;
+  border: 0;
+  border-radius: 8px;
+  color: #000;
+  padding: 1rem 1.25rem;
+  margin:7px;
+}
+input::file-selector-button:hover {
+  background-position-x: 100%;
+  background-color: rgb(232, 232, 232);
+  cursor: pointer;
+}
+
+.btn{
+	border-radius: 10px;
+	border: none;
+	background-color: #000;
+	color: #fff;
+	padding: 10px;
+	margin:10px;
+}
+
+footer{
+	background-color:#000;
+}
+
+.footer{
+	color: #fff;
+	padding: 70px;
+	margin: 0px;
+}
