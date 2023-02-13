@@ -58,13 +58,16 @@ public class ExamRoomAllocationService {
 			  int yearInd = FILE_NAME.indexOf("SM");
 			  String year = FILE_NAME.substring(yearInd+2,yearInd+3);
 			  
+			  //Getting number of rows in a sheet
 			  int rows = worksheet.getLastRowNum();
 			  System.out.println(rows);
 			  
+			  //Initializing student list of Student VO object 
 			  List<StudentVO> studentList = new ArrayList<>();
 			  
-		
+			  // looping through each row
 			  for(int rowCounter = 0; rowCounter<rows ; rowCounter++) {
+				  // Getting student data of each roll number (each row)
 				  StudentVO student = new StudentVO();
 				  HSSFRow row = worksheet.getRow(rowCounter);
 				  HSSFRow firstRow = worksheet.getRow(0);
@@ -73,18 +76,23 @@ public class ExamRoomAllocationService {
 				  for(int colCounter = 0; colCounter<cols ; colCounter++) {
 					  HSSFCell cell =  row.getCell(colCounter);
 					  
+					  // to skip error when col is null
 					  if(cell==null) {
 						  
 					  }else {
+						 
+						 //First cell object to get headers 
 						 HSSFCell firstCell = firstRow.getCell(colCounter);
 						 if(firstCell.getStringCellValue().equals("Subjects")) {
 							 subjects.add(cell.getStringCellValue());
 							 student.setCourses(subjects);
 							 
+							 // Hashset for getting all the subjects which will be used to create header for the student_details sheet
 							 courseSet.add(cell.getStringCellValue());
 							 
 						 }
 						 
+						 //Getting values from each col
 						 if(firstCell.getStringCellValue().equals("Entity")) {
 							 student.setFaculty(cell.getStringCellValue());
 						 }
@@ -121,6 +129,8 @@ public class ExamRoomAllocationService {
 			  
 //			  logger.info(Arrays.toString(courseSet.toArray()));
 			  ArrayList<String> courseList = new ArrayList<>(courseSet);
+			  
+			  // this will create sorted excel sheet
 			  excelUtil.createSortedExcel(courseList, studentList, Integer.valueOf(year));
 			  
 			  

@@ -62,7 +62,7 @@ public class GenerateExcelUtil {
         
         FileOutputStream out;
 		try {
-			out = new FileOutputStream( new File("C:\\Users\\This pc\\Downloads\\student_details.xlsx"));
+			out = new FileOutputStream( new File("C:\\Users\\This pc\\Documents\\student_details.xlsx"));
 			 
 	        workbook.write(out);
 	        out.close();
