@@ -47,7 +47,7 @@ public class ExamRoomAllocationService {
 
 	public String generateSeatingArrangement() {
 		// TODO Auto-generated method stub
-		 final String FILE_NAME = "C:\\Users\\This pc\\Downloads\\B.Tech SM7 1.10.xls";
+		 final String FILE_NAME = "C:\\Users\\sancsaxe\\Downloads\\B.Tech SM7 1.10.xls";
 		 
 		 try {
 			  FileInputStream excelFile = new FileInputStream(new File(FILE_NAME));

@@ -3,18 +3,18 @@
    <head>
       <meta charset = "ISO-8859-1" />
       <link href = "css/styles.css" rel = "stylesheet"/>
+      <script src="js/main.js"></script>
       <title>Exam Room Allocation</title>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
    </head>
    <body>
 	   <header>
 		   <h1 class="header">Exam Room Allocation</h1>
 	   </header>
       <h4 class="heading">Welcome to The Portal</h4>
-      <form>
-		  <label class="label">Upload the Master Registration file</label>
-		  <input type="file" id="myfile" name="myfile"/>
-		  <input class="btn" type="submit"/>
-	  </form>
+	  <label class="label">Upload the Master Registration file</label>
+	  <input type="file" id="myfile"/>
+	  <button class="btn" value="Upload" onclick="onUpload()">Upload</button>
       <footer>
 		  <p class="footer">Exam Room Allocation: It is a software to allocate room for the examinations according to the course code, branch and class.</p>
 	  </footer>
