@@ -1,6 +1,8 @@
 function onUpload() {
 	var fd = new FormData();
     fd.append('file', $('#myfile')[0].files[0]);
+    fd.append('dateSheetFile', $('#dateSheet')[0].files[0]);
+    fd.append('hallFile', $('#hallData')[0].files[0]);
     console.log(fd)
     var xmlhttp1;
   try {

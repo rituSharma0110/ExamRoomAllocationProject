@@ -17,6 +17,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.roomallocation.ExamRoomAllocation.service.ExamRoomAllocationService;
 import com.roomallocation.ExamRoomAllocation.vo.*;
@@ -26,13 +27,14 @@ public class ReadExcelUtil {
 	
 	private static final Logger logger = (Logger) LoggerFactory.getLogger(ExamRoomAllocationService.class);
 	
-	public List<DatesheetVO> getDateSheetList(){
-		final String FILE_NAME = "C:\\Users\\This pc\\Downloads\\Datesheet.xls";
+	public List<DatesheetVO> getDateSheetList(MultipartFile dateSheetFile){
+//		final String FILE_NAME = "C:\\Users\\This pc\\Downloads\\Datesheet.xlsx";
 		 try {
-			  FileInputStream excelFile = new FileInputStream(new File(FILE_NAME));
-			  HSSFWorkbook workbook = new HSSFWorkbook(excelFile);
-			  HSSFSheet worksheet = workbook.getSheetAt(0);
+//			  FileInputStream excelFile = new FileInputStream(new File(FILE_NAME));
+			  XSSFWorkbook workbook = new XSSFWorkbook(dateSheetFile.getInputStream());
+			  XSSFSheet worksheet = workbook.getSheetAt(0);
 			  
+			  DataFormatter formatter = new DataFormatter();
 			  
 			  //Getting number of rows in a sheet
 			  int rows = worksheet.getLastRowNum();
@@ -45,11 +47,11 @@ public class ReadExcelUtil {
 			  for(int rowCounter = 0; rowCounter<rows ; rowCounter++) {
 				  // Getting student data of each roll number (each row)
 				  DatesheetVO dateSheetObj = new DatesheetVO();
-				  HSSFRow row = worksheet.getRow(rowCounter);
-				  HSSFRow firstRow = worksheet.getRow(0);
+				  XSSFRow row = worksheet.getRow(rowCounter);
+				  XSSFRow firstRow = worksheet.getRow(0);
 				  int cols = worksheet.getRow(rowCounter).getLastCellNum();
 				  for(int colCounter = 0; colCounter<cols ; colCounter++) {
-					  HSSFCell cell =  row.getCell(colCounter);
+					  XSSFCell cell =  row.getCell(colCounter);
 //					  logger.info("Inside read excel util");
 					  // to skip error when col is null
 					  if(cell==null) {
@@ -57,34 +59,34 @@ public class ReadExcelUtil {
 					  }else {
 						 
 						 //First cell object to get headers 
-						 HSSFCell firstCell = firstRow.getCell(colCounter);
+						  XSSFCell firstCell = firstRow.getCell(colCounter);
 						 if(firstCell==null) {
 							 continue;
 						 }
 						 
 						 //Getting values from each col
 						 if(firstCell.getStringCellValue().equals("Date")) {
-							 dateSheetObj.setDate(cell.getStringCellValue());
+							 dateSheetObj.setDate(formatter.formatCellValue(cell));
 						 }
 						 
 						 if(firstCell.getStringCellValue().equals("Shift")) {
-							 dateSheetObj.setShift((cell.getStringCellValue()));
+							 dateSheetObj.setShift((formatter.formatCellValue(cell)));
 						 }
 						 
 						 if(firstCell.getStringCellValue().equals("Start Time")) {
-							 dateSheetObj.setStartTime(cell.getStringCellValue());
+							 dateSheetObj.setStartTime(formatter.formatCellValue(cell));
 						 }
 						 
 						 if(firstCell.getStringCellValue().equals("End Time")) {
-							 dateSheetObj.setEndTime(cell.getStringCellValue());
+							 dateSheetObj.setEndTime(formatter.formatCellValue(cell));
 						 }
 						 
 						 if(firstCell.getStringCellValue().equals("Batch Name")) {
-							 dateSheetObj.setBatchName(cell.getStringCellValue());
+							 dateSheetObj.setBatchName(formatter.formatCellValue(cell));
 						 }
 						 
 						 if(firstCell.getStringCellValue().equals("Subject Code")) {
-							 dateSheetObj.setSubjectCode(cell.getStringCellValue());
+							 dateSheetObj.setSubjectCode(formatter.formatCellValue(cell));
 						 }
 						 
 					  }
@@ -103,11 +105,11 @@ public class ReadExcelUtil {
 		 return null;
 	}
 	
-	public List<HallDataVO> getHallDataList(){
-		final String FILE_NAME = "C:\\Users\\This pc\\Downloads\\Hall Data.xlsx";
+	public List<HallDataVO> getHallDataList(MultipartFile hallFile){
+//		final String FILE_NAME = "C:\\Users\\This pc\\Downloads\\Hall Data.xlsx";
 		 try {
-			  FileInputStream excelFile = new FileInputStream(new File(FILE_NAME));
-			  XSSFWorkbook workbook = new XSSFWorkbook(excelFile);
+//			  FileInputStream excelFile = new FileInputStream(new File(FILE_NAME));
+			  XSSFWorkbook workbook = new XSSFWorkbook(hallFile.getInputStream());
 			  XSSFSheet worksheet = workbook.getSheetAt(0);
 			  
 			  DataFormatter formatter = new DataFormatter();

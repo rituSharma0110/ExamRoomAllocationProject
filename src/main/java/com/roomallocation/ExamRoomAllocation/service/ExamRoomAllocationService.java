@@ -53,7 +53,7 @@ public class ExamRoomAllocationService {
 		return healthCheck;
 	}
 
-	public String generateSeatingArrangement(MultipartFile file) {
+	public String generateSeatingArrangement(MultipartFile file, MultipartFile dateSheetFile, MultipartFile hallFile) {
 		// TODO Auto-generated method stub
 		 final String FILE_NAME = "C:\\Users\\This pc\\Downloads\\B.Tech SM7 1.10.xls";
 		 
@@ -136,8 +136,8 @@ public class ExamRoomAllocationService {
 			  
 //			  logger.info(Arrays.toString(courseSet.toArray()));
 			  ArrayList<String> courseList = new ArrayList<>(courseSet);
-			  ArrayList<DatesheetVO> dateSheetList = (ArrayList<DatesheetVO>) readExcelUtil.getDateSheetList();
-			  ArrayList<HallDataVO> hallDataList = (ArrayList<HallDataVO>) readExcelUtil.getHallDataList();
+			  ArrayList<DatesheetVO> dateSheetList = (ArrayList<DatesheetVO>) readExcelUtil.getDateSheetList(dateSheetFile);
+			  ArrayList<HallDataVO> hallDataList = (ArrayList<HallDataVO>) readExcelUtil.getHallDataList(hallFile);
 			  ObjectMapper mapper = new ObjectMapper();
 			  String dateList = mapper.writeValueAsString(dateSheetList);
 			  String hallList = mapper.writeValueAsString(hallDataList);

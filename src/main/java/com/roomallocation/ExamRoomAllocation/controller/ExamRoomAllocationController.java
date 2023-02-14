@@ -55,12 +55,15 @@ public class ExamRoomAllocationController {
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
 	@PostMapping(value = "/generateSeatingArrangement")
 	@ApiOperation(value = "Generate Seating Arrangement pdf", notes = "This is for generating excel/pdf of seating arrangement")
-	public ResponseEntity<String> generateSeatingArrangement(@RequestParam("file") MultipartFile file){
+	public ResponseEntity<String> generateSeatingArrangement(
+			@RequestParam("file") MultipartFile file,
+			@RequestParam("dateSheetFile") MultipartFile dateSheetFile,
+			@RequestParam("hallFile") MultipartFile hallFile ){
 		final String methodName = "generateSeatingArrangement()";
 		logger.info("{} : Generate Seating Arrangemtn ",  methodName);
 		String response = new String();
 		try {
-			response = examRoomAllocationService.generateSeatingArrangement(file);
+			response = examRoomAllocationService.generateSeatingArrangement(file, dateSheetFile, hallFile);
 		} catch (Exception e) {
 			return new ResponseEntity<String>(response,HttpStatus.INTERNAL_SERVER_ERROR);
 		}
