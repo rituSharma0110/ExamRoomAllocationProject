@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.roomallocation.ExamRoomAllocation.util.GenerateExcelUtil;
@@ -52,13 +53,12 @@ public class ExamRoomAllocationService {
 		return healthCheck;
 	}
 
-	public String generateSeatingArrangement() {
+	public String generateSeatingArrangement(MultipartFile file) {
 		// TODO Auto-generated method stub
 		 final String FILE_NAME = "C:\\Users\\This pc\\Downloads\\B.Tech SM7 1.10.xls";
 		 
 		 try {
-			  FileInputStream excelFile = new FileInputStream(new File(FILE_NAME));
-			  HSSFWorkbook workbook = new HSSFWorkbook(excelFile);
+			  HSSFWorkbook workbook = new HSSFWorkbook(file.getInputStream());
 			  HSSFSheet worksheet = workbook.getSheetAt(0);
 			  
 			  // this is for getting year -- any other way??

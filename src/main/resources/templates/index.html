@@ -6,6 +6,7 @@
       <script src="js/main.js"></script>
       <title>Exam Room Allocation</title>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+      
    </head>
    <body>
 	   <header>
@@ -13,7 +14,9 @@
 	   </header>
       <h4 class="heading">Welcome to The Portal</h4>
 	  <label class="label">Upload the Master Registration file</label>
+	  <form  enctype="multipart/form-data">
 	  <input type="file" id="myfile"/>
+	  </form>
 	  <button class="btn" value="Upload" onclick="onUpload()">Upload</button>
       <footer>
 		  <p class="footer">Exam Room Allocation: It is a software to allocate room for the examinations according to the course code, branch and class.</p>

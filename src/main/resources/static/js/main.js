@@ -1,4 +1,7 @@
 function onUpload() {
+	var fd = new FormData();
+    fd.append('file', $('#myfile')[0].files[0]);
+    console.log(fd)
     var xmlhttp1;
   try {
         xmlhttp1 = new XMLHttpRequest();
@@ -14,13 +17,12 @@ function onUpload() {
             }
         }
     }
-    xmlhttp1.open("GET", "http://localhost:8089" + "/roomallocation/generateSeatingArrangement", true);
+    xmlhttp1.open("POST", "http://localhost:8089" + "/roomallocation/generateSeatingArrangement", true);
     xmlhttp1.onreadystatechange = function () {
         if (this.status == 200) {
             var res = this.responseText;
-            console.log(res);
         }
     };
 
-    xmlhttp1.send();
+    xmlhttp1.send(fd);
 }

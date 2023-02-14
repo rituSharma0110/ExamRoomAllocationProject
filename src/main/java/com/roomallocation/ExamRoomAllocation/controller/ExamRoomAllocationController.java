@@ -10,8 +10,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.stereotype.Controller;
 
 import com.roomallocation.ExamRoomAllocation.service.ExamRoomAllocationService;
@@ -50,14 +53,14 @@ public class ExamRoomAllocationController {
 	}
 	
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
-	@GetMapping(value = "/generateSeatingArrangement")
+	@PostMapping(value = "/generateSeatingArrangement")
 	@ApiOperation(value = "Generate Seating Arrangement pdf", notes = "This is for generating excel/pdf of seating arrangement")
-	public ResponseEntity<String> generateSeatingArrangement(){
+	public ResponseEntity<String> generateSeatingArrangement(@RequestParam("file") MultipartFile file){
 		final String methodName = "generateSeatingArrangement()";
 		logger.info("{} : Generate Seating Arrangemtn ",  methodName);
 		String response = new String();
 		try {
-			response = examRoomAllocationService.generateSeatingArrangement();
+			response = examRoomAllocationService.generateSeatingArrangement(file);
 		} catch (Exception e) {
 			return new ResponseEntity<String>(response,HttpStatus.INTERNAL_SERVER_ERROR);
 		}

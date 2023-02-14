@@ -33,7 +33,6 @@ public class ReadExcelUtil {
 			  HSSFWorkbook workbook = new HSSFWorkbook(excelFile);
 			  HSSFSheet worksheet = workbook.getSheetAt(0);
 			  
-			  // this is for getting year -- any other way??
 			  
 			  //Getting number of rows in a sheet
 			  int rows = worksheet.getLastRowNum();
@@ -113,7 +112,6 @@ public class ReadExcelUtil {
 			  
 			  DataFormatter formatter = new DataFormatter();
 			  
-			  // this is for getting year -- any other way??
 			  
 			  //Getting number of rows in a sheet
 			  int rows = worksheet.getLastRowNum();
@@ -147,7 +145,7 @@ public class ReadExcelUtil {
 						 //Getting values from each col
 						 if(firstCell.getStringCellValue().equals("Room Name")) {
 							 hallDatatObj.setRoomName(formatter.formatCellValue(cell));
-							 logger.info(formatter.formatCellValue(cell));
+//							 logger.info(formatter.formatCellValue(cell));
 						 }
 						 
 						 if(firstCell.getStringCellValue().equals("Faculty")) {
