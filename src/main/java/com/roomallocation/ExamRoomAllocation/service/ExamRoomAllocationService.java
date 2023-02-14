@@ -17,7 +17,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.roomallocation.ExamRoomAllocation.util.GenerateExcelUtil;
+import com.roomallocation.ExamRoomAllocation.util.ReadExcelUtil;
+import com.roomallocation.ExamRoomAllocation.vo.DatesheetVO;
+import com.roomallocation.ExamRoomAllocation.vo.HallDataVO;
 import com.roomallocation.ExamRoomAllocation.vo.StudentVO;
 
 
@@ -29,6 +33,9 @@ public class ExamRoomAllocationService {
 	
 	@Autowired
 	GenerateExcelUtil excelUtil;
+	
+	@Autowired
+	ReadExcelUtil readExcelUtil;
 	
 	private static final Logger logger = (Logger) LoggerFactory.getLogger(ExamRoomAllocationService.class);
 	
@@ -47,7 +54,7 @@ public class ExamRoomAllocationService {
 
 	public String generateSeatingArrangement() {
 		// TODO Auto-generated method stub
-		 final String FILE_NAME = "C:\\Users\\sancsaxe\\Downloads\\B.Tech SM7 1.10.xls";
+		 final String FILE_NAME = "C:\\Users\\This pc\\Downloads\\B.Tech SM7 1.10.xls";
 		 
 		 try {
 			  FileInputStream excelFile = new FileInputStream(new File(FILE_NAME));
@@ -129,6 +136,13 @@ public class ExamRoomAllocationService {
 			  
 //			  logger.info(Arrays.toString(courseSet.toArray()));
 			  ArrayList<String> courseList = new ArrayList<>(courseSet);
+			  ArrayList<DatesheetVO> dateSheetList = (ArrayList<DatesheetVO>) readExcelUtil.getDateSheetList();
+			  ArrayList<HallDataVO> hallDataList = (ArrayList<HallDataVO>) readExcelUtil.getHallDataList();
+			  ObjectMapper mapper = new ObjectMapper();
+			  String dateList = mapper.writeValueAsString(dateSheetList);
+			  String hallList = mapper.writeValueAsString(hallDataList);
+			  logger.info(dateList);
+			  logger.info(hallList);
 			  
 			  // this will create sorted excel sheet
 			  excelUtil.createSortedExcel(courseList, studentList, Integer.valueOf(year));
