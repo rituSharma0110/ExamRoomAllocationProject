@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.roomallocation.ExamRoomAllocation.util.GenerateAlgo;
 import com.roomallocation.ExamRoomAllocation.util.GenerateExcelUtil;
 import com.roomallocation.ExamRoomAllocation.util.ReadExcelUtil;
 import com.roomallocation.ExamRoomAllocation.vo.DatesheetVO;
@@ -37,6 +38,9 @@ public class ExamRoomAllocationService {
 	
 	@Autowired
 	ReadExcelUtil readExcelUtil;
+	
+	@Autowired
+	GenerateAlgo generateAlgorithm;
 	
 	private static final Logger logger = (Logger) LoggerFactory.getLogger(ExamRoomAllocationService.class);
 	
@@ -147,6 +151,7 @@ public class ExamRoomAllocationService {
 			  // this will create sorted excel sheet
 			  excelUtil.createSortedExcel(courseList, studentList, Integer.valueOf(year));
 			  
+			  generateAlgorithm.generateAlgo(dateSheetList, hallDataList, studentList);
 			  
 			  
 	  
