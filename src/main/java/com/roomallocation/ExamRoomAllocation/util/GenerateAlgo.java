@@ -37,8 +37,60 @@ public class GenerateAlgo {
 		while(hallDataList.size()!=0) {
 			Collections.sort(listOfStudents,  Collections.reverseOrder());
 			Collections.sort(hallCapacity,  Collections.reverseOrder());
+			int r=(hallCapacity.get(0))%3;
+			int p=(hallCapacity.get(0))/3;
+			if(r==1){
+				if(listOfStudents.get(0)>=(p+1)) 
+					listOfStudents.set(0,listOfStudents.get(0)-(p+1));
+				else
+					listOfStudents.set(0,0);
+				if(listOfStudents.get(1)>=p)
+					listOfStudents.set(1,listOfStudents.get(1)-p);
+				else
+					listOfStudents.set(1,0);
+				if(listOfStudents.get(2)>=p)
+					listOfStudents.set(2,listOfStudents.get(2)-p);
+				else
+					listOfStudents.set(2,0);
+			}
+			else if(r==2){
+				if(listOfStudents.get(0)>=(p+1)) 
+					listOfStudents.set(0,listOfStudents.get(0)-(p+1));
+				else
+					listOfStudents.set(0,0);
+				if(listOfStudents.get(1)>=p)
+					listOfStudents.set(1,listOfStudents.get(1)-(p+1));
+				else
+					listOfStudents.set(1,0);
+				if(listOfStudents.get(2)>=p)
+					listOfStudents.set(2,listOfStudents.get(2)-p);
+				else
+					listOfStudents.set(2,0);
+			}
+			else{
+				if(listOfStudents.get(0)>=(p+1)) 
+					listOfStudents.set(0,listOfStudents.get(0)-p);
+				else
+					listOfStudents.set(0,0);
+				if(listOfStudents.get(1)>=p)
+					listOfStudents.set(1,listOfStudents.get(1)-p);
+				else
+					listOfStudents.set(1,0);
+				if(listOfStudents.get(2)>=p)
+					listOfStudents.set(2,listOfStudents.get(2)-p);
+				else
+					listOfStudents.set(2,0);
+			}
+			for(int i = 0; i < hallCapacity.size(); i++) {
+				hallCapacity.set(i, hallCapacity.get(i+1));
+			}
+			hallCapacity.remove(hallCapacity.size()-1);
+			System.out.println(hallCapacity.size());
 		}
 		
 	}
 
 }
+
+
+

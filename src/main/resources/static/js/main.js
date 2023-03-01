@@ -23,6 +23,8 @@ function onUpload() {
     xmlhttp1.onreadystatechange = function () {
         if (this.status == 200) {
             var res = this.responseText;
+            alert("File Uploaded Successfully!!");
+            window.location.reload();
         }
     };
 
