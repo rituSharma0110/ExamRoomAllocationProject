@@ -11,6 +11,7 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +61,7 @@ public class ExamRoomAllocationService {
 	public String generateSeatingArrangement(MultipartFile file, MultipartFile dateSheetFile, MultipartFile hallFile) {
 		// TODO Auto-generated method stub
 		 final String FILE_NAME = "C:\\Users\\This pc\\Downloads\\B.Tech SM7 1.10.xls";
-		 
+		 DataFormatter formatter = new DataFormatter();
 		 try {
 			  HSSFWorkbook workbook = new HSSFWorkbook(file.getInputStream());
 			  HSSFSheet worksheet = workbook.getSheetAt(0);
@@ -105,27 +106,27 @@ public class ExamRoomAllocationService {
 						 
 						 //Getting values from each col
 						 if(firstCell.getStringCellValue().equals("Entity")) {
-							 student.setFaculty(cell.getStringCellValue());
+							 student.setFaculty(formatter.formatCellValue(cell));
 						 }
 						 
 						 if(firstCell.getStringCellValue().equals("Branch")) {
-							 student.setBranch(cell.getStringCellValue());
+							 student.setBranch(formatter.formatCellValue(cell));
 						 }
 						 
 						 if(firstCell.getStringCellValue().equals("Student Name")) {
-							 student.setName(cell.getStringCellValue());
+							 student.setName(formatter.formatCellValue(cell));
 						 }
 						 
 						 if(firstCell.getStringCellValue().equals("Gender")) {
-							 student.setGender(cell.getStringCellValue());
+							 student.setGender(formatter.formatCellValue(cell));
 						 }
 						 
 						 if(firstCell.getStringCellValue().equals("Specialization")) {
-							 student.setSpecialization(cell.getStringCellValue());
+							 student.setSpecialization(formatter.formatCellValue(cell));
 						 }
 						 
 						 if(firstCell.getStringCellValue().equals("Roll Number")) {
-							 student.setRollNumber(cell.getStringCellValue());
+							 student.setRollNumber(formatter.formatCellValue(cell));
 						 }
 						 
 					  }

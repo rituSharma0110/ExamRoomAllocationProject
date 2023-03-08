@@ -18,13 +18,16 @@ public class GenerateAlgo {
 			List<StudentVO> studentList) {
 		ArrayList<Integer> listOfStudents = new ArrayList<>();
 		ArrayList<Integer> hallCapacity = new ArrayList<>();
-		for(int i = 0; i < dateSheetList.size(); i++) {
+		for(int i = 1; i < dateSheetList.size(); i++) {
+			System.out.println(dateSheetList.get(i).getSubjectCode());
 			int count = 0;
-			for(int j = 0; j<studentList.get(i).getCourses().size(); j++) {
-				if(studentList.get(i).getCourses().get(j).equals(dateSheetList.get(i).getSubjectCode())) {
+			for(int j = 1; j<studentList.size(); j++) {
+				for(int k = 1; k< studentList.get(j).getCourses().size(); k++)
+				if(studentList.get(j).getCourses().get(k).equals(dateSheetList.get(i).getSubjectCode())) {
 					count++;
 				}
 			
+					
 			}
 			listOfStudents.add(count);
 		}
@@ -81,7 +84,7 @@ public class GenerateAlgo {
 				else
 					listOfStudents.set(2,0);
 			}
-			for(int i = 0; i < hallCapacity.size(); i++) {
+			for(int i = 0; i < hallCapacity.size()-1; i++) {
 				hallCapacity.set(i, hallCapacity.get(i+1));
 			}
 			hallCapacity.remove(hallCapacity.size()-1);
