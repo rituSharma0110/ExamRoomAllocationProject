@@ -9,6 +9,8 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.*; 
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
@@ -47,95 +49,116 @@ public class GenerateAlgo {
 		
 		
 
-		while(hallDataList.size()!=0) {
-			HashMap<String, Integer> studentMap = new HashMap<>();
-			HashMap<String, Integer> hallMap = new HashMap<>();
-			studentMap = sortInReverse(listOfStudents);
-			hallMap = sortInReverse(hallCapacity);
-//			Collections.sort(listOfStudents,  Collections.reverseOrder());
-//			Collections.sort(hallCapacity,  Collections.reverseOrder());
-//			int r=(hallMap.get(0))%3;
-//			int p=(hallMap.get(0))/3;
-//			if(r==1){
-//				if(studentMap.get(0)>=(p+1)) 
-//					studentMap.set(0,studentMap.get(0)-(p+1));
-//				else
-//					listOfStudents.set(0,0);
-//				if(listOfStudents.get(1)>=p)
-//					listOfStudents.set(1,listOfStudents.get(1)-p);
-//				else
-//					listOfStudents.set(1,0);
-//				if(listOfStudents.get(2)>=p)
-//					listOfStudents.set(2,listOfStudents.get(2)-p);
-//				else
-//					listOfStudents.set(2,0);
-//			}
-//			else if(r==2){
-//				if(listOfStudents.get(0)>=(p+1)) 
-//					listOfStudents.set(0,listOfStudents.get(0)-(p+1));
-//				else
-//					listOfStudents.set(0,0);
-//				if(listOfStudents.get(1)>=p)
-//					listOfStudents.set(1,listOfStudents.get(1)-(p+1));
-//				else
-//					listOfStudents.set(1,0);
-//				if(listOfStudents.get(2)>=p)
-//					listOfStudents.set(2,listOfStudents.get(2)-p);
-//				else
-//					listOfStudents.set(2,0);
-//			}
-//			else{
-//				if(listOfStudents.get(0)>=(p+1)) 
-//					listOfStudents.set(0,listOfStudents.get(0)-p);
-//				else
-//					listOfStudents.set(0,0);
-//				if(listOfStudents.get(1)>=p)
-//					listOfStudents.set(1,listOfStudents.get(1)-p);
-//				else
-//					listOfStudents.set(1,0);
-//				if(listOfStudents.get(2)>=p)
-//					listOfStudents.set(2,listOfStudents.get(2)-p);
-//				else
-//					listOfStudents.set(2,0);
-//			}
-//			for(int i = 0; i < hallCapacity.size()-1; i++) {
-//				hallCapacity.set(i, hallCapacity.get(i+1));
-//			}
-//			hallCapacity.remove(hallCapacity.size()-1);
-//			System.out.println(hallCapacity.size());
+		while(hallCapacity.size()!=0) {
+			
+			LinkedHashMap<String, Integer> studentMap = listOfStudents.entrySet()
+		            .stream()
+		            .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+		            .collect(Collectors.toMap(
+		                Map.Entry::getKey,
+		                Map.Entry::getValue,
+		                (oldValue, newValue) -> oldValue, LinkedHashMap::new));
+			
+			LinkedHashMap<String, Integer> hallMap = hallCapacity.entrySet()
+		            .stream()
+		            .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+		            .collect(Collectors.toMap(
+		                Map.Entry::getKey,
+		                Map.Entry::getValue,
+		                (oldValue, newValue) -> oldValue, LinkedHashMap::new));
+			int r=(hallMap.get(hallMap.keySet().toArray()[0]))%3;
+			int p=(hallMap.get(hallMap.keySet().toArray()[0]))/3;
+			int a,b,c;
+			String x=null,y=null,z=null;
+			a=studentMap.get(studentMap.keySet().toArray()[0]);
+			b=studentMap.get(studentMap.keySet().toArray()[1]);
+			c=studentMap.get(studentMap.keySet().toArray()[2]);
+			for (Map.Entry<String, Integer> entry : studentMap.entrySet()) {
+                if (entry.getValue().equals(a)) {
+                    x=entry.getKey();
+                }
+                if (entry.getValue().equals(b)) {
+                    y=entry.getKey();
+                }
+                if (entry.getValue().equals(c)) {
+                    z=entry.getKey();
+                }
+            }
+			if(r==1){
+				if(a>=(p+1)) {
+					listOfStudents.replace(x, a-(p+1));
+				}
+				else {
+					listOfStudents.replace(x, 0);
+				}
+				if(b>=(p+1)) {
+					listOfStudents.replace(y, b-p);
+				}
+				else {
+					listOfStudents.replace(y, 0);
+				}
+				if(c>=(p+1)) {
+					listOfStudents.replace(z, c-p);
+				}
+				else {
+					listOfStudents.replace(z, 0);
+				}		
+			}
+			else if(r==2){
+				if(a>=(p+1)) {
+					listOfStudents.replace(x, a-(p+1));
+				}
+				else {
+					listOfStudents.replace(x, 0);
+				}
+				if(b>=(p+1)) {
+					listOfStudents.replace(y, b-(p+1));
+				}
+				else {
+					listOfStudents.replace(y, 0);
+				}
+				if(c>=(p+1)) {
+					listOfStudents.replace(z, c-p);
+				}
+				else {
+					listOfStudents.replace(z, 0);
+				}		
+			}
+			else{
+				if(a>=(p+1)) {
+					listOfStudents.replace(x, a-p);
+				}
+				else {
+					listOfStudents.replace(x, 0);
+				}
+				if(b>=(p+1)) {
+					listOfStudents.replace(y, b-p);
+				}
+				else {
+					listOfStudents.replace(y, 0);
+				}
+				if(c>=(p+1)) {
+					listOfStudents.replace(z, c-p);
+				}
+				else {
+					listOfStudents.replace(z, 0);
+				}		
+			}
+			int count;
+			count=hallMap.get(hallMap.keySet().toArray()[0]);
+			String room=null;
+			for (Map.Entry<String, Integer> entry : hallMap.entrySet()) {
+                if (entry.getValue().equals(count)) {
+                	room=entry.getKey();
+                }
+			for(int i = 0; i < hallDataList.size()-1; i++) {
+				hallCapacity.remove(room);
+			}
+			System.out.println(hallCapacity.size());
 		}
 		
 	}
-	
-	public HashMap<String, Integer> sortInReverse(HashMap<String, Integer> hm) {
-		List<Map.Entry<String, Integer> > list =
-	               new LinkedList<Map.Entry<String, Integer> >(hm.entrySet());
-	 
-	        // Sort the list
-	        Collections.sort(list, new Comparator<Map.Entry<String, Integer> >() {
-	            public int compare(Map.Entry<String, Integer> o1,
-	                               Map.Entry<String, Integer> o2)
-	            {
-	                return (o1.getValue()).compareTo(o2.getValue());
-	            }
-	        });
-	         
-	        // put data from sorted list to hashmap
-	        HashMap<String, Integer> temp = new LinkedHashMap<String, Integer>();
-	        for (Map.Entry<String, Integer> aa : list) {
-	            temp.put(aa.getKey(), aa.getValue());
-	        }
-	        
-	        HashMap<String, Integer> reversedHashMap = new HashMap<String, Integer>();
-
-	        for (String i : temp.keySet()) {
-	            reversedHashMap.put(i, temp.get(i));
-	        }
-	        
-	        return reversedHashMap;
-		
-	}
-
+}
 }
 
 
