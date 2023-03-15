@@ -46,7 +46,11 @@ public class GenerateExcelUtil {
         	dataRow.createCell(2).setCellValue(studentList.get(i).getRollNumber());
         	dataRow.createCell(3).setCellValue(studentList.get(i).getBranch());
         	dataRow.createCell(4).setCellValue(studentList.get(i).getSpecialization());
-        	dataRow.createCell(5).setCellValue(String.valueOf(year/2+1));
+        	if(year%2==0) {
+        		dataRow.createCell(5).setCellValue(String.valueOf(year/2));
+        	}else {
+        		dataRow.createCell(5).setCellValue(String.valueOf(year/2+1));
+        	}
         	
         	HashSet<String> courseSet = new HashSet<>(studentList.get(i).getCourses());	
         	for(int j = 6 ; j < heading.size();j++) {
@@ -62,7 +66,7 @@ public class GenerateExcelUtil {
         
         FileOutputStream out;
 		try {
-			out = new FileOutputStream( new File("C:\\Users\\This pc\\Documents\\student_details.xlsx"));
+			out = new FileOutputStream( new File("C:\\Users\\This pc\\Documents\\student_details" + year + ".xlsx"));
 			 
 	        workbook.write(out);
 	        out.close();

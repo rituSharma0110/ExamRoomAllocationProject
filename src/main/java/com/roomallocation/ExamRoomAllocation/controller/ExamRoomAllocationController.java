@@ -3,6 +3,9 @@ package com.roomallocation.ExamRoomAllocation.controller;
 import static com.roomallocation.ExamRoomAllocation.constants.ExamRoomAllocationConstants.BASE_URL;
 import static com.roomallocation.ExamRoomAllocation.constants.ExamRoomAllocationConstants.HEALTHCHECK_URL;
 
+import java.io.IOException;
+import java.util.Arrays;
+
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.stereotype.Controller;
 
+import com.google.common.io.Files;
 import com.roomallocation.ExamRoomAllocation.service.ExamRoomAllocationService;
 
 import ch.qos.logback.classic.Logger;
@@ -56,14 +60,15 @@ public class ExamRoomAllocationController {
 	@PostMapping(value = "/generateSeatingArrangement")
 	@ApiOperation(value = "Generate Seating Arrangement pdf", notes = "This is for generating excel/pdf of seating arrangement")
 	public ResponseEntity<String> generateSeatingArrangement(
-			@RequestParam("file") MultipartFile file,
+			@RequestParam("file") MultipartFile [] files,
 			@RequestParam("dateSheetFile") MultipartFile dateSheetFile,
 			@RequestParam("hallFile") MultipartFile hallFile ){
 		final String methodName = "generateSeatingArrangement()";
-		logger.info("{} : Generate Seating Arrangemtn ",  methodName);
+		logger.info("{} : Generate Seating Arrangement ",  methodName);
 		String response = new String();
 		try {
-			response = examRoomAllocationService.generateSeatingArrangement(file, dateSheetFile, hallFile);
+			
+			response = examRoomAllocationService.generateSeatingArrangement(files, dateSheetFile, hallFile);
 		} catch (Exception e) {
 			return new ResponseEntity<String>(response,HttpStatus.INTERNAL_SERVER_ERROR);
 		}
