@@ -1,6 +1,9 @@
 function onUpload() {
 	var fd = new FormData();
-    fd.append('file', $('#myfile')[0].files[0]);
+	var totalfiles = document.getElementById('myfile').files.length;
+   	for (var index = 0; index < totalfiles; index++) {
+      fd.append("file", document.getElementById('myfile').files[index]);
+   	}
     fd.append('dateSheetFile', $('#dateSheet')[0].files[0]);
     fd.append('hallFile', $('#hallData')[0].files[0]);
     console.log(fd)
