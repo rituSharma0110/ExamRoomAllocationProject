@@ -98,38 +98,37 @@ public class GenerateAlgo {
 					listOfStudents.replace(x, a-(p+1));
 					courseList.add(x);
 					courseList.add(String.valueOf(p+1));
-					outputMap.add(room, courseList);
-					
+//					outputMap.add(room, courseList);	
 				}
 				else {
 					listOfStudents.replace(x, 0);
 					courseList.add(x);
 					courseList.add(String.valueOf(a));
-					outputMap.add(room, courseList);
+//					outputMap.add(room, courseList);
 				}
 				if(b>=(p+1)) {
 					listOfStudents.replace(y, b-p);
 					courseList.add(y);
 					courseList.add(String.valueOf(p));
-					outputMap.add(room, courseList);
+//					outputMap.add(room, courseList);
 				}
 				else {
 					listOfStudents.replace(y, 0);
 					courseList.add(y);
 					courseList.add(String.valueOf(b));
-					outputMap.add(room, courseList);
+//					outputMap.add(room, courseList);
 				}
 				if(c>=(p+1)) {
 					listOfStudents.replace(z, c-p);
 					courseList.add(z);
 					courseList.add(String.valueOf(p));
-					outputMap.add(room, courseList);
+//					outputMap.add(room, courseList);
 				}
 				else {
 					listOfStudents.replace(z, 0);
 					courseList.add(z);
 					courseList.add(String.valueOf(c));
-					outputMap.add(room, courseList);
+//					outputMap.add(room, courseList);
 				}		
 			}
 			else if(r==2){
@@ -137,37 +136,37 @@ public class GenerateAlgo {
 					listOfStudents.replace(x, a-(p+1));
 					courseList.add(x);
 					courseList.add(String.valueOf((p+1)));
-					outputMap.add(room, courseList);
+//					outputMap.add(room, courseList);
 				}
 				else {
 					listOfStudents.replace(x, 0);
 					courseList.add(x);
 					courseList.add(String.valueOf((a)));
-					outputMap.add(room, courseList);
+//					outputMap.add(room, courseList);
 				}
 				if(b>=(p+1)) {
 					listOfStudents.replace(y, b-(p+1));
 					courseList.add(y);
 					courseList.add(String.valueOf((p+1)));
-					outputMap.add(room, courseList);
+//					outputMap.add(room, courseList);
 				}
 				else {
 					listOfStudents.replace(y, 0);
 					courseList.add(y);
 					courseList.add(String.valueOf((b)));
-					outputMap.add(room, courseList);
+//					outputMap.add(room, courseList);
 				}
 				if(c>=(p+1)) {
 					listOfStudents.replace(z, c-p);
 					courseList.add(z);
 					courseList.add(String.valueOf((p)));
-					outputMap.add(room, courseList);
+//					outputMap.add(room, courseList);
 				}
 				else {
 					listOfStudents.replace(z, 0);
 					courseList.add(z);
 					courseList.add(String.valueOf((c)));
-					outputMap.add(room, courseList);
+//					outputMap.add(room, courseList);
 				}		
 			}
 			else{
@@ -175,39 +174,40 @@ public class GenerateAlgo {
 					listOfStudents.replace(x, a-p);
 					courseList.add(z);
 					courseList.add(String.valueOf((p)));
-					outputMap.add(room, courseList);
+//					outputMap.add(room, courseList);
 				}
 				else {
 					listOfStudents.replace(x, 0);
 					courseList.add(x);
 					courseList.add(String.valueOf((a)));
-					outputMap.add(room, courseList);
+//					outputMap.add(room, courseList);
 				}
 				if(b>=(p+1)) {
 					listOfStudents.replace(y, b-p);
 					courseList.add(y);
 					courseList.add(String.valueOf((p)));
-					outputMap.add(room, courseList);
+//					outputMap.add(room, courseList);
 				}
 				else {
 					listOfStudents.replace(y, 0);
 					courseList.add(y);
 					courseList.add(String.valueOf((b)));
-					outputMap.add(room, courseList);
+//					outputMap.add(room, courseList);
 				}
 				if(c>=(p+1)) {
 					listOfStudents.replace(z, c-p);
 					courseList.add(z);
 					courseList.add(String.valueOf((p)));
-					outputMap.add(room, courseList);
+//					outputMap.add(room, courseList);
 				}
 				else {
 					listOfStudents.replace(z, 0);
 					courseList.add(z);
 					courseList.add(String.valueOf((c)));
-					outputMap.add(room, courseList);
+//					outputMap.add(room, courseList);
 				}		
 			}
+			outputMap.add(room, courseList);
 //			System.out.println(hallCapacity.size());
 			hallCapacity.remove(room);
 		
