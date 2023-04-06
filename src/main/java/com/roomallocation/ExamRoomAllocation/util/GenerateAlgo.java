@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
@@ -19,7 +20,7 @@ import com.roomallocation.ExamRoomAllocation.vo.StudentVO;
 @Component
 public class GenerateAlgo {
 	
-	public void generateAlgo(ArrayList<DatesheetVO> dateSheetList, ArrayList<HallDataVO> hallDataList, 
+	public MultiValueMap<String, List<String>> generateAlgo(ArrayList<DatesheetVO> dateSheetList, ArrayList<HallDataVO> hallDataList, 
 			List<StudentVO> studentList) {
 		HashMap<String, Integer> listOfGirlsStudents = new HashMap<>();
 		HashMap<String, Integer> listOfBoysStudents = new HashMap<>();
@@ -183,7 +184,7 @@ public class GenerateAlgo {
 			else{
 				if(a>=(p+1)) {
 					listOfGirlsStudents.replace(x, a-p);
-					courseList.add(z);
+					courseList.add(x);
 					courseList.add(String.valueOf((p)));
 //					outputMap.add(room, courseList);
 				}
@@ -350,7 +351,7 @@ public class GenerateAlgo {
 			else{
 				if(a>=(p+1)) {
 					listOfBoysStudents.replace(x, a-p);
-					courseList.add(z);
+					courseList.add(x);
 					courseList.add(String.valueOf((p)));
 //					outputMap.add(room, courseList);
 				}
@@ -396,6 +397,15 @@ public class GenerateAlgo {
 		for(Map.Entry m : outputMap.entrySet()){    
             System.out.println(m.getKey()+" "+m.getValue());    
         }
+		
+		 MultiValueMap<String, List<String>>  valueMap = outputMap;
+	       Set<String> valueSet = valueMap.keySet();
+	       
+	       for(String str: valueSet) {
+               System.out.println(valueMap.get(str).get(0));
+       }
+		
+		return outputMap;
 	}
 }
 
