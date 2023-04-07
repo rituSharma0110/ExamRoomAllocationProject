@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
@@ -31,6 +32,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.roomallocation.ExamRoomAllocation.util.GenerateAlgo;
 import com.roomallocation.ExamRoomAllocation.util.GenerateExcelUtil;
 import com.roomallocation.ExamRoomAllocation.util.ReadExcelUtil;
+import com.roomallocation.ExamRoomAllocation.vo.AlgoOutputVO;
 import com.roomallocation.ExamRoomAllocation.vo.DatesheetVO;
 import com.roomallocation.ExamRoomAllocation.vo.HallDataVO;
 import com.roomallocation.ExamRoomAllocation.vo.StudentVO;
@@ -93,13 +95,14 @@ public class ExamRoomAllocationService {
 			  ArrayList<DatesheetVO> dateSheetList = (ArrayList<DatesheetVO>) readExcelUtil.getDateSheetList(dateSheetFile);
 			  
 			  XSSFWorkbook seatingChart = new XSSFWorkbook();
-			  for (int i = 0; i < workbook.getNumberOfSheets(); i++)
+			  for (int i = 0; i < workbook.getNumberOfSheets()-1; i++)
 			  {
 				  ArrayList<String> batch = new ArrayList<>();
 				  ArrayList<String> batchSub = new ArrayList<>();
 				  StringBuilder shift = new StringBuilder("Shift ");
 				  String startTime = null;
 				  String endTime = null;
+				  HashMap<String, String> batchAndCourse = new HashMap<>();
 				  for(int j = 0 ; j < dateSheetList.size(); j++) {
 						if(dateSheetList.get(j).getShift()!= null) {
 							if(dateSheetList.get(j).getShift().equals(String.valueOf(i+1))) {
@@ -107,6 +110,7 @@ public class ExamRoomAllocationService {
 								batchSub.add(dateSheetList.get(j).getSubjectCode());
 								startTime = dateSheetList.get(j).getStartTime();
 								endTime = dateSheetList.get(j).getEndTime();
+								batchAndCourse.put( dateSheetList.get(j).getSubjectCode(), dateSheetList.get(j).getBatchName());
 						}
 						
 					}
@@ -117,8 +121,13 @@ public class ExamRoomAllocationService {
 				  hallDataList.add(list);
 				  String examDate = dateSheetList.get(1).getDate().replace("/", "-");
 				  outputMap = generateAlgorithm.generateAlgo(dateSheetList, list, studentList);
+				  
+				  ArrayList<AlgoOutputVO> outputList = generateAlgorithm.generateOutput(dateSheetList, list, studentList);
 				  excelUtil.seatingChart(outputMap, batch, batchSub, new String(shift), seatingChart, startTime, endTime, 
 						  examDate, studentList, outputMap);
+				  
+				  
+				  excelUtil.createAttendanceList(outputList, studentList, dateSheetList, batchAndCourse, list);
 			  }
 			  
 			  ObjectMapper mapper = new ObjectMapper();
