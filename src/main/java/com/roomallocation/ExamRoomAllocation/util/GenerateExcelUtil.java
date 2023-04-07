@@ -27,8 +27,12 @@ import com.roomallocation.ExamRoomAllocation.vo.HallDataVO;
 import com.roomallocation.ExamRoomAllocation.vo.StudentOutputVO;
 import com.roomallocation.ExamRoomAllocation.vo.StudentVO;
 
+import io.github.millij.poi.util.Spreadsheet;
+
 @Component
 public class GenerateExcelUtil {
+	
+	HashMap<String, String> seatingMap = new HashMap<String, String>();
 	
 	public void createSortedExcel(ArrayList courseList, List<StudentVO> studentList, int year) {
 		ArrayList<String> heading = new ArrayList<>();
@@ -302,6 +306,7 @@ public class GenerateExcelUtil {
 	        			dataRow.createCell(2).setCellValue(rowCounter + 1);
 	        			dataRow.createCell(3).setCellValue(names.get(rowCounter));
 	        			dataRow.createCell(4).setCellValue(rollNo.get(rowCounter));
+	        			seatingMap.put( rollNo.get(rowCounter), outputList.get(i).getClassRoom());
 	        			dataRow.createCell(5).setCellValue(genderAllowed);
 	        			dataRow.createCell(6).setCellValue("");
 	        			dataRow.createCell(7).setCellValue("");
@@ -352,6 +357,36 @@ public class GenerateExcelUtil {
         
 		return null;
         
+		
+	}
+	
+	public byte [] createSeatingList(List<StudentVO> studentList, String shift) {
+		XSSFWorkbook workbook = new XSSFWorkbook();
+		
+		XSSFSheet spreadsheet = workbook.createSheet();
+		Row headerRow = spreadsheet.createRow(0);
+		headerRow.createCell(0).setCellValue("Roll Number");
+		headerRow.createCell(1).setCellValue("Room Name");
+		Row dataRow = null;
+		for(int i = 1;i < studentList.size(); i++) {
+			dataRow = spreadsheet.createRow(i+1);
+			dataRow.createCell(0).setCellValue(studentList.get(i).getRollNumber());
+			dataRow.createCell(1).setCellValue(seatingMap.get(studentList.get(i).getRollNumber()));
+		}
+		
+		 FileOutputStream out;
+			try {
+				out = new FileOutputStream( new File("C:\\Users\\This pc\\Downloads\\" + shift + "-Seating List.xlsx"));
+				 
+				workbook.write(out);
+		        out.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+	        
+			return null;
 		
 	}
 

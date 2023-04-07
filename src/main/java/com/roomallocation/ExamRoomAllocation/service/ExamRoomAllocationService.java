@@ -129,6 +129,9 @@ public class ExamRoomAllocationService {
 				  
 				  excelUtil.createAttendanceList(outputList, studentList, dateSheetList, batchAndCourse, list, new String(shift),
 						  startTime);
+				  
+				  excelUtil.createSeatingList(studentList, new String(shift));
+				  
 			  }
 			  
 			  ObjectMapper mapper = new ObjectMapper();
