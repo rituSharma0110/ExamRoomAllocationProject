@@ -81,7 +81,7 @@ public class GenerateExcelUtil {
         
         FileOutputStream out;
 		try {
-			out = new FileOutputStream( new File("C:\\Users\\This pc\\Downloads\\student_details" + year + ".xlsx"));
+			out = new FileOutputStream( new File("C:\\Users\\sancsaxe\\Downloads\\student_details" + year + ".xlsx"));
 			 
 	        workbook.write(out);
 	        out.close();
@@ -167,7 +167,7 @@ public class GenerateExcelUtil {
        
         FileOutputStream out;
 		try {
-			out = new FileOutputStream( new File("C:\\Users\\This pc\\Downloads\\seating plan.xlsx"));
+			out = new FileOutputStream( new File("C:\\Users\\sancsaxe\\Downloads\\seating plan.xlsx"));
 			 
 			seatingChart.write(out);
 	        out.close();
@@ -325,7 +325,7 @@ public class GenerateExcelUtil {
         // Write the output to a file
         FileOutputStream out;
 		try {
-			out = new FileOutputStream( new File("C:\\Users\\This pc\\Downloads\\Attendance plan.xlsx"));
+			out = new FileOutputStream( new File("C:\\Users\\sancsaxe\\Downloads\\Attendance plan.xlsx"));
 			 
 			workbook.write(out);
 	        out.close();
