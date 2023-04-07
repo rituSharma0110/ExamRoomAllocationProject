@@ -18,6 +18,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,6 +27,9 @@ import com.roomallocation.ExamRoomAllocation.vo.*;
 
 @Component
 public class ReadExcelUtil {
+	
+	@Autowired
+	GenerateExcelUtil excelUtil;
 	
 	private static final Logger logger = (Logger) LoggerFactory.getLogger(ExamRoomAllocationService.class);
 	
@@ -206,7 +210,7 @@ public class ReadExcelUtil {
 	   		 List<StudentVO> currentStudentList = new ArrayList<>();
 	   		 
 	   		 // looping through each row
-	   		 for(int rowCounter = 0; rowCounter<rows ; rowCounter++) {
+	   		 for(int rowCounter = 0; rowCounter<=rows ; rowCounter++) {
 	   			 // Getting student data of each roll number (each row)
 	   			 StudentVO student = new StudentVO();
 	   			 HSSFRow row = worksheet.getRow(rowCounter);
@@ -282,7 +286,7 @@ public class ReadExcelUtil {
 	   		 List<StudentVO> currentStudentList = new ArrayList<>();
 	   		 
 	   		 // looping through each row
-	   		 for(int rowCounter = 0; rowCounter<rows ; rowCounter++) {
+	   		 for(int rowCounter = 0; rowCounter<=rows ; rowCounter++) {
 	   			 // Getting student data of each roll number (each row)
 	   			 StudentVO student = new StudentVO();
 	   			 XSSFRow row = worksheet.getRow(rowCounter);
@@ -342,7 +346,7 @@ public class ReadExcelUtil {
 	   		 }
 	   		 ArrayList<String> courseList = new ArrayList<>(courseSet);
 	   		 // this will create sorted excel sheet
-//	   		 excelUtil.createSortedExcel(courseList, currentStudentList, Integer.valueOf(year));
+	   		 excelUtil.createSortedExcel(courseList, currentStudentList, Integer.valueOf(year));
 	   		 
 	   		 return studentList;
 	   	 }

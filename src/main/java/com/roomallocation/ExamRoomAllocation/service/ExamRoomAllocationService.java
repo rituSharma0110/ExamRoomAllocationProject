@@ -99,7 +99,7 @@ public class ExamRoomAllocationService {
 			  {
 				  ArrayList<String> batch = new ArrayList<>();
 				  ArrayList<String> batchSub = new ArrayList<>();
-				  StringBuilder shift = new StringBuilder("Shift ");
+				  StringBuilder shift = new StringBuilder("Shift-");
 				  String startTime = null;
 				  String endTime = null;
 				  HashMap<String, String> batchAndCourse = new HashMap<>();
@@ -127,7 +127,8 @@ public class ExamRoomAllocationService {
 						  examDate, studentList, outputMap);
 				  
 				  
-				  excelUtil.createAttendanceList(outputList, studentList, dateSheetList, batchAndCourse, list);
+				  excelUtil.createAttendanceList(outputList, studentList, dateSheetList, batchAndCourse, list, new String(shift),
+						  startTime);
 			  }
 			  
 			  ObjectMapper mapper = new ObjectMapper();

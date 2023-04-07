@@ -8,15 +8,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -24,7 +21,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.roomallocation.ExamRoomAllocation.vo.AlgoOutputVO;
 import com.roomallocation.ExamRoomAllocation.vo.DatesheetVO;
 import com.roomallocation.ExamRoomAllocation.vo.HallDataVO;
@@ -81,7 +77,7 @@ public class GenerateExcelUtil {
         
         FileOutputStream out;
 		try {
-			out = new FileOutputStream( new File("C:\\Users\\sancsaxe\\Downloads\\student_details" + year + ".xlsx"));
+			out = new FileOutputStream( new File("C:\\Users\\This pc\\Downloads\\student_details" + year + ".xlsx"));
 			 
 	        workbook.write(out);
 	        out.close();
@@ -167,7 +163,7 @@ public class GenerateExcelUtil {
        
         FileOutputStream out;
 		try {
-			out = new FileOutputStream( new File("C:\\Users\\sancsaxe\\Downloads\\seating plan.xlsx"));
+			out = new FileOutputStream( new File("C:\\Users\\This pc\\Downloads\\seating plan.xlsx"));
 			 
 			seatingChart.write(out);
 	        out.close();
@@ -185,7 +181,7 @@ public class GenerateExcelUtil {
 	}
 	
 	public byte [] createAttendanceList(ArrayList<AlgoOutputVO> outputList, List<StudentVO> studentList, ArrayList<DatesheetVO> dateSheetList,
-			HashMap<String, String> batchAndCourse, ArrayList<HallDataVO> list) {
+			HashMap<String, String> batchAndCourse, ArrayList<HallDataVO> list, String shift, String startTime) {
 		ArrayList<StudentOutputVO> students = new ArrayList<>();
 		for (int i = 0 ; i< studentList.size(); i++) {
 			StudentOutputVO student = new StudentOutputVO();
@@ -207,7 +203,9 @@ public class GenerateExcelUtil {
         	for(int j = 0 ; j < outputList.get(i).getValues().size(); j++){// this will loop 6 times
         		int numberOfStudents = Integer.valueOf(outputList.get(i).getValues().get(j+1));
         		if(numberOfStudents != 0) {
-	        		XSSFSheet spreadsheet = workbook.createSheet( "Attendance List" + j + i);
+        			String batch = batchAndCourse.get(outputList.get(i).getValues().get(j));
+        			String roomName = outputList.get(i).getClassRoom();
+	        		XSSFSheet spreadsheet = workbook.createSheet(batch + " " + roomName);
 	            	// FIRST ROW CREATE WITH STYLES 
 	                Row firstRow = spreadsheet.createRow(0);
 	                // Create a new font and alter it.
@@ -229,7 +227,10 @@ public class GenerateExcelUtil {
 	                Row secRow = spreadsheet.createRow(1);
 	        	    style.setAlignment(HorizontalAlignment.CENTER);
 	        	    Cell secCell = secRow.createCell(0);
-	        	    secCell.setCellValue("CT2-2022-02-28-Shift-1-09:00:00");
+	        	    StringBuilder secondHeader = new StringBuilder("CT-2-");
+	        	    secondHeader.append(shift + "-");
+	        	    secondHeader.append(startTime);
+	        	    secCell.setCellValue(secondHeader.toString());
 	        	    secCell.setCellStyle(style);
 	                
 	                spreadsheet.addMergedRegion(new CellRangeAddress(
@@ -244,7 +245,6 @@ public class GenerateExcelUtil {
 	                        0, //first column (0-based)
 	                        8  //last column  (0-based)
 	                ));
-	        		String batch = batchAndCourse.get(outputList.get(i).getValues().get(j));
 	//        		System.out.println(batch);
 	//        		System.out.println(outputList.get(i).getValues().get(j));
 	        		Row headerRow = spreadsheet.createRow(4);
@@ -278,7 +278,6 @@ public class GenerateExcelUtil {
 	        		otherCellStyle.setBorderBottom(BorderStyle.THIN);
 	        		otherCellStyle.setBorderLeft(BorderStyle.THIN);
 	        		
-//	        		int l = 0;
 	        		ArrayList<String> names = new ArrayList<>();
 	        		ArrayList<String> rollNo = new ArrayList<>();
 	        		String genderAllowed = hallMap.get(outputList.get(i).getClassRoom());
@@ -294,23 +293,39 @@ public class GenerateExcelUtil {
         					}
         				}
         			}
-	        		
-        			if(names.size()>1) {
-	        		for (int rowCounter = 0 ; rowCounter< numberOfStudents; rowCounter++) {
-	        			Row dataRow = spreadsheet.createRow(rowCounter+5);
+        			
+        			Row dataRow = null;
+	        		for (int rowCounter = 0 ; rowCounter< names.size(); rowCounter++) {
+	        			dataRow = spreadsheet.createRow(rowCounter+5);
 	        			dataRow.createCell(0).setCellValue(String.valueOf(batch));
 	        			dataRow.createCell(1).setCellValue(outputList.get(i).getClassRoom());
 	        			dataRow.createCell(2).setCellValue(rowCounter + 1);
 	        			dataRow.createCell(3).setCellValue(names.get(rowCounter));
 	        			dataRow.createCell(4).setCellValue(rollNo.get(rowCounter));
 	        			dataRow.createCell(5).setCellValue(genderAllowed);
+	        			dataRow.createCell(6).setCellValue("");
+	        			dataRow.createCell(7).setCellValue("");
 	        			dataRow.createCell(8).setCellValue(outputList.get(i).getValues().get(j));
+	        			for(int l = 0 ; l<=8 ; l++) {
+	        				dataRow.getCell(l).setCellStyle(otherCellStyle);
+	        			}
 	        			
 	        			
 	        		}
-        			}
         			
-        		
+	        		Row totalRow = spreadsheet.createRow(names.size() + 7);
+	        		totalRow.createCell(0).setCellValue("Total");
+	        		totalRow.createCell(7).setCellValue("Invigilator's Sign");
+	        		spreadsheet.addMergedRegion(new CellRangeAddress(names.size() + 7,names.size() + 7,0,1));
+	        		spreadsheet.addMergedRegion(new CellRangeAddress(names.size() + 7,names.size() + 7,7,8));
+	        		Row presentRow = spreadsheet.createRow(names.size() + 8);
+	        		presentRow.createCell(0).setCellValue("Present");
+	        		spreadsheet.addMergedRegion(new CellRangeAddress(names.size() + 8,names.size() + 8,0,1));
+	        		
+	        		Row absentRow = spreadsheet.createRow(names.size() + 9);
+	        		absentRow.createCell(0).setCellValue("Absent");
+	        		spreadsheet.addMergedRegion(new CellRangeAddress(names.size() + 9,names.size() + 9,0,1));
+	        		
         			
         		}
         		j++;
@@ -325,7 +340,7 @@ public class GenerateExcelUtil {
         // Write the output to a file
         FileOutputStream out;
 		try {
-			out = new FileOutputStream( new File("C:\\Users\\sancsaxe\\Downloads\\Attendance plan.xlsx"));
+			out = new FileOutputStream( new File("C:\\Users\\This pc\\Downloads\\" + shift + " Attendance plan.xlsx"));
 			 
 			workbook.write(out);
 	        out.close();
