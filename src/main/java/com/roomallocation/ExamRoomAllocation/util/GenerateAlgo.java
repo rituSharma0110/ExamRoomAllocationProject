@@ -526,17 +526,37 @@ public class GenerateAlgo {
 			b = studentMap.get(studentMap.keySet().toArray()[1]);
 			c = studentMap.get(studentMap.keySet().toArray()[2]);
 			
+//			for (Map.Entry<String, Integer> entry : studentMap.entrySet()) {
+//                if (entry.getValue().equals(a)) {
+//                    x = entry.getKey();
+//                }
+//                if (entry.getValue().equals(b)) {
+//                    y = entry.getKey();
+//                }
+//                if (entry.getValue().equals(c)) {
+//                    z = entry.getKey();
+//                }
+//            }
+			
 			for (Map.Entry<String, Integer> entry : studentMap.entrySet()) {
                 if (entry.getValue().equals(a)) {
                     x = entry.getKey();
                 }
+			}
+            studentMap.remove(x);
+            for (Map.Entry<String, Integer> entry : studentMap.entrySet()) {
                 if (entry.getValue().equals(b)) {
                     y = entry.getKey();
                 }
+            }
+            studentMap.remove(y);
+            for (Map.Entry<String, Integer> entry : studentMap.entrySet()) {
                 if (entry.getValue().equals(c)) {
                     z = entry.getKey();
                 }
             }
+            studentMap.remove(z);
+			
 //			System.out.println(x + " : " + y + " : " + z + " : " + room);
 			if(r==1){
 				if(a>=(p+1)) {
@@ -697,17 +717,37 @@ public class GenerateAlgo {
 			b = studentMap.get(studentMap.keySet().toArray()[1]);
 			c = studentMap.get(studentMap.keySet().toArray()[2]);
 			
+//			for (Map.Entry<String, Integer> entry : studentMap.entrySet()) {
+//                if (entry.getValue().equals(a)) {
+//                    x = entry.getKey();
+//                }
+//                if (entry.getValue().equals(b)) {
+//                    y = entry.getKey();
+//                }
+//                if (entry.getValue().equals(c)) {
+//                    z = entry.getKey();
+//                }
+//            }
+			
 			for (Map.Entry<String, Integer> entry : studentMap.entrySet()) {
                 if (entry.getValue().equals(a)) {
                     x = entry.getKey();
                 }
+			}
+            studentMap.remove(x);
+            for (Map.Entry<String, Integer> entry : studentMap.entrySet()) {
                 if (entry.getValue().equals(b)) {
                     y = entry.getKey();
                 }
+            }
+            studentMap.remove(y);
+            for (Map.Entry<String, Integer> entry : studentMap.entrySet()) {
                 if (entry.getValue().equals(c)) {
                     z = entry.getKey();
                 }
             }
+            studentMap.remove(z);
+			
 //			System.out.println(x + " : " + y + " : " + z + " : " + room);
 			if(r==1){
 				if(a>=(p+1)) {
