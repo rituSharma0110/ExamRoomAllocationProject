@@ -209,135 +209,215 @@ public class GenerateExcelUtil {
         		if(numberOfStudents != 0) {
         			String batch = batchAndCourse.get(outputList.get(i).getValues().get(j));
         			String roomName = outputList.get(i).getClassRoom();
-	        		XSSFSheet spreadsheet = workbook.createSheet(batch + " " + roomName);
-	            	// FIRST ROW CREATE WITH STYLES 
-	                Row firstRow = spreadsheet.createRow(0);
-	                // Create a new font and alter it.
-	                Font font = workbook.createFont();
-	                font.setFontHeightInPoints((short)16);
-	                font.setFontName("Calibri");
-	                font.setBold(true);
-	                font.setUnderline((byte) 1);
-	                // Fonts are set into a style so create a new one to use.
-	                CellStyle style = workbook.createCellStyle();
-	                style.setFont(font);
-	                style.setAlignment(HorizontalAlignment.CENTER);
-	                // Create a cell and put a value in it.
-	                Cell firsCell = firstRow.createCell(0);
-	                firsCell.setCellValue("DEI Faculty Of Engineering");
-	                firsCell.setCellStyle(style);
-	                
-	                // SECOND ROW CREATE WITH STYLES
-	                Row secRow = spreadsheet.createRow(1);
-	        	    style.setAlignment(HorizontalAlignment.CENTER);
-	        	    Cell secCell = secRow.createCell(0);
-	        	    StringBuilder secondHeader = new StringBuilder("CT-2-");
-	        	    secondHeader.append(shift + "-");
-	        	    secondHeader.append(startTime);
-	        	    secCell.setCellValue(secondHeader.toString());
-	        	    secCell.setCellStyle(style);
-	                
-	                spreadsheet.addMergedRegion(new CellRangeAddress(
-	                        0, //first row (0-based)
-	                        0, //last row  (0-based)
-	                        0, //first column (0-based)
-	                        8  //last column  (0-based)
-	                ));
-	                spreadsheet.addMergedRegion(new CellRangeAddress(
-	                        1, //first row (0-based)
-	                        1, //last row  (0-based)
-	                        0, //first column (0-based)
-	                        8  //last column  (0-based)
-	                ));
-	//        		System.out.println(batch);
-	//        		System.out.println(outputList.get(i).getValues().get(j));
-	        		Row headerRow = spreadsheet.createRow(4);
-	        		Font headerfont = workbook.createFont();
-	        		headerfont.setBold(true);
-	        		
-	        		headerRow.createCell(0).setCellValue("Class");
-	        		headerRow.createCell(1).setCellValue("Room");
-	        		headerRow.createCell(2).setCellValue("S No.");
-	        		headerRow.createCell(3).setCellValue("Roll No.");
-	        		headerRow.createCell(4).setCellValue("Student Name");
-	        		headerRow.createCell(5).setCellValue("Gender");
-	        		headerRow.createCell(6).setCellValue("Signature");
-	        		headerRow.createCell(7).setCellValue("B-Copies");
-	        		headerRow.createCell(8).setCellValue("Subject");
-	        		CellStyle cellStyle = workbook.createCellStyle();
-	        		cellStyle.setFont(headerfont);
-	        		cellStyle.setBorderTop(BorderStyle.THIN);
-	        		cellStyle.setBorderRight(BorderStyle.THIN);
-	        		cellStyle.setBorderBottom(BorderStyle.THIN);
-	        		cellStyle.setBorderLeft(BorderStyle.THIN);
-	        		for(int l = 0; l<=8; l++)
-	        			headerRow.getCell(l).setCellStyle(cellStyle);
-	        		
-	        		
-	        		Font cellFonts = workbook.createFont();
-	        		CellStyle otherCellStyle = workbook.createCellStyle();
-	        		otherCellStyle.setFont(cellFonts);
-	        		otherCellStyle.setBorderTop(BorderStyle.THIN);
-	        		otherCellStyle.setBorderRight(BorderStyle.THIN);
-	        		otherCellStyle.setBorderBottom(BorderStyle.THIN);
-	        		otherCellStyle.setBorderLeft(BorderStyle.THIN);
-	        		
-	        		ArrayList<String> names = new ArrayList<>();
-	        		ArrayList<String> rollNo = new ArrayList<>();
-	        		String genderAllowed = hallMap.get(outputList.get(i).getClassRoom());
-        			for(int studentCounter = 0, l=0 ;  studentCounter<students.size(); studentCounter++) {
-        				if(!students.get(studentCounter).isAdded() && l<numberOfStudents &&
-        						students.get(studentCounter).getStudent().getCourses().contains(outputList.get(i).getValues().get(j))) {
-        					if(students.get(studentCounter).getStudent().getGender().equals(genderAllowed)) {
-        						names.add(students.get(studentCounter).getStudent().getName());
-        						rollNo.add(students.get(studentCounter).getStudent().getRollNumber());
-        						students.get(studentCounter).setAdded(true);
-        						l++;
-        						
-        					}
-        				}
+        			
+        			if(batch.endsWith("BT")) {
+//        				System.out.println("Inside BT");
+        				ArrayList<String> names = new ArrayList<>();
+    	        		ArrayList<String> rollNo = new ArrayList<>();
+    	        		ArrayList<String> branch = new ArrayList<>();
+    	        		String genderAllowed = hallMap.get(outputList.get(i).getClassRoom());
+            			for(int studentCounter = 0, l=0 ;  studentCounter<students.size(); studentCounter++) {
+            				if(!students.get(studentCounter).isAdded() && l<numberOfStudents &&
+            						students.get(studentCounter).getStudent().getCourses().contains(outputList.get(i).getValues().get(j))) {
+            					if(students.get(studentCounter).getStudent().getGender().equals(genderAllowed)) {
+            						names.add(students.get(studentCounter).getStudent().getName());
+            						rollNo.add(students.get(studentCounter).getStudent().getRollNumber());
+            						branch.add(students.get(studentCounter).getStudent().getBranch());
+//            						System.out.println(students.get(studentCounter).getStudent().getBranch());
+            						students.get(studentCounter).setAdded(true);
+            						l++;
+            						
+            					}
+            				}
+            			}
+            			
+            			// OPTIMIZE FURTHER USE ARRAYLIST<ARRAYLIST> OR OBJECT
+            			ArrayList<String> mechanical = new ArrayList<String>();
+            			ArrayList<String> electrical = new ArrayList<String>();
+            			ArrayList<String> footwear = new ArrayList<String>();
+            			ArrayList<String> civil = new ArrayList<String>();
+            			ArrayList<String> agriculture = new ArrayList<String>();
+            			
+            			ArrayList<String> mechRollNo = new ArrayList<String>();
+            			ArrayList<String> elRollNo = new ArrayList<String>();
+            			ArrayList<String> fwRollNo = new ArrayList<String>();
+            			ArrayList<String> clRollNo = new ArrayList<String>();
+            			ArrayList<String> agRollNo = new ArrayList<String>();
+            			for(int k = 0; k < branch.size(); k++) {
+            				if(branch.get(k).substring(0,1).equalsIgnoreCase("M")) {
+            					mechanical.add(names.get(k));
+            					mechRollNo.add(rollNo.get(k));
+            				}else if(branch.get(k).substring(0,1).equalsIgnoreCase("E")) {
+            					electrical.add(names.get(k));
+            					elRollNo.add(rollNo.get(k));
+            				}else if(branch.get(k).substring(0,1).equalsIgnoreCase("C")) {
+            					civil.add(names.get(k));
+            					clRollNo.add(rollNo.get(k));
+            				}else if(branch.get(k).substring(0,1).equalsIgnoreCase("F")) {
+            					footwear.add(names.get(k));
+            					fwRollNo.add(rollNo.get(k));
+            				}else if(branch.get(k).substring(0,1).equalsIgnoreCase("A")) {
+            					agriculture.add(names.get(k));
+            					agRollNo.add(rollNo.get(k));
+            				}
+            			}
+            			
+//            			System.out.println(mechanical.size());
+            			if(mechanical.size()!=0) {
+            				XSSFSheet spreadsheet = workbook.createSheet(batch + " M " + roomName);
+            				addStyleToSheet(spreadsheet, workbook, shift, startTime);
+            				createSeparateSheet(workbook, spreadsheet, mechanical, batch, outputList, i, mechRollNo, genderAllowed, j );
+            			}
+            			if(electrical.size()!=0) {
+            				XSSFSheet spreadsheet = workbook.createSheet(batch + " E " + roomName);
+            				addStyleToSheet(spreadsheet, workbook, shift, startTime);
+            				createSeparateSheet(workbook, spreadsheet, electrical, batch, outputList, i, elRollNo, genderAllowed, j );
+            			}
+            			if(civil.size()!=0) {
+            				XSSFSheet spreadsheet = workbook.createSheet(batch + " C " + roomName);
+            				addStyleToSheet(spreadsheet, workbook, shift, startTime);
+            				createSeparateSheet(workbook, spreadsheet, civil, batch, outputList, i, clRollNo, genderAllowed, j );
+            			}
+            			if(footwear.size()!=0) {
+            				XSSFSheet spreadsheet = workbook.createSheet(batch + " F " + roomName);
+            				addStyleToSheet(spreadsheet, workbook, shift, startTime);
+            				createSeparateSheet(workbook, spreadsheet, footwear, batch, outputList, i, fwRollNo, genderAllowed, j );
+            			}
+            			if(agriculture.size()!=0) {
+            				XSSFSheet spreadsheet = workbook.createSheet(batch + " F " + roomName);
+            				addStyleToSheet(spreadsheet, workbook, shift, startTime);
+            				createSeparateSheet(workbook, spreadsheet, agriculture, batch, outputList, i, agRollNo, genderAllowed, j );
+            			}
+//            			XSSFSheet spreadsheet = workbook.createSheet(batch + " " + roomName);
+        			}else {
+        				
+            			XSSFSheet spreadsheet = workbook.createSheet(batch + " " + roomName);
+            			// FIRST ROW CREATE WITH STYLES 
+            			Row firstRow = spreadsheet.createRow(0);
+            			// Create a new font and alter it.
+            			Font font = workbook.createFont();
+            			font.setFontHeightInPoints((short)16);
+            			font.setFontName("Calibri");
+            			font.setBold(true);
+            			font.setUnderline((byte) 1);
+            			// Fonts are set into a style so create a new one to use.
+            			CellStyle style = workbook.createCellStyle();
+            			style.setFont(font);
+            			style.setAlignment(HorizontalAlignment.CENTER);
+            			// Create a cell and put a value in it.
+            			Cell firsCell = firstRow.createCell(0);
+            			firsCell.setCellValue("DEI Faculty Of Engineering");
+            			firsCell.setCellStyle(style);
+            			
+            			// SECOND ROW CREATE WITH STYLES
+            			Row secRow = spreadsheet.createRow(1);
+            			style.setAlignment(HorizontalAlignment.CENTER);
+            			Cell secCell = secRow.createCell(0);
+            			StringBuilder secondHeader = new StringBuilder("CT-2-");
+            			secondHeader.append(shift + "-");
+            			secondHeader.append(startTime);
+            			secCell.setCellValue(secondHeader.toString());
+            			secCell.setCellStyle(style);
+            			
+            			spreadsheet.addMergedRegion(new CellRangeAddress(
+            					0, //first row (0-based)
+            					0, //last row  (0-based)
+            					0, //first column (0-based)
+            					8  //last column  (0-based)
+            					));
+            			spreadsheet.addMergedRegion(new CellRangeAddress(
+            					1, //first row (0-based)
+            					1, //last row  (0-based)
+            					0, //first column (0-based)
+            					8  //last column  (0-based)
+            					));
+            			//        		System.out.println(batch);
+            			//        		System.out.println(outputList.get(i).getValues().get(j));
+            			Row headerRow = spreadsheet.createRow(4);
+            			Font headerfont = workbook.createFont();
+            			headerfont.setBold(true);
+            			
+            			headerRow.createCell(0).setCellValue("Class");
+            			headerRow.createCell(1).setCellValue("Room");
+            			headerRow.createCell(2).setCellValue("S No.");
+            			headerRow.createCell(3).setCellValue("Roll No.");
+            			headerRow.createCell(4).setCellValue("Student Name");
+            			headerRow.createCell(5).setCellValue("Gender");
+            			headerRow.createCell(6).setCellValue("Signature");
+            			headerRow.createCell(7).setCellValue("B-Copies");
+            			headerRow.createCell(8).setCellValue("Subject");
+            			CellStyle cellStyle = workbook.createCellStyle();
+            			cellStyle.setFont(headerfont);
+            			cellStyle.setBorderTop(BorderStyle.THIN);
+            			cellStyle.setBorderRight(BorderStyle.THIN);
+            			cellStyle.setBorderBottom(BorderStyle.THIN);
+            			cellStyle.setBorderLeft(BorderStyle.THIN);
+            			for(int l = 0; l<=8; l++)
+            				headerRow.getCell(l).setCellStyle(cellStyle);
+            			
+            			
+            			Font cellFonts = workbook.createFont();
+            			CellStyle otherCellStyle = workbook.createCellStyle();
+            			otherCellStyle.setFont(cellFonts);
+            			otherCellStyle.setBorderTop(BorderStyle.THIN);
+            			otherCellStyle.setBorderRight(BorderStyle.THIN);
+            			otherCellStyle.setBorderBottom(BorderStyle.THIN);
+            			otherCellStyle.setBorderLeft(BorderStyle.THIN);
+            			
+            			ArrayList<String> names = new ArrayList<>();
+            			ArrayList<String> rollNo = new ArrayList<>();
+            			String genderAllowed = hallMap.get(outputList.get(i).getClassRoom());
+            			for(int studentCounter = 0, l=0 ;  studentCounter<students.size(); studentCounter++) {
+            				if(!students.get(studentCounter).isAdded() && l<numberOfStudents &&
+            						students.get(studentCounter).getStudent().getCourses().contains(outputList.get(i).getValues().get(j))) {
+            					if(students.get(studentCounter).getStudent().getGender().equals(genderAllowed)) {
+            						names.add(students.get(studentCounter).getStudent().getName());
+            						rollNo.add(students.get(studentCounter).getStudent().getRollNumber());
+            						students.get(studentCounter).setAdded(true);
+            						l++;
+            						
+            					}
+            				}
+            			}
+            			
+            			Row dataRow = null;
+            			for (int rowCounter = 0 ; rowCounter< names.size(); rowCounter++) {
+            				dataRow = spreadsheet.createRow(rowCounter+5);
+            				dataRow.createCell(0).setCellValue(String.valueOf(batch));
+            				dataRow.createCell(1).setCellValue(outputList.get(i).getClassRoom());
+            				dataRow.createCell(2).setCellValue(rowCounter + 1);
+            				dataRow.createCell(3).setCellValue(names.get(rowCounter));
+            				dataRow.createCell(4).setCellValue(rollNo.get(rowCounter));
+            				seatingMap.put( rollNo.get(rowCounter), outputList.get(i).getClassRoom());
+            				dataRow.createCell(5).setCellValue(genderAllowed);
+            				dataRow.createCell(6).setCellValue("");
+            				dataRow.createCell(7).setCellValue("");
+            				dataRow.createCell(8).setCellValue(outputList.get(i).getValues().get(j));
+            				for(int l = 0 ; l<=8 ; l++) {
+            					dataRow.getCell(l).setCellStyle(otherCellStyle);
+            				}
+            				
+            				
+            			}
+            			
+            			Row totalRow = spreadsheet.createRow(names.size() + 7);
+            			totalRow.createCell(0).setCellValue("Total");
+            			totalRow.createCell(7).setCellValue("Invigilator's Sign");
+            			spreadsheet.addMergedRegion(new CellRangeAddress(names.size() + 7,names.size() + 7,0,1));
+            			spreadsheet.addMergedRegion(new CellRangeAddress(names.size() + 7,names.size() + 7,7,8));
+            			Row presentRow = spreadsheet.createRow(names.size() + 8);
+            			presentRow.createCell(0).setCellValue("Present");
+            			spreadsheet.addMergedRegion(new CellRangeAddress(names.size() + 8,names.size() + 8,0,1));
+            			
+            			Row absentRow = spreadsheet.createRow(names.size() + 9);
+            			absentRow.createCell(0).setCellValue("Absent");
+            			spreadsheet.addMergedRegion(new CellRangeAddress(names.size() + 9,names.size() + 9,0,1));
+
         			}
-        			
-        			Row dataRow = null;
-	        		for (int rowCounter = 0 ; rowCounter< names.size(); rowCounter++) {
-	        			dataRow = spreadsheet.createRow(rowCounter+5);
-	        			dataRow.createCell(0).setCellValue(String.valueOf(batch));
-	        			dataRow.createCell(1).setCellValue(outputList.get(i).getClassRoom());
-	        			dataRow.createCell(2).setCellValue(rowCounter + 1);
-	        			dataRow.createCell(3).setCellValue(names.get(rowCounter));
-	        			dataRow.createCell(4).setCellValue(rollNo.get(rowCounter));
-	        			seatingMap.put( rollNo.get(rowCounter), outputList.get(i).getClassRoom());
-	        			dataRow.createCell(5).setCellValue(genderAllowed);
-	        			dataRow.createCell(6).setCellValue("");
-	        			dataRow.createCell(7).setCellValue("");
-	        			dataRow.createCell(8).setCellValue(outputList.get(i).getValues().get(j));
-	        			for(int l = 0 ; l<=8 ; l++) {
-	        				dataRow.getCell(l).setCellStyle(otherCellStyle);
-	        			}
-	        			
-	        			
-	        		}
-        			
-	        		Row totalRow = spreadsheet.createRow(names.size() + 7);
-	        		totalRow.createCell(0).setCellValue("Total");
-	        		totalRow.createCell(7).setCellValue("Invigilator's Sign");
-	        		spreadsheet.addMergedRegion(new CellRangeAddress(names.size() + 7,names.size() + 7,0,1));
-	        		spreadsheet.addMergedRegion(new CellRangeAddress(names.size() + 7,names.size() + 7,7,8));
-	        		Row presentRow = spreadsheet.createRow(names.size() + 8);
-	        		presentRow.createCell(0).setCellValue("Present");
-	        		spreadsheet.addMergedRegion(new CellRangeAddress(names.size() + 8,names.size() + 8,0,1));
-	        		
-	        		Row absentRow = spreadsheet.createRow(names.size() + 9);
-	        		absentRow.createCell(0).setCellValue("Absent");
-	        		spreadsheet.addMergedRegion(new CellRangeAddress(names.size() + 9,names.size() + 9,0,1));
-	        		
         			
         		}
         		j++;
         		
-        		
-        	
-	        	
             
         	}
         }
@@ -388,6 +468,115 @@ public class GenerateExcelUtil {
 	        
 			return null;
 		
+	}
+	
+	public void addStyleToSheet(XSSFSheet spreadsheet, XSSFWorkbook workbook, String shift, String startTime) {
+		Row firstRow = spreadsheet.createRow(0);
+        // Create a new font and alter it.
+        Font font = workbook.createFont();
+        font.setFontHeightInPoints((short)16);
+        font.setFontName("Calibri");
+        font.setBold(true);
+        font.setUnderline((byte) 1);
+        // Fonts are set into a style so create a new one to use.
+        CellStyle style = workbook.createCellStyle();
+        style.setFont(font);
+        style.setAlignment(HorizontalAlignment.CENTER);
+        // Create a cell and put a value in it.
+        Cell firsCell = firstRow.createCell(0);
+        firsCell.setCellValue("DEI Faculty Of Engineering");
+        firsCell.setCellStyle(style);
+        
+        // SECOND ROW CREATE WITH STYLES
+        Row secRow = spreadsheet.createRow(1);
+	    style.setAlignment(HorizontalAlignment.CENTER);
+	    Cell secCell = secRow.createCell(0);
+	    StringBuilder secondHeader = new StringBuilder("CT-2-");
+	    secondHeader.append(shift + "-");
+	    secondHeader.append(startTime);
+	    secCell.setCellValue(secondHeader.toString());
+	    secCell.setCellStyle(style);
+        
+        spreadsheet.addMergedRegion(new CellRangeAddress(
+                0, //first row (0-based)
+                0, //last row  (0-based)
+                0, //first column (0-based)
+                8  //last column  (0-based)
+        ));
+        spreadsheet.addMergedRegion(new CellRangeAddress(
+                1, //first row (0-based)
+                1, //last row  (0-based)
+                0, //first column (0-based)
+                8  //last column  (0-based)
+        ));
+//        		System.out.println(batch);
+//        		System.out.println(outputList.get(i).getValues().get(j));
+		Row headerRow = spreadsheet.createRow(4);
+		Font headerfont = workbook.createFont();
+		headerfont.setBold(true);
+		
+		headerRow.createCell(0).setCellValue("Class");
+		headerRow.createCell(1).setCellValue("Room");
+		headerRow.createCell(2).setCellValue("S No.");
+		headerRow.createCell(3).setCellValue("Roll No.");
+		headerRow.createCell(4).setCellValue("Student Name");
+		headerRow.createCell(5).setCellValue("Gender");
+		headerRow.createCell(6).setCellValue("Signature");
+		headerRow.createCell(7).setCellValue("B-Copies");
+		headerRow.createCell(8).setCellValue("Subject");
+		CellStyle cellStyle = workbook.createCellStyle();
+		cellStyle.setFont(headerfont);
+		cellStyle.setBorderTop(BorderStyle.THIN);
+		cellStyle.setBorderRight(BorderStyle.THIN);
+		cellStyle.setBorderBottom(BorderStyle.THIN);
+		cellStyle.setBorderLeft(BorderStyle.THIN);
+		for(int l = 0; l<=8; l++)
+			headerRow.getCell(l).setCellStyle(cellStyle);
+	}
+	
+	public void createSeparateSheet(XSSFWorkbook workbook, XSSFSheet spreadsheet, ArrayList<String> names, String batch,
+			ArrayList<AlgoOutputVO> outputList, int i, ArrayList<String> rollNo, String genderAllowed, int j) {
+		
+		Font cellFonts = workbook.createFont();
+		CellStyle otherCellStyle = workbook.createCellStyle();
+		otherCellStyle.setFont(cellFonts);
+		otherCellStyle.setBorderTop(BorderStyle.THIN);
+		otherCellStyle.setBorderRight(BorderStyle.THIN);
+		otherCellStyle.setBorderBottom(BorderStyle.THIN);
+		otherCellStyle.setBorderLeft(BorderStyle.THIN);
+		
+		Row dataRow = null;
+		for (int rowCounter = 0 ; rowCounter< names.size(); rowCounter++) {
+			dataRow = spreadsheet.createRow(rowCounter+5);
+			dataRow.createCell(0).setCellValue(String.valueOf(batch));
+			dataRow.createCell(1).setCellValue(outputList.get(i).getClassRoom());
+			dataRow.createCell(2).setCellValue(rowCounter + 1);
+			dataRow.createCell(3).setCellValue(names.get(rowCounter));
+			dataRow.createCell(4).setCellValue(rollNo.get(rowCounter));
+			seatingMap.put( rollNo.get(rowCounter), outputList.get(i).getClassRoom());
+			dataRow.createCell(5).setCellValue(genderAllowed);
+			dataRow.createCell(6).setCellValue("");
+			dataRow.createCell(7).setCellValue("");
+			dataRow.createCell(8).setCellValue(outputList.get(i).getValues().get(j));
+			for(int l = 0 ; l<=8 ; l++) {
+				dataRow.getCell(l).setCellStyle(otherCellStyle);
+			}
+			
+			
+		}
+		
+		Row totalRow = spreadsheet.createRow(names.size() + 7);
+		totalRow.createCell(0).setCellValue("Total");
+		totalRow.createCell(7).setCellValue("Invigilator's Sign");
+		spreadsheet.addMergedRegion(new CellRangeAddress(names.size() + 7,names.size() + 7,0,1));
+		spreadsheet.addMergedRegion(new CellRangeAddress(names.size() + 7,names.size() + 7,7,8));
+		Row presentRow = spreadsheet.createRow(names.size() + 8);
+		presentRow.createCell(0).setCellValue("Present");
+		spreadsheet.addMergedRegion(new CellRangeAddress(names.size() + 8,names.size() + 8,0,1));
+		
+		Row absentRow = spreadsheet.createRow(names.size() + 9);
+		absentRow.createCell(0).setCellValue("Absent");
+		spreadsheet.addMergedRegion(new CellRangeAddress(names.size() + 9,names.size() + 9,0,1));
 	}
 
 }

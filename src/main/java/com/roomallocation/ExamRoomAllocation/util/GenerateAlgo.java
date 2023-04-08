@@ -437,9 +437,9 @@ public class GenerateAlgo {
 //		for(Entry<String, List<Object>> m  : outputMap.entrySet()){    
 //            System.out.println(m.getKey()+" "+m.getValue());    
 //        }
-		for(Map.Entry m : outputMap.entrySet()){    
-            System.out.println(m.getKey()+" "+m.getValue());    
-        }
+//		for(Map.Entry m : outputMap.entrySet()){    
+//            System.out.println(m.getKey()+" "+m.getValue());    
+//        }
 		
 //		 MultiValueMap<String, List<String>>  valueMap = outputMap;
 //	       Set<String> valueSet = valueMap.keySet();
