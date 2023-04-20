@@ -81,7 +81,7 @@ public class GenerateExcelUtil {
         
         FileOutputStream out;
 		try {
-			out = new FileOutputStream( new File("C:\\Users\\This pc\\Downloads\\student_details" + year + ".xlsx"));
+			out = new FileOutputStream( new File("C:\\Users\\sancsaxe\\Downloads\\student_details" + year + ".xlsx"));
 			 
 	        workbook.write(out);
 	        out.close();
@@ -167,7 +167,7 @@ public class GenerateExcelUtil {
        
         FileOutputStream out;
 		try {
-			out = new FileOutputStream( new File("C:\\Users\\This pc\\Downloads\\seating plan.xlsx"));
+			out = new FileOutputStream( new File("C:\\Users\\sancsaxe\\Downloads\\seating plan.xlsx"));
 			 
 			seatingChart.write(out);
 	        out.close();
@@ -425,7 +425,7 @@ public class GenerateExcelUtil {
         // Write the output to a file
         FileOutputStream out;
 		try {
-			out = new FileOutputStream( new File("C:\\Users\\This pc\\Downloads\\" + shift + " Attendance plan.xlsx"));
+			out = new FileOutputStream( new File("C:\\Users\\sancsaxe\\Downloads\\" + shift + " Attendance plan.xlsx"));
 			 
 			workbook.write(out);
 	        out.close();
@@ -449,14 +449,15 @@ public class GenerateExcelUtil {
 		headerRow.createCell(1).setCellValue("Room Name");
 		Row dataRow = null;
 		for(int i = 1;i < studentList.size(); i++) {
-			dataRow = spreadsheet.createRow(i+1);
-			dataRow.createCell(0).setCellValue(studentList.get(i).getRollNumber());
-			dataRow.createCell(1).setCellValue(seatingMap.get(studentList.get(i).getRollNumber()));
+			if(seatingMap.get(studentList.get(i).getRollNumber()) != null || seatingMap.get(studentList.get(i).getRollNumber()) != "null" || seatingMap.get(studentList.get(i).getRollNumber()) != "") {
+				dataRow = spreadsheet.createRow(i+1);
+				dataRow.createCell(0).setCellValue(studentList.get(i).getRollNumber());
+				dataRow.createCell(1).setCellValue(seatingMap.get(studentList.get(i).getRollNumber()));
+			}
 		}
-		
 		 FileOutputStream out;
 			try {
-				out = new FileOutputStream( new File("C:\\Users\\This pc\\Downloads\\" + shift + "-Seating List.xlsx"));
+				out = new FileOutputStream( new File("C:\\Users\\sancsaxe\\Downloads\\" + shift + "-Seating List.xlsx"));
 				 
 				workbook.write(out);
 		        out.close();
