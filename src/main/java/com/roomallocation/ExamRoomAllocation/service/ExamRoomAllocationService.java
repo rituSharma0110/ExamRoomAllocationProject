@@ -1,7 +1,5 @@
 package com.roomallocation.ExamRoomAllocation.service;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,13 +7,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.DataFormatter;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
@@ -25,7 +16,6 @@ import org.springframework.boot.info.BuildProperties;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -79,21 +69,24 @@ public class ExamRoomAllocationService {
              try {
             	 List<StudentVO> list = readExcelUtil.getStudentList(file, courseSet);
             	 studentList.addAll(list);
-            	 
+            	
              } catch (IOException e) {
 
              }
          });
 		 try {
-			  
-//			  logger.info(studentList.get(1).getCourses().toString());
-//			  logger.info(studentList.get(300).getCourses().toString());
+			 
+//			  logger.info(studentList.get(0).getCourses().toString());
+//			  logger.info(studentList.get(267).getCourses().toString());
 			  
 //			  logger.info(Arrays.toString(courseSet.toArray()));
 			  ArrayList<ArrayList<HallDataVO>> hallDataList = new ArrayList<ArrayList<HallDataVO>>();
 			  XSSFWorkbook workbook = new XSSFWorkbook(hallFile.getInputStream());
 			  ArrayList<DatesheetVO> dateSheetList = (ArrayList<DatesheetVO>) readExcelUtil.getDateSheetList(dateSheetFile);
-			  
+			  ObjectMapper mapper = new ObjectMapper();
+				String batchlist = mapper.writeValueAsString(dateSheetList);
+				
+				System.out.println(batchlist);
 			  XSSFWorkbook seatingChart = new XSSFWorkbook();
 			  for (int i = 0; i < workbook.getNumberOfSheets()-1; i++)
 			  {
@@ -106,6 +99,8 @@ public class ExamRoomAllocationService {
 				  for(int j = 0 ; j < dateSheetList.size(); j++) {
 						if(dateSheetList.get(j).getShift()!= null) {
 							if(dateSheetList.get(j).getShift().equals(String.valueOf(i+1))) {
+								logger.info(String.valueOf(dateSheetList.size()));
+								logger.info(dateSheetList.get(j).getBatchName());
 								batch.add(dateSheetList.get(j).getBatchName());
 								batchSub.add(dateSheetList.get(j).getSubjectCode());
 								startTime = dateSheetList.get(j).getStartTime();
@@ -115,6 +110,8 @@ public class ExamRoomAllocationService {
 						
 					}
 				  }
+					
+
 				  shift.append((i+1) + " ").append(dateSheetList.get(1).getDate().replace("/", "-") + " ");
 				  XSSFSheet sheet = workbook.getSheetAt(i);
 				  ArrayList<HallDataVO> list  = readExcelUtil.getHallDataList(sheet);
@@ -134,7 +131,7 @@ public class ExamRoomAllocationService {
 				  
 			  }
 			  
-			  ObjectMapper mapper = new ObjectMapper();
+//			  ObjectMapper mapper = new ObjectMapper();
 //			  String dateList = mapper.writeValueAsString(dateSheetList);
 //			  String hallList = mapper.writeValueAsString(hallDataList);
 //			  logger.info(dateList);

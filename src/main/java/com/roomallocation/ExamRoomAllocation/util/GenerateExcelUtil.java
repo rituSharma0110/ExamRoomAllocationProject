@@ -21,13 +21,13 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.roomallocation.ExamRoomAllocation.vo.AlgoOutputVO;
 import com.roomallocation.ExamRoomAllocation.vo.DatesheetVO;
 import com.roomallocation.ExamRoomAllocation.vo.HallDataVO;
 import com.roomallocation.ExamRoomAllocation.vo.StudentOutputVO;
 import com.roomallocation.ExamRoomAllocation.vo.StudentVO;
 
-import io.github.millij.poi.util.Spreadsheet;
 
 @Component
 public class GenerateExcelUtil {
@@ -54,7 +54,7 @@ public class GenerateExcelUtil {
 			cell.setCellValue(heading.get(i));
         }
         
-        for(int i = 1; i < studentList.size(); i++) {
+        for(int i = 0; i < studentList.size(); i++) {
         	Row dataRow = spreadsheet.createRow(i + 1);
         	dataRow.createCell(0).setCellValue(String.valueOf((i+1)));
         	dataRow.createCell(1).setCellValue(studentList.get(i).getName());
@@ -81,7 +81,7 @@ public class GenerateExcelUtil {
         
         FileOutputStream out;
 		try {
-			out = new FileOutputStream( new File("C:\\Users\\sancsaxe\\Downloads\\student_details" + year + ".xlsx"));
+			out = new FileOutputStream( new File("C:\\Users\\This pc\\Downloads\\student_details" + year + ".xlsx"));
 			 
 	        workbook.write(out);
 	        out.close();
@@ -98,7 +98,7 @@ public class GenerateExcelUtil {
 	
 	public byte [] seatingChart(MultiValueMap<String, List<String>> outputMap, ArrayList<String> batch, 
 			ArrayList<String> batchSub, String shift, XSSFWorkbook seatingChart, String startTime, 
-			String endTime, String examDate, List<StudentVO> studentList, MultiValueMap<String, List<String>> outputMap2) {
+			String endTime, String examDate, List<StudentVO> studentList, MultiValueMap<String, List<String>> outputMap2) throws JsonProcessingException {
 		
         
         XSSFSheet sheet = seatingChart.createSheet(shift);
@@ -123,7 +123,8 @@ public class GenerateExcelUtil {
 			Cell cell = firstHeaderRow.createCell(j);
 			cell.setCellValue(batch.get(i));
         }
-        
+        Cell totalCell = firstHeaderRow.createCell(batch.size()+3);
+        totalCell.setCellValue("TOTAL");
         j=2;
         for (int i = 0 ; i < batchSub.size(); i++, j++) {
         	Cell cell = secHeaderRow.createCell(j);
@@ -147,6 +148,7 @@ public class GenerateExcelUtil {
         int l = 5;
         MultiValueMap<String, List<String>>  valueMap = outputMap;
         for (int k = 0 ; k< valueMap.size(); k++, l++) {
+        int total = 0;
     	Row dataRow = sheet.createRow(l);
     	dataRow.createCell(1).setCellValue(valueMap.keySet().toArray()[k].toString());
         	for (int i = 0 ; i < batchSub.size(); i++) {
@@ -156,18 +158,20 @@ public class GenerateExcelUtil {
         			valString = valString.replace(",","");
         			valString = valString.replace("]", "");
         			int val = Integer.valueOf(valString);
+        			total += val;
         			if(val!=0) {
         				dataRow.createCell(2+i).setCellValue(val);
         			}
         		}
 	        }
+        	dataRow.createCell(3+batch.size()).setCellValue(total);
         }
         
        
        
         FileOutputStream out;
 		try {
-			out = new FileOutputStream( new File("C:\\Users\\sancsaxe\\Downloads\\seating plan.xlsx"));
+			out = new FileOutputStream( new File("C:\\Users\\This pc\\Downloads\\Seating plan.xlsx"));
 			 
 			seatingChart.write(out);
 	        out.close();
@@ -425,7 +429,7 @@ public class GenerateExcelUtil {
         // Write the output to a file
         FileOutputStream out;
 		try {
-			out = new FileOutputStream( new File("C:\\Users\\sancsaxe\\Downloads\\" + shift + " Attendance plan.xlsx"));
+			out = new FileOutputStream( new File("C:\\Users\\This pc\\Downloads\\" + shift + " Attendance plan.xlsx"));
 			 
 			workbook.write(out);
 	        out.close();
@@ -457,7 +461,7 @@ public class GenerateExcelUtil {
 		}
 		 FileOutputStream out;
 			try {
-				out = new FileOutputStream( new File("C:\\Users\\sancsaxe\\Downloads\\" + shift + "-Seating List.xlsx"));
+				out = new FileOutputStream( new File("C:\\Users\\This pc\\Downloads\\" + shift + "-Seating List.xlsx"));
 				 
 				workbook.write(out);
 		        out.close();
