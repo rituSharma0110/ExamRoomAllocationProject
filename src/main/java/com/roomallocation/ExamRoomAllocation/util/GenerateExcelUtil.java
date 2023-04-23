@@ -288,14 +288,14 @@ public class GenerateExcelUtil {
             				createSeparateSheet(workbook, spreadsheet, footwear, batch, outputList, i, fwRollNo, genderAllowed, j );
             			}
             			if(agriculture.size()!=0) {
-            				XSSFSheet spreadsheet = workbook.createSheet(batch + " F " + roomName);
+            				XSSFSheet spreadsheet = workbook.createSheet(batch + " A " + roomName);
             				addStyleToSheet(spreadsheet, workbook, shift, startTime);
             				createSeparateSheet(workbook, spreadsheet, agriculture, batch, outputList, i, agRollNo, genderAllowed, j );
             			}
 //            			XSSFSheet spreadsheet = workbook.createSheet(batch + " " + roomName);
         			}else {
         				
-            			XSSFSheet spreadsheet = workbook.createSheet(batch + " " + roomName);
+            			XSSFSheet spreadsheet = workbook.createSheet(batch + " " + outputList.get(i).getValues().get(j) + " "+ roomName);
             			// FIRST ROW CREATE WITH STYLES 
             			Row firstRow = spreadsheet.createRow(0);
             			// Create a new font and alter it.

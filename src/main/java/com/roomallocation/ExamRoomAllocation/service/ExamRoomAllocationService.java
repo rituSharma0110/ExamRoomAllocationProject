@@ -47,7 +47,7 @@ public class ExamRoomAllocationService {
 	
 	HashSet<String> courseSet = new HashSet<>();
 
-	MultiValueMap<String, List<String>> outputMap = new LinkedMultiValueMap<>();
+	
 	public String healthCheck() {
 		// TODO Auto-generated method stub
 		final String methodName = "healthCheck()";
@@ -99,8 +99,6 @@ public class ExamRoomAllocationService {
 				  for(int j = 0 ; j < dateSheetList.size(); j++) {
 						if(dateSheetList.get(j).getShift()!= null) {
 							if(dateSheetList.get(j).getShift().equals(String.valueOf(i+1))) {
-								logger.info(String.valueOf(dateSheetList.size()));
-								logger.info(dateSheetList.get(j).getBatchName());
 								batch.add(dateSheetList.get(j).getBatchName());
 								batchSub.add(dateSheetList.get(j).getSubjectCode());
 								startTime = dateSheetList.get(j).getStartTime();
@@ -117,9 +115,10 @@ public class ExamRoomAllocationService {
 				  ArrayList<HallDataVO> list  = readExcelUtil.getHallDataList(sheet);
 				  hallDataList.add(list);
 				  String examDate = dateSheetList.get(1).getDate().replace("/", "-");
-				  outputMap = generateAlgorithm.generateAlgo(dateSheetList, list, studentList);
+				  MultiValueMap<String, List<String>> outputMap = new LinkedMultiValueMap<>();
+				  outputMap = generateAlgorithm.generateAlgo(dateSheetList, list, studentList, (i+1));
 				  
-				  ArrayList<AlgoOutputVO> outputList = generateAlgorithm.generateOutput(dateSheetList, list, studentList);
+				  ArrayList<AlgoOutputVO> outputList = generateAlgorithm.generateOutput(dateSheetList, list, studentList, (i+1));
 				  excelUtil.seatingChart(outputMap, batch, batchSub, new String(shift), seatingChart, startTime, endTime, 
 						  examDate, studentList, outputMap);
 				  

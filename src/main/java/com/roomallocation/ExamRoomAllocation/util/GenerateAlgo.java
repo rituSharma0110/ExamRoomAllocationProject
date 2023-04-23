@@ -22,26 +22,29 @@ import com.roomallocation.ExamRoomAllocation.vo.StudentVO;
 public class GenerateAlgo {
 	
 	public MultiValueMap<String, List<String>> generateAlgo(ArrayList<DatesheetVO> dateSheetList, ArrayList<HallDataVO> hallDataList, 
-			List<StudentVO> studentList) {
+			List<StudentVO> studentList, int shiftNumber) {
 		HashMap<String, Integer> listOfGirlsStudents = new HashMap<>();
 		HashMap<String, Integer> listOfBoysStudents = new HashMap<>();
 		HashMap<String, Integer> hallCapacityForMale = new HashMap<>();
 		HashMap<String, Integer> hallCapacityForFemale = new HashMap<>();
-		for(int i = 1; i < dateSheetList.size(); i++) {
-			int countGirls = 0;
-			int countBoys = 0;
-			for(int j = 1; j<studentList.size(); j++) {
-				for(int k = 1; k< studentList.get(j).getCourses().size(); k++) {
-					if(studentList.get(j).getCourses().get(k).equals(dateSheetList.get(i).getSubjectCode())&&studentList.get(j).getGender().equalsIgnoreCase("m")) {
-					countBoys++;
+		for(int i = 1; i < dateSheetList.size() ; i++) {
+			if(dateSheetList.get(i).getShift().equals(String.valueOf(shiftNumber))) {
+				int countGirls = 0;
+				int countBoys = 0;
+				for(int j = 1; j<studentList.size(); j++) {
+					for(int k = 1; k< studentList.get(j).getCourses().size(); k++) {
+						if(studentList.get(j).getCourses().get(k).equals(dateSheetList.get(i).getSubjectCode())&&studentList.get(j).getGender().equalsIgnoreCase("m")) {
+						countBoys++;
+						}
+						else if(studentList.get(j).getCourses().get(k).equals(dateSheetList.get(i).getSubjectCode())&&studentList.get(j).getGender().equalsIgnoreCase("f")) {
+						countGirls++;
+						}	
 					}
-					else if(studentList.get(j).getCourses().get(k).equals(dateSheetList.get(i).getSubjectCode())&&studentList.get(j).getGender().equalsIgnoreCase("f")) {
-					countGirls++;
-					}	
 				}
+				listOfBoysStudents.put(dateSheetList.get(i).getSubjectCode(), countBoys);
+				listOfGirlsStudents.put(dateSheetList.get(i).getSubjectCode(), countGirls);
 			}
-			listOfBoysStudents.put(dateSheetList.get(i).getSubjectCode(), countBoys);
-			listOfGirlsStudents.put(dateSheetList.get(i).getSubjectCode(), countGirls);
+			
 		}
 
 		
@@ -636,27 +639,29 @@ public class GenerateAlgo {
 	}
 	
 	public ArrayList<AlgoOutputVO> generateOutput(ArrayList<DatesheetVO> dateSheetList, ArrayList<HallDataVO> hallDataList, 
-			List<StudentVO> studentList) {
+			List<StudentVO> studentList, int shiftNumber) {
 		
 		HashMap<String, Integer> listOfGirlsStudents = new HashMap<>();
 		HashMap<String, Integer> listOfBoysStudents = new HashMap<>();
 		HashMap<String, Integer> hallCapacityForMale = new HashMap<>();
 		HashMap<String, Integer> hallCapacityForFemale = new HashMap<>();
 		for(int i = 1; i < dateSheetList.size(); i++) {
-			int countGirls = 0;
-			int countBoys = 0;
-			for(int j = 1; j<studentList.size(); j++) {
-				for(int k = 1; k< studentList.get(j).getCourses().size(); k++) {
-					if(studentList.get(j).getCourses().get(k).equals(dateSheetList.get(i).getSubjectCode())&&studentList.get(j).getGender().equalsIgnoreCase("m")) {
-					countBoys++;
+			if(dateSheetList.get(i).getShift().equals(String.valueOf(shiftNumber))) {
+				int countGirls = 0;
+				int countBoys = 0;
+				for(int j = 1; j<studentList.size(); j++) {
+					for(int k = 1; k< studentList.get(j).getCourses().size(); k++) {
+						if(studentList.get(j).getCourses().get(k).equals(dateSheetList.get(i).getSubjectCode())&&studentList.get(j).getGender().equalsIgnoreCase("m")) {
+						countBoys++;
+						}
+						else if(studentList.get(j).getCourses().get(k).equals(dateSheetList.get(i).getSubjectCode())&&studentList.get(j).getGender().equalsIgnoreCase("f")) {
+						countGirls++;
+						}	
 					}
-					else if(studentList.get(j).getCourses().get(k).equals(dateSheetList.get(i).getSubjectCode())&&studentList.get(j).getGender().equalsIgnoreCase("f")) {
-					countGirls++;
-					}	
 				}
+				listOfBoysStudents.put(dateSheetList.get(i).getSubjectCode(), countBoys);
+				listOfGirlsStudents.put(dateSheetList.get(i).getSubjectCode(), countGirls);
 			}
-			listOfBoysStudents.put(dateSheetList.get(i).getSubjectCode(), countBoys);
-			listOfGirlsStudents.put(dateSheetList.get(i).getSubjectCode(), countGirls);
 		}
 
 		
