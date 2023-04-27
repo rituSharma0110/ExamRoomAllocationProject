@@ -453,13 +453,14 @@ public class GenerateExcelUtil {
 		headerRow.createCell(1).setCellValue("Room Name");
 		Row dataRow = null;
 		for(int i = 1;i < studentList.size(); i++) {
-			if(seatingMap.get(studentList.get(i).getRollNumber()) != null || seatingMap.get(studentList.get(i).getRollNumber()) != "null" || seatingMap.get(studentList.get(i).getRollNumber()) != "") {
+			if(seatingMap.containsKey(studentList.get(i).getRollNumber())) {
 				dataRow = spreadsheet.createRow(i+1);
 				dataRow.createCell(0).setCellValue(studentList.get(i).getRollNumber());
 				dataRow.createCell(1).setCellValue(seatingMap.get(studentList.get(i).getRollNumber()));
 			}
 		}
-		 FileOutputStream out;
+		seatingMap.clear();
+		FileOutputStream out;
 			try {
 				out = new FileOutputStream( new File("C:\\Users\\This pc\\Downloads\\" + shift + "-Seating List.xlsx"));
 				 
