@@ -20,11 +20,13 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.roomallocation.ExamRoomAllocation.vo.AlgoOutputVO;
 import com.roomallocation.ExamRoomAllocation.vo.DatesheetVO;
 import com.roomallocation.ExamRoomAllocation.vo.HallDataVO;
+import com.roomallocation.ExamRoomAllocation.vo.RowColVO;
 import com.roomallocation.ExamRoomAllocation.vo.StudentOutputVO;
 import com.roomallocation.ExamRoomAllocation.vo.StudentVO;
 
@@ -81,7 +83,7 @@ public class GenerateExcelUtil {
         
         FileOutputStream out;
 		try {
-			out = new FileOutputStream( new File("C:\\Users\\This pc\\Downloads\\student_details" + year + ".xlsx"));
+			out = new FileOutputStream( new File("C:\\Users\\sancsaxe\\Downloads\\student_details" + year + ".xlsx"));
 			 
 	        workbook.write(out);
 	        out.close();
@@ -171,7 +173,7 @@ public class GenerateExcelUtil {
        
         FileOutputStream out;
 		try {
-			out = new FileOutputStream( new File("C:\\Users\\This pc\\Downloads\\Seating plan.xlsx"));
+			out = new FileOutputStream( new File("C:\\Users\\sancsaxe\\Downloads\\Seating plan.xlsx"));
 			 
 			seatingChart.write(out);
 	        out.close();
@@ -429,7 +431,7 @@ public class GenerateExcelUtil {
         // Write the output to a file
         FileOutputStream out;
 		try {
-			out = new FileOutputStream( new File("C:\\Users\\This pc\\Downloads\\" + shift + " Attendance plan.xlsx"));
+			out = new FileOutputStream( new File("C:\\Users\\sancsaxe\\Downloads\\" + shift + " Attendance plan.xlsx"));
 			 
 			workbook.write(out);
 	        out.close();
@@ -452,9 +454,11 @@ public class GenerateExcelUtil {
 		headerRow.createCell(0).setCellValue("Roll Number");
 		headerRow.createCell(1).setCellValue("Room Name");
 		Row dataRow = null;
+		int j = 1;
 		for(int i = 1;i < studentList.size(); i++) {
 			if(seatingMap.containsKey(studentList.get(i).getRollNumber())) {
-				dataRow = spreadsheet.createRow(i+1);
+				dataRow = spreadsheet.createRow(j+1);
+				j++;
 				dataRow.createCell(0).setCellValue(studentList.get(i).getRollNumber());
 				dataRow.createCell(1).setCellValue(seatingMap.get(studentList.get(i).getRollNumber()));
 			}
@@ -462,7 +466,7 @@ public class GenerateExcelUtil {
 		seatingMap.clear();
 		FileOutputStream out;
 			try {
-				out = new FileOutputStream( new File("C:\\Users\\This pc\\Downloads\\" + shift + "-Seating List.xlsx"));
+				out = new FileOutputStream( new File("C:\\Users\\sancsaxe\\Downloads\\" + shift + "-Seating List.xlsx"));
 				 
 				workbook.write(out);
 		        out.close();
@@ -583,6 +587,125 @@ public class GenerateExcelUtil {
 		Row absentRow = spreadsheet.createRow(names.size() + 9);
 		absentRow.createCell(0).setCellValue("Absent");
 		spreadsheet.addMergedRegion(new CellRangeAddress(names.size() + 9,names.size() + 9,0,1));
+	}
+
+	public List<RowColVO> createMatrix(ArrayList<AlgoOutputVO> outputList, List<StudentVO> studentList,
+			ArrayList<DatesheetVO> dateSheetList, HashMap<String, String> batchAndCourse, ArrayList<HallDataVO> list,
+			String shift, String startTime, List<RowColVO> matrixList) {
+//		ArrayList<StudentOutputVO> students = new ArrayList<>();
+//		for (int i = 0 ; i< studentList.size(); i++) {
+//			StudentOutputVO student = new StudentOutputVO();
+//			if(studentList.get(i)!=null ) {
+//				student.setStudent(studentList.get(i));
+//				student.setAdded(false);
+//				students.add(student);
+//			}
+//		}
+//		
+//		HashMap<String, String> hallMap = new HashMap<>();
+//		for(int i = 0 ; i < list.size(); i++) {
+//			hallMap.put(list.get(i).getRoomName(), list.get(i).getGender());
+//		}
+//		XSSFWorkbook workbook = new XSSFWorkbook();
+//        for(int i = 0; i < outputList.size(); i++) {
+//        	
+//        	String roomName = outputList.get(i).getClassRoom();
+//        	for(int j = 0 ; j < outputList.get(i).getValues().size(); j++){// this will loop 6 times
+//        		int numberOfStudents = Integer.valueOf(outputList.get(i).getValues().get(j+1));
+//        		if(numberOfStudents != 0) {
+//        			String batch = batchAndCourse.get(outputList.get(i).getValues().get(j));
+//        			
+//        			
+//            			
+//            			
+//            			
+//            			
+//            			headerRow.createCell(0).setCellValue("Class");
+//            			headerRow.createCell(1).setCellValue("Room");
+//            			headerRow.createCell(2).setCellValue("S No.");
+//            			headerRow.createCell(3).setCellValue("Roll No.");
+//            			headerRow.createCell(4).setCellValue("Student Name");
+//            			headerRow.createCell(5).setCellValue("Gender");
+//            			headerRow.createCell(6).setCellValue("Signature");
+//            			headerRow.createCell(7).setCellValue("B-Copies");
+//            			headerRow.createCell(8).setCellValue("Subject");
+//            			
+//            			
+//            			ArrayList<String> names = new ArrayList<>();
+//            			ArrayList<String> rollNo = new ArrayList<>();
+//            			String genderAllowed = hallMap.get(outputList.get(i).getClassRoom());
+//            			for(int studentCounter = 0, l=0 ;  studentCounter<students.size(); studentCounter++) {
+//            				if(!students.get(studentCounter).isAdded() && l<numberOfStudents &&
+//            						students.get(studentCounter).getStudent().getCourses().contains(outputList.get(i).getValues().get(j))) {
+//            					if(students.get(studentCounter).getStudent().getGender().equals(genderAllowed)) {
+//            						names.add(students.get(studentCounter).getStudent().getName());
+//            						rollNo.add(students.get(studentCounter).getStudent().getRollNumber());
+//            						students.get(studentCounter).setAdded(true);
+//            						l++;
+//            						
+//            					}
+//            				}
+//            			}
+//            			
+//            			Row dataRow = null;
+//            			for (int rowCounter = 0 ; rowCounter< names.size(); rowCounter++) {
+//            				dataRow = spreadsheet.createRow(rowCounter+5);
+//            				dataRow.createCell(0).setCellValue(String.valueOf(batch));
+//            				dataRow.createCell(1).setCellValue(outputList.get(i).getClassRoom());
+//            				dataRow.createCell(2).setCellValue(rowCounter + 1);
+//            				dataRow.createCell(3).setCellValue(names.get(rowCounter));
+//            				dataRow.createCell(4).setCellValue(rollNo.get(rowCounter));
+//            				seatingMap.put( rollNo.get(rowCounter), outputList.get(i).getClassRoom());
+//            				dataRow.createCell(5).setCellValue(genderAllowed);
+//            				dataRow.createCell(6).setCellValue("");
+//            				dataRow.createCell(7).setCellValue("");
+//            				dataRow.createCell(8).setCellValue(outputList.get(i).getValues().get(j));
+//            				
+//            				
+//            				
+//            			}
+//            			
+//        			
+//        		}
+//        		
+//        		int ind = matrixList.indexOf(roomName);
+//    			int rows = Integer.valueOf(matrixList.get(ind).getRows());
+//    			int cols = Integer.valueOf(matrixList.get(ind).getCols());
+//    				
+//        			XSSFSheet spreadsheet = workbook.createSheet( "Matrix - " + roomName);
+//        			// FIRST ROW CREATE WITH STYLES 
+//        			
+//        			Row headerRow = spreadsheet.createRow(0);
+//        			Font headerfont = workbook.createFont();
+//        			headerfont.setBold(true);
+//        			
+//        			for(int l = 0 ;l< cols; l++) {
+//        				headerRow.createCell(l+2).setCellValue("Col-" + l);
+//        				for(int k=0; k< rows; k++) {
+//        					
+//        				}
+//        			}
+//        		j++;
+//        		
+//            
+//        	}
+//        }
+//        
+//        // Write the output to a file
+//        FileOutputStream out;
+//		try {
+//			out = new FileOutputStream( new File("C:\\Users\\sancsaxe\\Downloads\\" + shift + " Matrix plan.xlsx"));
+//			 
+//			workbook.write(out);
+//	        out.close();
+//		} catch (FileNotFoundException e) {
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+        
+		return null;
+		
 	}
 
 }

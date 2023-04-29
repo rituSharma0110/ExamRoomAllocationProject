@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.roomallocation.ExamRoomAllocation.service.ExamRoomAllocationService;
 import com.roomallocation.ExamRoomAllocation.vo.*;
 
@@ -432,6 +433,72 @@ public class ReadExcelUtil {
 	   	 }
 	   	
 		return studentList;
+	}
+
+	public List<RowColVO> getMatrix(MultipartFile matrixFile) {
+		try {
+			  XSSFWorkbook workbook = new XSSFWorkbook(matrixFile.getInputStream());
+			  XSSFSheet worksheet = workbook.getSheetAt(0);
+			  
+			  DataFormatter formatter = new DataFormatter();
+			  
+			  //Getting number of rows in a sheet
+			  int rows = worksheet.getLastRowNum();
+			  System.out.println(rows);
+			  
+			  //Initializing student list of Student VO object 
+			  List<RowColVO> rowColList = new ArrayList<>();
+			  
+			  // looping through each row
+			  for(int rowCounter = 0; rowCounter<rows ; rowCounter++) {
+				  // Getting student data of each roll number (each row)
+				  RowColVO rowColVO = new RowColVO();
+				  XSSFRow row = worksheet.getRow(rowCounter);
+				  XSSFRow firstRow = worksheet.getRow(0);
+				  int cols = worksheet.getRow(rowCounter).getLastCellNum();
+				  for(int colCounter = 0; colCounter<cols ; colCounter++) {
+					  XSSFCell cell =  row.getCell(colCounter);
+//					  logger.info("Inside read excel util");
+					  // to skip error when col is null
+					  if(cell==null) {
+						  
+					  }else {
+						 
+						 //First cell object to get headers 
+						  XSSFCell firstCell = firstRow.getCell(colCounter);
+						 if(firstCell==null) {
+							 continue;
+						 }
+						 
+						 //Getting values from each col
+						 if(firstCell.getStringCellValue().equals("Room Name")) {
+							 rowColVO.setRoomName(formatter.formatCellValue(cell));
+						 }
+						 
+						 if(firstCell.getStringCellValue().equals("Rows")) {
+							 rowColVO.setRows((formatter.formatCellValue(cell)));
+						 }
+						 
+						 if(firstCell.getStringCellValue().equals("Columns")) {
+							 rowColVO.setCols(formatter.formatCellValue(cell));
+						 }
+						 
+					  }
+					
+				  }
+				  rowColList.add(rowCounter, rowColVO);
+				 
+				
+			  }
+			  ObjectMapper mapper = new ObjectMapper();
+			  System.out.println(mapper.writeValueAsString(rowColList));
+			  return rowColList;
+	  
+		} catch (Exception e) {
+			  logger.error(e.getMessage());
+			
+		}
+		 return null;
 	}
 	
 

@@ -62,13 +62,14 @@ public class ExamRoomAllocationController {
 	public ResponseEntity<String> generateSeatingArrangement(
 			@RequestParam("file") MultipartFile [] files,
 			@RequestParam("dateSheetFile") MultipartFile dateSheetFile,
-			@RequestParam("hallFile") MultipartFile hallFile ){
+			@RequestParam("hallFile") MultipartFile hallFile,
+			@RequestParam("matrixFile") MultipartFile matrixFile){
 		final String methodName = "generateSeatingArrangement()";
 		logger.info("{} : Generate Seating Arrangement ",  methodName);
 		String response = new String();
 		try {
 			
-			response = examRoomAllocationService.generateSeatingArrangement(files, dateSheetFile, hallFile);
+			response = examRoomAllocationService.generateSeatingArrangement(files, dateSheetFile, hallFile, matrixFile);
 		} catch (Exception e) {
 			return new ResponseEntity<String>(response,HttpStatus.INTERNAL_SERVER_ERROR);
 		}

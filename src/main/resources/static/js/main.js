@@ -6,6 +6,7 @@ function onUpload() {
    	}
     fd.append('dateSheetFile', $('#dateSheet')[0].files[0]);
     fd.append('hallFile', $('#hallData')[0].files[0]);
+    fd.append('matrixFile', $('#matrixFile')[0].files[0])
     console.log(fd)
     var xmlhttp1;
   try {
