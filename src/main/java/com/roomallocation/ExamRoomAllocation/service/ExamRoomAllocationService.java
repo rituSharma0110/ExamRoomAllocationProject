@@ -132,7 +132,7 @@ public class ExamRoomAllocationService {
 				  
 				  ArrayList<AlgoOutputVO> outputList = generateAlgorithm.generateOutput(dateSheetList, list, studentList, (i+1));
 				  excelUtil.seatingChart(outputMap, batch, batchSub, new String(shift), seatingChart, startTime, endTime, 
-						  examDate, studentList, outputMap);
+						  examDate, studentList, list);
 				  
 				  
 				  excelUtil.createAttendanceList(outputList, studentList, dateSheetList, batchAndCourse, list, new String(shift),

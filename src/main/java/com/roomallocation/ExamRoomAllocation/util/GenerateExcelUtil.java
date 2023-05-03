@@ -15,17 +15,16 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.ss.util.RegionUtil;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.roomallocation.ExamRoomAllocation.vo.AlgoOutputVO;
 import com.roomallocation.ExamRoomAllocation.vo.DatesheetVO;
 import com.roomallocation.ExamRoomAllocation.vo.HallDataVO;
@@ -104,16 +103,50 @@ public class GenerateExcelUtil {
 	
 	public byte [] seatingChart(MultiValueMap<String, List<String>> outputMap, ArrayList<String> batch, 
 			ArrayList<String> batchSub, String shift, XSSFWorkbook seatingChart, String startTime, 
-			String endTime, String examDate, List<StudentVO> studentList, MultiValueMap<String, List<String>> outputMap2) throws JsonProcessingException {
+			String endTime, String examDate, List<StudentVO> studentList, ArrayList<HallDataVO> list) throws JsonProcessingException {
 		
+		HashMap<String, String> controlContext = new HashMap<>();
+		for(int i = 0 ; i < list.size(); i++) {
+			controlContext.put(list.get(i).getRoomName(), list.get(i).getControlContext());
+		}
         
         XSSFSheet sheet = seatingChart.createSheet(shift);
 		
-		Row firstHeaderRow = sheet.createRow(0);
-		Row secHeaderRow = sheet.createRow(1);
-		Row thirdHeaderRow = sheet.createRow(2);
-		Row fourthHeaderRow = sheet.createRow(3);
-		Row fiftHeaderRow = sheet.createRow(4);
+        Row headingRow = sheet.createRow(0);
+        Font headerFont = seatingChart.createFont();
+        headerFont.setFontHeightInPoints((short)16);
+        headerFont.setFontName("Calibri");
+        headerFont.setBold(true);
+        headerFont.setUnderline((byte) 1);
+        // Fonts are set into a style so create a new one to use.
+        CellStyle firstCellStyle = seatingChart.createCellStyle();
+        firstCellStyle.setFont(headerFont);
+        firstCellStyle.setAlignment(HorizontalAlignment.CENTER);
+        // Create a cell and put a value in it.
+        Cell firsCell = headingRow.createCell(0);
+        firsCell.setCellValue("DEI Faculty Of Engineering");
+        firsCell.setCellStyle(firstCellStyle);
+        
+		Row firstHeaderRow = sheet.createRow(1);
+		Row secHeaderRow = sheet.createRow(2);
+		Row thirdHeaderRow = sheet.createRow(3);
+		Row fourthHeaderRow = sheet.createRow(4);
+		Row fiftHeaderRow = sheet.createRow(5);
+		
+		Font font = seatingChart.createFont();
+        font.setFontName("Calibri");
+        font.setBold(true);
+        // Fonts are set into a style so create a new one to use.
+        CellStyle style = seatingChart.createCellStyle();
+        style.setFont(font);
+        style.setBorderRight(CellStyle.BORDER_MEDIUM);
+        sheet.addMergedRegion(new CellRangeAddress(
+                0, //first row (0-based)
+                0, //last row  (0-based)
+                0, //first column (0-based)
+                batch.size()+2  //last column  (0-based)
+        ));
+        
 		firstHeaderRow.createCell(0).setCellValue("CT 2");
 		firstHeaderRow.createCell(1).setCellValue("Branch");
 		secHeaderRow.createCell(0).setCellValue(examDate);
@@ -124,17 +157,31 @@ public class GenerateExcelUtil {
 		fourthHeaderRow.createCell(1).setCellValue("Girls");
 		fiftHeaderRow.createCell(0).setCellValue(endTime);
 		fiftHeaderRow.createCell(1).setCellValue("Total");
+		
+		for (int i  = 1 ; i < 6 ; i++) {
+			Row headers = sheet.getRow(i);
+			for (int j = 0 ; j < 2; j++) {
+				headers.getCell(j).setCellStyle(style);
+			}
+		}
+		
+		CellStyle otherStyle = seatingChart.createCellStyle();
+        otherStyle.setBorderBottom(CellStyle.BORDER_MEDIUM);
+		
 		int j = 2;
         for (int i = 0; i < batch.size() ; i++,j++) {
 			Cell cell = firstHeaderRow.createCell(j);
 			cell.setCellValue(batch.get(i));
+//			cell.setCellStyle(otherStyle);
         }
-        Cell totalCell = firstHeaderRow.createCell(batch.size()+3);
+        Cell totalCell = firstHeaderRow.createCell(batch.size()+2);
         totalCell.setCellValue("TOTAL");
+        totalCell.setCellStyle(style);
         j=2;
         for (int i = 0 ; i < batchSub.size(); i++, j++) {
         	Cell cell = secHeaderRow.createCell(j);
 			cell.setCellValue(batchSub.get(i));
+			cell.setCellStyle(otherStyle);
 			int girlsCount = 0;
 			int boysCount = 0;
 			for(int k = 0; k < studentList.size(); k++) {
@@ -149,13 +196,31 @@ public class GenerateExcelUtil {
 			fiftHeaderRow.createCell(j).setCellValue(girlsCount + boysCount);
 			
         }
+        secHeaderRow.createCell(batchSub.size() + 2).setCellStyle(otherStyle);;
         
         j = 2;
-        int l = 5;
+        int l = 6;
+        HashSet <String> controlAdded = new HashSet<>();
         MultiValueMap<String, List<String>>  valueMap = outputMap;
         for (int k = 0 ; k< valueMap.size(); k++, l++) {
         int total = 0;
     	Row dataRow = sheet.createRow(l);
+    	if(!controlAdded.contains(controlContext.get(valueMap.keySet().toArray()[k].toString()))) {
+    		controlAdded.add(controlContext.get(valueMap.keySet().toArray()[k].toString()));
+    		sheet.addMergedRegion(new CellRangeAddress(
+                    l, //first row (0-based)
+                    l, //last row  (0-based)
+                    0, //first column (0-based)
+                    batch.size()+2  //last column  (0-based)
+            ));
+    		dataRow.createCell(0).setCellValue(controlContext.get(valueMap.keySet().toArray()[k].toString()));
+            CellStyle controlStyle = seatingChart.createCellStyle();
+    		controlStyle.setAlignment(HorizontalAlignment.CENTER);
+    		controlStyle.setFont(font);
+    		dataRow.getCell(0).setCellStyle(controlStyle);
+    		k--;
+    		continue;
+    	}
     	dataRow.createCell(1).setCellValue(valueMap.keySet().toArray()[k].toString());
         	for (int i = 0 ; i < batchSub.size(); i++) {
         		if( valueMap.values().toArray()[k].toString().contains(batchSub.get(i))) {
@@ -170,9 +235,18 @@ public class GenerateExcelUtil {
         			}
         		}
 	        }
-        	dataRow.createCell(3+batch.size()).setCellValue(total);
+        	dataRow.createCell(2+batch.size()).setCellValue(total);
         }
-        
+        CellRangeAddress regionOne = new CellRangeAddress(1, l, 0, 2+batch.size());
+        CellRangeAddress regionTwo = new CellRangeAddress(6, l, 0, 2+batch.size());
+        RegionUtil.setBorderBottom(CellStyle.BORDER_MEDIUM, regionOne, sheet, seatingChart);
+        RegionUtil.setBorderLeft(CellStyle.BORDER_MEDIUM, regionOne, sheet, seatingChart);
+        RegionUtil.setBorderRight(CellStyle.BORDER_MEDIUM, regionOne, sheet, seatingChart);
+        RegionUtil.setBorderTop(CellStyle.BORDER_MEDIUM, regionOne, sheet, seatingChart);
+        RegionUtil.setBorderBottom(CellStyle.BORDER_MEDIUM, regionTwo, sheet, seatingChart);
+        RegionUtil.setBorderLeft(CellStyle.BORDER_MEDIUM, regionTwo, sheet, seatingChart);
+        RegionUtil.setBorderRight(CellStyle.BORDER_MEDIUM, regionTwo, sheet, seatingChart);
+        RegionUtil.setBorderTop(CellStyle.BORDER_MEDIUM, regionTwo, sheet, seatingChart);
        
        
         FileOutputStream out;
