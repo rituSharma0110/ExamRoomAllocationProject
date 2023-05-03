@@ -122,7 +122,7 @@ public class ExamRoomAllocationService {
 				  }
 					
 
-				  shift.append((i+1) + " ").append(dateSheetList.get(1).getDate().replace("/", "-") + " ");
+				  shift.append((char)(i + 'A') + " ").append(dateSheetList.get(1).getDate().replace("/", "-") + " ");
 				  XSSFSheet sheet = workbook.getSheetAt(i);
 				  ArrayList<HallDataVO> list  = readExcelUtil.getHallDataList(sheet);
 				  hallDataList.add(list);
