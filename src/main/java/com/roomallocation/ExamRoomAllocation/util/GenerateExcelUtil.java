@@ -203,11 +203,14 @@ public class GenerateExcelUtil {
 		}
 		
 		HashMap<String, String> hallMap = new HashMap<>();
+		HashMap<String, String> controlContext = new HashMap<>();
 		for(int i = 0 ; i < list.size(); i++) {
 			hallMap.put(list.get(i).getRoomName(), list.get(i).getGender());
+			controlContext.put(list.get(i).getRoomName(), list.get(i).getControlContext());
 		}
 		
 		XSSFWorkbook workbook = new XSSFWorkbook();
+		int numberOfSheets = 1;
         for(int i = 0; i < outputList.size(); i++) {
         	
         	for(int j = 0 ; j < outputList.get(i).getValues().size(); j++){// this will loop 6 times
@@ -270,34 +273,40 @@ public class GenerateExcelUtil {
             			
 //            			System.out.println(mechanical.size());
             			if(mechanical.size()!=0) {
-            				XSSFSheet spreadsheet = workbook.createSheet(batch + " M " + roomName);
+            				XSSFSheet spreadsheet = workbook.createSheet(controlContext.get(roomName) + " " + numberOfSheets);
+            				numberOfSheets++;
             				addStyleToSheet(spreadsheet, workbook, shift, startTime);
             				createSeparateSheet(workbook, spreadsheet, mechanical, batch, outputList, i, mechRollNo, genderAllowed, j );
             			}
             			if(electrical.size()!=0) {
-            				XSSFSheet spreadsheet = workbook.createSheet(batch + " E " + roomName);
+            				XSSFSheet spreadsheet = workbook.createSheet(controlContext.get(roomName) + " " + numberOfSheets);
+            				numberOfSheets++;
             				addStyleToSheet(spreadsheet, workbook, shift, startTime);
             				createSeparateSheet(workbook, spreadsheet, electrical, batch, outputList, i, elRollNo, genderAllowed, j );
             			}
             			if(civil.size()!=0) {
-            				XSSFSheet spreadsheet = workbook.createSheet(batch + " C " + roomName);
+            				XSSFSheet spreadsheet = workbook.createSheet(controlContext.get(roomName) + " " + numberOfSheets);
+            				numberOfSheets++;
             				addStyleToSheet(spreadsheet, workbook, shift, startTime);
             				createSeparateSheet(workbook, spreadsheet, civil, batch, outputList, i, clRollNo, genderAllowed, j );
             			}
             			if(footwear.size()!=0) {
-            				XSSFSheet spreadsheet = workbook.createSheet(batch + " F " + roomName);
+            				XSSFSheet spreadsheet = workbook.createSheet(controlContext.get(roomName) + " " + numberOfSheets);
+            				numberOfSheets++;
             				addStyleToSheet(spreadsheet, workbook, shift, startTime);
             				createSeparateSheet(workbook, spreadsheet, footwear, batch, outputList, i, fwRollNo, genderAllowed, j );
             			}
             			if(agriculture.size()!=0) {
-            				XSSFSheet spreadsheet = workbook.createSheet(batch + " A " + roomName);
+            				XSSFSheet spreadsheet = workbook.createSheet(controlContext.get(roomName) + " " + numberOfSheets);
+            				numberOfSheets++;
             				addStyleToSheet(spreadsheet, workbook, shift, startTime);
             				createSeparateSheet(workbook, spreadsheet, agriculture, batch, outputList, i, agRollNo, genderAllowed, j );
             			}
 //            			XSSFSheet spreadsheet = workbook.createSheet(batch + " " + roomName);
         			}else {
         				
-            			XSSFSheet spreadsheet = workbook.createSheet(batch + " " + outputList.get(i).getValues().get(j) + " "+ roomName);
+            			XSSFSheet spreadsheet = workbook.createSheet(controlContext.get(roomName) + " " + numberOfSheets);
+            			numberOfSheets++;
             			// FIRST ROW CREATE WITH STYLES 
             			addStyleToSheet(spreadsheet, workbook, shift, startTime);
             			

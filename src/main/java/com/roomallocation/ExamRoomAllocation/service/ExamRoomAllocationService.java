@@ -90,9 +90,9 @@ public class ExamRoomAllocationService {
 			  XSSFWorkbook workbook = new XSSFWorkbook(hallFile.getInputStream());
 			  ArrayList<DatesheetVO> dateSheetList = (ArrayList<DatesheetVO>) readExcelUtil.getDateSheetList(dateSheetFile);
 			  ObjectMapper mapper = new ObjectMapper();
-				String batchlist = mapper.writeValueAsString(dateSheetList);
+//				String batchlist = mapper.writeValueAsString(dateSheetList);
 				
-				System.out.println(batchlist);
+//				System.out.println(batchlist);
 			  XSSFWorkbook seatingChart = new XSSFWorkbook();
 			  for (int i = 0; i < workbook.getNumberOfSheets()-1; i++)
 			  {
