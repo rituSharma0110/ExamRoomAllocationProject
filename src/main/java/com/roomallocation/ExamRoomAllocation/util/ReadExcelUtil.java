@@ -505,5 +505,88 @@ public class ReadExcelUtil {
 		 return null;
 	}
 	
+	
+	public List<SuspendedStuVO> getSuspendList(MultipartFile suspendedStuFile) {
+		try {
+			  XSSFWorkbook workbook = new XSSFWorkbook(suspendedStuFile.getInputStream());
+			  XSSFSheet worksheet = workbook.getSheetAt(0);
+			  
+			  DataFormatter formatter = new DataFormatter();
+			  
+			  //Getting number of rows in a sheet
+			  int rows = worksheet.getLastRowNum();
+			  System.out.println(rows);
+			  
+			  int startRow = 0;
+		   		 for(int i = 0; i <= rows; i ++) {
+		   			XSSFRow row = worksheet.getRow(i); 
+		   			
+		   			if(row == null || row.toString() == "" || row.toString() == "null") {
+		   				continue;
+		   			}
+	   				XSSFCell cell =  row.getCell(0);
+	   				if(cell == null) {
+	   					continue;
+	   				}
+	   				if(formatter.formatCellValue(cell).equals("SL.No.")) {
+	   					startRow = i;
+	   					break;
+		   			}
+		   			 
+		   		 }
+			  
+		   		 System.out.println(startRow);
+			  //Initializing student list of Student VO object 
+			  List<SuspendedStuVO> suspendList = new ArrayList<>();
+			  
+			  // looping through each row
+			  for(int rowCounter = startRow; rowCounter<=rows ; rowCounter++) {
+				  // Getting student data of each roll number (each row)
+				  SuspendedStuVO suspendedVO = new SuspendedStuVO();
+				  XSSFRow row = worksheet.getRow(rowCounter);
+		   		  XSSFRow firstRow = worksheet.getRow(startRow);
+		   		  int cols = worksheet.getRow(rowCounter).getLastCellNum();
+				  System.out.println(cols);
+				  for(int colCounter = 0; colCounter<cols ; colCounter++) {
+					  XSSFCell cell =  row.getCell(colCounter);
+					  if(cell==null) {
+						  
+					  }else {
+						 
+						 //First cell object to get headers 
+						  XSSFCell firstCell = firstRow.getCell(colCounter);
+						 if(firstCell==null) {
+							 continue;
+						 }
+						 
+						 //Getting values from each col
+						 if(firstCell.getStringCellValue().equals("Roll Number")) {
+							 suspendedVO.setRollNo(String.valueOf(formatter.formatCellValue(cell)));
+						 }
+						 
+						 if(firstCell.getStringCellValue().equals("Student Name")) {
+							 suspendedVO.setStudentName((formatter.formatCellValue(cell)));
+						 }
+						 
+					  }
+					
+				  }
+				  
+				  
+				  suspendList.add(suspendedVO);
+				 
+				
+			  }
+			  ObjectMapper mapper = new ObjectMapper();
+			  System.out.println(mapper.writeValueAsString(suspendList));
+			  return suspendList;
+//	  
+		} catch (Exception e) {
+			  logger.error(e.getMessage());
+			
+		}
+		 return null;
+	}
+	
 
 }

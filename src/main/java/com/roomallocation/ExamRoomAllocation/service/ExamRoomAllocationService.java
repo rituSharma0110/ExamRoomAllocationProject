@@ -27,6 +27,7 @@ import com.roomallocation.ExamRoomAllocation.vo.DatesheetVO;
 import com.roomallocation.ExamRoomAllocation.vo.HallDataVO;
 import com.roomallocation.ExamRoomAllocation.vo.RowColVO;
 import com.roomallocation.ExamRoomAllocation.vo.StudentVO;
+import com.roomallocation.ExamRoomAllocation.vo.SuspendedStuVO;
 
 
 @Service
@@ -60,12 +61,17 @@ public class ExamRoomAllocationService {
 		return healthCheck;
 	}
 
-	public String generateSeatingArrangement(MultipartFile[] files, MultipartFile dateSheetFile, MultipartFile hallFile, MultipartFile matrixFile) {
+	public String generateSeatingArrangement(MultipartFile[] files, MultipartFile dateSheetFile, MultipartFile hallFile, MultipartFile matrixFile, MultipartFile suspendedStuFile) {
 //		 final String FILE_NAME = "C:\\Users\\This pc\\Downloads\\B.Tech SM7 1.10.xls";
 		
+		List<RowColVO> matrixList = null;
 		 if(matrixFile != null) {
-			 List<RowColVO> matrixList = readExcelUtil.getMatrix(matrixFile);
+			 matrixList = readExcelUtil.getMatrix(matrixFile);
 			 
+		 }
+		 List<SuspendedStuVO> suspendList = null;
+		 if(suspendedStuFile!=null) {
+			suspendList =  readExcelUtil.getSuspendList(suspendedStuFile);
 		 }
 		
 		 //Initializing student list of Student VO object 
@@ -130,7 +136,7 @@ public class ExamRoomAllocationService {
 				  
 				  
 				  excelUtil.createAttendanceList(outputList, studentList, dateSheetList, batchAndCourse, list, new String(shift),
-						  startTime);
+						  startTime, suspendList);
 				  
 //				  excelUtil.createMatrix(outputList, studentList, dateSheetList, batchAndCourse, list, new String(shift),
 //						  startTime, matrixList);

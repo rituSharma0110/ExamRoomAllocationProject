@@ -9,11 +9,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
+import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -23,12 +25,14 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.roomallocation.ExamRoomAllocation.vo.AlgoOutputVO;
 import com.roomallocation.ExamRoomAllocation.vo.DatesheetVO;
 import com.roomallocation.ExamRoomAllocation.vo.HallDataVO;
 import com.roomallocation.ExamRoomAllocation.vo.RowColVO;
 import com.roomallocation.ExamRoomAllocation.vo.StudentOutputVO;
 import com.roomallocation.ExamRoomAllocation.vo.StudentVO;
+import com.roomallocation.ExamRoomAllocation.vo.SuspendedStuVO;
 
 
 @Component
@@ -191,7 +195,7 @@ public class GenerateExcelUtil {
 	}
 	
 	public byte [] createAttendanceList(ArrayList<AlgoOutputVO> outputList, List<StudentVO> studentList, ArrayList<DatesheetVO> dateSheetList,
-			HashMap<String, String> batchAndCourse, ArrayList<HallDataVO> list, String shift, String startTime) {
+			HashMap<String, String> batchAndCourse, ArrayList<HallDataVO> list, String shift, String startTime, List<SuspendedStuVO> suspendList) {
 		ArrayList<StudentOutputVO> students = new ArrayList<>();
 		for (int i = 0 ; i< studentList.size(); i++) {
 			StudentOutputVO student = new StudentOutputVO();
@@ -208,6 +212,15 @@ public class GenerateExcelUtil {
 			hallMap.put(list.get(i).getRoomName(), list.get(i).getGender());
 			controlContext.put(list.get(i).getRoomName(), list.get(i).getControlContext());
 		}
+		
+		ArrayList<String> suspendedRollNo = new ArrayList<>();
+		if(suspendList!=null) {
+			for(int i = 0 ; i < suspendList.size(); i++) {
+				suspendedRollNo.add(suspendList.get(i).getRollNo());
+			}
+			
+		}
+		
 		
 		XSSFWorkbook workbook = new XSSFWorkbook();
 		int numberOfSheets = 1;
@@ -276,31 +289,31 @@ public class GenerateExcelUtil {
             				XSSFSheet spreadsheet = workbook.createSheet(controlContext.get(roomName) + " " + numberOfSheets);
             				numberOfSheets++;
             				addStyleToSheet(spreadsheet, workbook, shift, startTime);
-            				createSeparateSheet(workbook, spreadsheet, mechanical, batch, outputList, i, mechRollNo, genderAllowed, j );
+            				createSeparateSheet(workbook, spreadsheet, mechanical, batch, outputList, i, mechRollNo, genderAllowed, j, suspendedRollNo );
             			}
             			if(electrical.size()!=0) {
             				XSSFSheet spreadsheet = workbook.createSheet(controlContext.get(roomName) + " " + numberOfSheets);
             				numberOfSheets++;
             				addStyleToSheet(spreadsheet, workbook, shift, startTime);
-            				createSeparateSheet(workbook, spreadsheet, electrical, batch, outputList, i, elRollNo, genderAllowed, j );
+            				createSeparateSheet(workbook, spreadsheet, electrical, batch, outputList, i, elRollNo, genderAllowed, j, suspendedRollNo );
             			}
             			if(civil.size()!=0) {
             				XSSFSheet spreadsheet = workbook.createSheet(controlContext.get(roomName) + " " + numberOfSheets);
             				numberOfSheets++;
             				addStyleToSheet(spreadsheet, workbook, shift, startTime);
-            				createSeparateSheet(workbook, spreadsheet, civil, batch, outputList, i, clRollNo, genderAllowed, j );
+            				createSeparateSheet(workbook, spreadsheet, civil, batch, outputList, i, clRollNo, genderAllowed, j, suspendedRollNo );
             			}
             			if(footwear.size()!=0) {
             				XSSFSheet spreadsheet = workbook.createSheet(controlContext.get(roomName) + " " + numberOfSheets);
             				numberOfSheets++;
             				addStyleToSheet(spreadsheet, workbook, shift, startTime);
-            				createSeparateSheet(workbook, spreadsheet, footwear, batch, outputList, i, fwRollNo, genderAllowed, j );
+            				createSeparateSheet(workbook, spreadsheet, footwear, batch, outputList, i, fwRollNo, genderAllowed, j, suspendedRollNo );
             			}
             			if(agriculture.size()!=0) {
             				XSSFSheet spreadsheet = workbook.createSheet(controlContext.get(roomName) + " " + numberOfSheets);
             				numberOfSheets++;
             				addStyleToSheet(spreadsheet, workbook, shift, startTime);
-            				createSeparateSheet(workbook, spreadsheet, agriculture, batch, outputList, i, agRollNo, genderAllowed, j );
+            				createSeparateSheet(workbook, spreadsheet, agriculture, batch, outputList, i, agRollNo, genderAllowed, j, suspendedRollNo );
             			}
 //            			XSSFSheet spreadsheet = workbook.createSheet(batch + " " + roomName);
         			}else {
@@ -343,9 +356,13 @@ public class GenerateExcelUtil {
             			snoCellStyle.setBorderBottom(BorderStyle.THIN);
             			snoCellStyle.setBorderLeft(BorderStyle.THIN);
             			
+            			CellStyle style = workbook.createCellStyle();
+            			 style.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+            		     style.setFillPattern(CellStyle.SOLID_FOREGROUND);
             			// filling data
             			Row dataRow = null;
             			for (int rowCounter = 0 ; rowCounter< names.size(); rowCounter++) {
+            				
             				dataRow = spreadsheet.createRow(rowCounter+5);
             				dataRow.createCell(0).setCellValue(String.valueOf(batch));
             				dataRow.createCell(1).setCellValue(outputList.get(i).getClassRoom());
@@ -361,6 +378,11 @@ public class GenerateExcelUtil {
             					dataRow.getCell(l).setCellStyle(otherCellStyle);
             				}
             				dataRow.getCell(2).setCellStyle(snoCellStyle);
+            				if(suspendedRollNo.size()!=0 && suspendedRollNo.contains(rollNo.get(rowCounter))) {
+            					for(int l = 0 ; l<=8 ; l++) {
+                					dataRow.getCell(l).setCellStyle(style);
+                				}
+            				}
             				
             			}
             			spreadsheet.autoSizeColumn(1);
@@ -505,7 +527,7 @@ public class GenerateExcelUtil {
 	}
 	
 	public void createSeparateSheet(XSSFWorkbook workbook, XSSFSheet spreadsheet, ArrayList<String> names, String batch,
-			ArrayList<AlgoOutputVO> outputList, int i, ArrayList<String> rollNo, String genderAllowed, int j) {
+			ArrayList<AlgoOutputVO> outputList, int i, ArrayList<String> rollNo, String genderAllowed, int j, ArrayList<String> suspendedRollNo) {
 		
 		Font cellFonts = workbook.createFont();
 		CellStyle otherCellStyle = workbook.createCellStyle();
@@ -523,6 +545,10 @@ public class GenerateExcelUtil {
 		snoCellStyle.setBorderRight(BorderStyle.THIN);
 		snoCellStyle.setBorderBottom(BorderStyle.THIN);
 		snoCellStyle.setBorderLeft(BorderStyle.THIN);
+		
+		CellStyle style = workbook.createCellStyle();
+		 style.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+	     style.setFillPattern(CellStyle.SOLID_FOREGROUND);
 		Row dataRow = null;
 		for (int rowCounter = 0 ; rowCounter< names.size(); rowCounter++) {
 			dataRow = spreadsheet.createRow(rowCounter+5);
@@ -540,6 +566,11 @@ public class GenerateExcelUtil {
 				dataRow.getCell(l).setCellStyle(otherCellStyle);
 			}
 			dataRow.getCell(2).setCellStyle(snoCellStyle);
+			if(suspendedRollNo.size()!=0 && suspendedRollNo.contains(rollNo.get(rowCounter))) {
+				for(int l = 0 ; l<=8 ; l++) {
+					dataRow.getCell(l).setCellStyle(style);
+				}
+			}
 			
 		}
 		spreadsheet.autoSizeColumn(1);
