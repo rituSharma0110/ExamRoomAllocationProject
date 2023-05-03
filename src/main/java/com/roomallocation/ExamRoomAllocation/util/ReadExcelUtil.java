@@ -171,6 +171,10 @@ public class ReadExcelUtil {
 							 hallDatatObj.setIsHallAvailable(formatter.formatCellValue(cell));
 						 }
 						 
+						 if(firstCell.getStringCellValue().equals("Counter")) {
+							 hallDatatObj.setControlContext(formatter.formatCellValue(cell));
+						 }
+						 
 						 
 					  }
 					

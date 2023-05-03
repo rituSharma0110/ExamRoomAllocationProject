@@ -21,6 +21,14 @@ public class HallDataVO {
 	@SheetColumn("Hall Available")
 	private String isHallAvailable;
 	
+	public String getControlContext() {
+		return controlContext;
+	}
+	public void setControlContext(String controlContext) {
+		this.controlContext = controlContext;
+	}
+	private String controlContext;
+	
 	public String getRoomName() {
 		return roomName;
 	}

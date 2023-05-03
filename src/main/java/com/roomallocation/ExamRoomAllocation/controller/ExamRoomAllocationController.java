@@ -63,7 +63,7 @@ public class ExamRoomAllocationController {
 			@RequestParam("file") MultipartFile [] files,
 			@RequestParam("dateSheetFile") MultipartFile dateSheetFile,
 			@RequestParam("hallFile") MultipartFile hallFile,
-			@RequestParam("matrixFile") MultipartFile matrixFile){
+			@RequestParam(value = "matrixFile", required = false) MultipartFile matrixFile){
 		final String methodName = "generateSeatingArrangement()";
 		logger.info("{} : Generate Seating Arrangement ",  methodName);
 		String response = new String();

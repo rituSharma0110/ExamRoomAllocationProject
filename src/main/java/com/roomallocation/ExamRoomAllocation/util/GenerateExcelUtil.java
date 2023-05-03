@@ -83,7 +83,7 @@ public class GenerateExcelUtil {
         
         FileOutputStream out;
 		try {
-			out = new FileOutputStream( new File("C:\\Users\\sancsaxe\\Downloads\\student_details" + year + ".xlsx"));
+			out = new FileOutputStream( new File("C:\\Users\\This pc\\Downloads\\student_details" + year + ".xlsx"));
 			 
 	        workbook.write(out);
 	        out.close();
@@ -173,7 +173,7 @@ public class GenerateExcelUtil {
        
         FileOutputStream out;
 		try {
-			out = new FileOutputStream( new File("C:\\Users\\sancsaxe\\Downloads\\Seating plan.xlsx"));
+			out = new FileOutputStream( new File("C:\\Users\\This pc\\Downloads\\Seating plan.xlsx"));
 			 
 			seatingChart.write(out);
 	        out.close();
@@ -299,68 +299,7 @@ public class GenerateExcelUtil {
         				
             			XSSFSheet spreadsheet = workbook.createSheet(batch + " " + outputList.get(i).getValues().get(j) + " "+ roomName);
             			// FIRST ROW CREATE WITH STYLES 
-            			Row firstRow = spreadsheet.createRow(0);
-            			// Create a new font and alter it.
-            			Font font = workbook.createFont();
-            			font.setFontHeightInPoints((short)16);
-            			font.setFontName("Calibri");
-            			font.setBold(true);
-            			font.setUnderline((byte) 1);
-            			// Fonts are set into a style so create a new one to use.
-            			CellStyle style = workbook.createCellStyle();
-            			style.setFont(font);
-            			style.setAlignment(HorizontalAlignment.CENTER);
-            			// Create a cell and put a value in it.
-            			Cell firsCell = firstRow.createCell(0);
-            			firsCell.setCellValue("DEI Faculty Of Engineering");
-            			firsCell.setCellStyle(style);
-            			
-            			// SECOND ROW CREATE WITH STYLES
-            			Row secRow = spreadsheet.createRow(1);
-            			style.setAlignment(HorizontalAlignment.CENTER);
-            			Cell secCell = secRow.createCell(0);
-            			StringBuilder secondHeader = new StringBuilder("CT-2-");
-            			secondHeader.append(shift + "-");
-            			secondHeader.append(startTime);
-            			secCell.setCellValue(secondHeader.toString());
-            			secCell.setCellStyle(style);
-            			
-            			spreadsheet.addMergedRegion(new CellRangeAddress(
-            					0, //first row (0-based)
-            					0, //last row  (0-based)
-            					0, //first column (0-based)
-            					8  //last column  (0-based)
-            					));
-            			spreadsheet.addMergedRegion(new CellRangeAddress(
-            					1, //first row (0-based)
-            					1, //last row  (0-based)
-            					0, //first column (0-based)
-            					8  //last column  (0-based)
-            					));
-            			//        		System.out.println(batch);
-            			//        		System.out.println(outputList.get(i).getValues().get(j));
-            			Row headerRow = spreadsheet.createRow(4);
-            			Font headerfont = workbook.createFont();
-            			headerfont.setBold(true);
-            			
-            			headerRow.createCell(0).setCellValue("Class");
-            			headerRow.createCell(1).setCellValue("Room");
-            			headerRow.createCell(2).setCellValue("S No.");
-            			headerRow.createCell(3).setCellValue("Roll No.");
-            			headerRow.createCell(4).setCellValue("Student Name");
-            			headerRow.createCell(5).setCellValue("Gender");
-            			headerRow.createCell(6).setCellValue("Signature");
-            			headerRow.createCell(7).setCellValue("B-Copies");
-            			headerRow.createCell(8).setCellValue("Subject");
-            			CellStyle cellStyle = workbook.createCellStyle();
-            			cellStyle.setFont(headerfont);
-            			cellStyle.setBorderTop(BorderStyle.THIN);
-            			cellStyle.setBorderRight(BorderStyle.THIN);
-            			cellStyle.setBorderBottom(BorderStyle.THIN);
-            			cellStyle.setBorderLeft(BorderStyle.THIN);
-            			for(int l = 0; l<=8; l++)
-            				headerRow.getCell(l).setCellStyle(cellStyle);
-            			
+            			addStyleToSheet(spreadsheet, workbook, shift, startTime);
             			
             			Font cellFonts = workbook.createFont();
             			CellStyle otherCellStyle = workbook.createCellStyle();
@@ -386,14 +325,24 @@ public class GenerateExcelUtil {
             				}
             			}
             			
+            			// this is to set style for Sno. col
+            			CellStyle snoCellStyle = workbook.createCellStyle();
+            			snoCellStyle.setAlignment(HorizontalAlignment.CENTER);
+            			snoCellStyle.setFont(cellFonts);
+            			snoCellStyle.setBorderTop(BorderStyle.THIN);
+            			snoCellStyle.setBorderRight(BorderStyle.THIN);
+            			snoCellStyle.setBorderBottom(BorderStyle.THIN);
+            			snoCellStyle.setBorderLeft(BorderStyle.THIN);
+            			
+            			// filling data
             			Row dataRow = null;
             			for (int rowCounter = 0 ; rowCounter< names.size(); rowCounter++) {
             				dataRow = spreadsheet.createRow(rowCounter+5);
             				dataRow.createCell(0).setCellValue(String.valueOf(batch));
             				dataRow.createCell(1).setCellValue(outputList.get(i).getClassRoom());
             				dataRow.createCell(2).setCellValue(rowCounter + 1);
-            				dataRow.createCell(3).setCellValue(names.get(rowCounter));
-            				dataRow.createCell(4).setCellValue(rollNo.get(rowCounter));
+            				dataRow.createCell(4).setCellValue(names.get(rowCounter));
+            				dataRow.createCell(3).setCellValue(rollNo.get(rowCounter));
             				seatingMap.put( rollNo.get(rowCounter), outputList.get(i).getClassRoom());
             				dataRow.createCell(5).setCellValue(genderAllowed);
             				dataRow.createCell(6).setCellValue("");
@@ -402,10 +351,12 @@ public class GenerateExcelUtil {
             				for(int l = 0 ; l<=8 ; l++) {
             					dataRow.getCell(l).setCellStyle(otherCellStyle);
             				}
-            				
+            				dataRow.getCell(2).setCellStyle(snoCellStyle);
             				
             			}
-            			
+            			spreadsheet.autoSizeColumn(1);
+            			spreadsheet.autoSizeColumn(2);
+            			spreadsheet.setColumnWidth(4, 5000);
             			Row totalRow = spreadsheet.createRow(names.size() + 7);
             			totalRow.createCell(0).setCellValue("Total");
             			totalRow.createCell(7).setCellValue("Invigilator's Sign");
@@ -431,7 +382,7 @@ public class GenerateExcelUtil {
         // Write the output to a file
         FileOutputStream out;
 		try {
-			out = new FileOutputStream( new File("C:\\Users\\sancsaxe\\Downloads\\" + shift + " Attendance plan.xlsx"));
+			out = new FileOutputStream( new File("C:\\Users\\This pc\\Downloads\\" + shift + " Attendance plan.xlsx"));
 			 
 			workbook.write(out);
 	        out.close();
@@ -466,7 +417,7 @@ public class GenerateExcelUtil {
 		seatingMap.clear();
 		FileOutputStream out;
 			try {
-				out = new FileOutputStream( new File("C:\\Users\\sancsaxe\\Downloads\\" + shift + "-Seating List.xlsx"));
+				out = new FileOutputStream( new File("C:\\Users\\This pc\\Downloads\\" + shift + "-Seating List.xlsx"));
 				 
 				workbook.write(out);
 		        out.close();
@@ -555,14 +506,22 @@ public class GenerateExcelUtil {
 		otherCellStyle.setBorderBottom(BorderStyle.THIN);
 		otherCellStyle.setBorderLeft(BorderStyle.THIN);
 		
+		// this is to set style for Sno. col
+		CellStyle snoCellStyle = workbook.createCellStyle();
+		snoCellStyle.setAlignment(HorizontalAlignment.CENTER);
+		snoCellStyle.setFont(cellFonts);
+		snoCellStyle.setBorderTop(BorderStyle.THIN);
+		snoCellStyle.setBorderRight(BorderStyle.THIN);
+		snoCellStyle.setBorderBottom(BorderStyle.THIN);
+		snoCellStyle.setBorderLeft(BorderStyle.THIN);
 		Row dataRow = null;
 		for (int rowCounter = 0 ; rowCounter< names.size(); rowCounter++) {
 			dataRow = spreadsheet.createRow(rowCounter+5);
 			dataRow.createCell(0).setCellValue(String.valueOf(batch));
 			dataRow.createCell(1).setCellValue(outputList.get(i).getClassRoom());
 			dataRow.createCell(2).setCellValue(rowCounter + 1);
-			dataRow.createCell(3).setCellValue(names.get(rowCounter));
-			dataRow.createCell(4).setCellValue(rollNo.get(rowCounter));
+			dataRow.createCell(4).setCellValue(names.get(rowCounter));
+			dataRow.createCell(3).setCellValue(rollNo.get(rowCounter));
 			seatingMap.put( rollNo.get(rowCounter), outputList.get(i).getClassRoom());
 			dataRow.createCell(5).setCellValue(genderAllowed);
 			dataRow.createCell(6).setCellValue("");
@@ -571,10 +530,12 @@ public class GenerateExcelUtil {
 			for(int l = 0 ; l<=8 ; l++) {
 				dataRow.getCell(l).setCellStyle(otherCellStyle);
 			}
-			
+			dataRow.getCell(2).setCellStyle(snoCellStyle);
 			
 		}
-		
+		spreadsheet.autoSizeColumn(1);
+		spreadsheet.autoSizeColumn(2);
+		spreadsheet.setColumnWidth(4, 5000);
 		Row totalRow = spreadsheet.createRow(names.size() + 7);
 		totalRow.createCell(0).setCellValue("Total");
 		totalRow.createCell(7).setCellValue("Invigilator's Sign");
@@ -694,7 +655,7 @@ public class GenerateExcelUtil {
 //        // Write the output to a file
 //        FileOutputStream out;
 //		try {
-//			out = new FileOutputStream( new File("C:\\Users\\sancsaxe\\Downloads\\" + shift + " Matrix plan.xlsx"));
+//			out = new FileOutputStream( new File("C:\\Users\\This pc\\Downloads\\" + shift + " Matrix plan.xlsx"));
 //			 
 //			workbook.write(out);
 //	        out.close();
