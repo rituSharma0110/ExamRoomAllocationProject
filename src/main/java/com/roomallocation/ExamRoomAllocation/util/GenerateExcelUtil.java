@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -705,25 +706,28 @@ public class GenerateExcelUtil {
 			headerfont.setBold(true);
 			Row dataRow = null;
 			
-			ArrayList<String> names = new ArrayList<>();
-			ArrayList<String> rollNo = new ArrayList<>();
-			ArrayList<String> subjectCode = new ArrayList<>();
-			
+			HashMap<Integer, String> names = new HashMap<>();
+			HashMap<Integer, String> rollNo = new HashMap<>();
+			HashMap<Integer, String> subjectCode = new HashMap<>();
+			HashMap<String, String> map = new HashMap<>();
+			int numberOfStudents = 0;
+			int totalSub = 0;
         	for(int j = 0 ; j < outputList.get(i).getValues().size(); j++){// this will loop 6 times
-        		int numberOfStudents = Integer.valueOf(outputList.get(i).getValues().get(j+1));
+        		numberOfStudents = Integer.valueOf(outputList.get(i).getValues().get(j+1));
         		if(numberOfStudents != 0) {
-        			String batch = batchAndCourse.get(outputList.get(i).getValues().get(j));
+        			int index = 0;
         			
         			String genderAllowed = hallMap.get(outputList.get(i).getClassRoom());
         			for(int studentCounter = 0, l=0 ;  studentCounter<students.size(); studentCounter++) {
         				if(!students.get(studentCounter).isAdded() && l<numberOfStudents &&
         						students.get(studentCounter).getStudent().getCourses().contains(outputList.get(i).getValues().get(j))) {
         					if(students.get(studentCounter).getStudent().getGender().equals(genderAllowed)) {
-        						names.add(students.get(studentCounter).getStudent().getName());
-        						rollNo.add(students.get(studentCounter).getStudent().getRollNumber());
-        						subjectCode.add(outputList.get(i).getValues().get(j));
+        						names.put(index+totalSub, students.get(studentCounter).getStudent().getName());
+        						rollNo.put(index+totalSub, students.get(studentCounter).getStudent().getRollNumber());
+        						subjectCode.put(index+totalSub, outputList.get(i).getValues().get(j));
         						students.get(studentCounter).setAdded(true);
         						l++;
+        						index+=3;
         						
         					}
         				}
@@ -732,47 +736,29 @@ public class GenerateExcelUtil {
         			
         		}
         		j++;
-        			
-        			
-        			
-//        			for (int rowCounter = 0 ; rowCounter< names.size(); rowCounter++) {
-//        				dataRow = spreadsheet.createRow(rowCounter+5);
-//        				dataRow.createCell(0).setCellValue(String.valueOf(batch));
-//        				dataRow.createCell(1).setCellValue(outputList.get(i).getClassRoom());
-//        				dataRow.createCell(2).setCellValue(rowCounter + 1);
-//        				dataRow.createCell(3).setCellValue(names.get(rowCounter));
-//        				dataRow.createCell(4).setCellValue(rollNo.get(rowCounter));
-//        				seatingMap.put( rollNo.get(rowCounter), outputList.get(i).getClassRoom());
-//        				dataRow.createCell(5).setCellValue(genderAllowed);
-//        				dataRow.createCell(6).setCellValue("");
-//        				dataRow.createCell(7).setCellValue("");
-//        				dataRow.createCell(8).setCellValue(outputList.get(i).getValues().get(j));
-//        				
-//        			}
+        		totalSub++;
         			
             			
         	}
         	for(int l = 0 ;l< cols; l++) {
 				headerRow.createCell(2*l+2).setCellValue("Column-" + (l+1));
 				spreadsheet.setColumnWidth(2*l+2, 5000);
-				for(int k=1; k<= rows; k++) {
-//					dataRow = spreadsheet.createRow(k);
-//					dataRow.createCell(2*l+2).setCellValue("I");
-				}
 			}
-			ArrayList<String> finalList = new ArrayList<>();
-        	for(int l = 0; l <names.size(); l++) {
-        		
-        	}
         	
 			for(int l = 1, counter = 0;l<= rows; l++ ) {
 				dataRow = spreadsheet.createRow(l);
 				for(int k=0 ;k< cols; k++ , counter++) {
 					CellStyle cs = workbook.createCellStyle();
 					cs.setWrapText(true);
-					if(counter<names.size()) {
-						dataRow.createCell(2*k+2).setCellValue(rollNo.get(counter) + " " +subjectCode.get(counter));
-						dataRow.getCell(2*k+2).setCellStyle(cs);
+					if(counter<rows*cols) {
+						if( rollNo.get(counter)==null) {
+							dataRow.createCell(2*k+2).setCellValue("-");
+							dataRow.getCell(2*k+2).setCellStyle(cs);
+						}else {
+							dataRow.createCell(2*k+2).setCellValue(rollNo.get(counter) + " " + subjectCode.get(counter));
+							dataRow.getCell(2*k+2).setCellStyle(cs);
+							
+						}
 					}
 				}
 			}
