@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -19,7 +18,6 @@ import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.RegionUtil;
-import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Component;
@@ -699,7 +697,7 @@ public class GenerateExcelUtil {
 			int rows = Integer.valueOf(matrixList.get(ind).getRows());
 			int cols = Integer.valueOf(matrixList.get(ind).getCols());
 				
-			XSSFSheet spreadsheet = workbook.createSheet( "Matrix - " + roomName );
+			XSSFSheet spreadsheet = workbook.createSheet(controlContext.get(roomName) + " - "  + roomName);
 			
 			Row headerRow = spreadsheet.createRow(0);
 			Font headerfont = workbook.createFont();
@@ -709,7 +707,6 @@ public class GenerateExcelUtil {
 			HashMap<Integer, String> names = new HashMap<>();
 			HashMap<Integer, String> rollNo = new HashMap<>();
 			HashMap<Integer, String> subjectCode = new HashMap<>();
-			HashMap<String, String> map = new HashMap<>();
 			int numberOfStudents = 0;
 			int totalSub = 0;
         	for(int j = 0 ; j < outputList.get(i).getValues().size(); j++){// this will loop 6 times
@@ -733,36 +730,41 @@ public class GenerateExcelUtil {
         				}
         			}
         			
-        			
         		}
         		j++;
         		totalSub++;
-        			
             			
         	}
+        	CellStyle style = workbook.createCellStyle();
+        	style.setWrapText(true);
+        	style.setBorderTop(BorderStyle.THIN);
+        	style.setBorderRight(BorderStyle.THIN);
+        	style.setBorderBottom(BorderStyle.THIN);
+        	style.setBorderLeft(BorderStyle.THIN);
         	for(int l = 0 ;l< cols; l++) {
+        		CellStyle cs = workbook.createCellStyle();
+        		cs.setFont(headerfont);
 				headerRow.createCell(2*l+2).setCellValue("Column-" + (l+1));
+				headerRow.getCell(2*l+2).setCellStyle(cs);
 				spreadsheet.setColumnWidth(2*l+2, 5000);
 			}
         	
 			for(int l = 1, counter = 0;l<= rows; l++ ) {
 				dataRow = spreadsheet.createRow(l);
 				for(int k=0 ;k< cols; k++ , counter++) {
-					CellStyle cs = workbook.createCellStyle();
-					cs.setWrapText(true);
 					if(counter<rows*cols) {
 						if( rollNo.get(counter)==null) {
 							dataRow.createCell(2*k+2).setCellValue("-");
-							dataRow.getCell(2*k+2).setCellStyle(cs);
+							dataRow.getCell(2*k+2).setCellStyle(style);
 						}else {
 							dataRow.createCell(2*k+2).setCellValue(rollNo.get(counter) + " " + subjectCode.get(counter));
-							dataRow.getCell(2*k+2).setCellStyle(cs);
+							dataRow.getCell(2*k+2).setCellStyle(style);
 							
 						}
 					}
 				}
 			}
-        		
+        	
             
         }
         
