@@ -5,39 +5,45 @@
       <link href = "css/styles.css" rel = "stylesheet"/>
       <script src="js/main.js"></script>
       <title>Exam Room Allocation</title>
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-      
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script> 
    </head>
    <body>
 	   <header>
 		   <h1 class="header">Exam Room Allocation</h1>
 	   </header>
       <h4 class="heading">Welcome to The Portal</h4>
-	  <label class="label">Upload the Master Registration file</label>
-	  <form  enctype="multipart/form-data">
-	  <input type="file" id="myfile"  multiple/>
-	  </form>
-	  
-	  <label class="label">Upload the Date Sheet file</label>
-	  <form  enctype="multipart/form-data">
-	  <input type="file" id="dateSheet"/>
-	  </form>
-	  
-	  <label class="label">Upload the Hall Data file</label>
-	  <form  enctype="multipart/form-data">
-	  <input type="file" id="hallData"/>
-	  </form>
-	  
-	  <label class="label">Upload the Suspended Students file</label>
-	  <form  enctype="multipart/form-data">
-	  <input type="file" id="suspendFile"/>
-	  </form>
-	  
-	  <label class="label">Upload the Matrix file</label>
-	  <form  enctype="multipart/form-data">
-	  <input type="file" id="matrixFile"/>
-	  </form>
-	  
+      <div class="grid-container">
+		  <div class="grid-item">
+			  <label class="label">Upload the Master Registration file</label>
+			  <form  enctype="multipart/form-data">
+			  <input type="file" id="myfile"  multiple/>
+			  </form>
+		  </div>
+		  <div class="grid-item">
+			  <label class="label">Upload the Date Sheet file</label>
+			  <form  enctype="multipart/form-data">
+			  <input type="file" id="dateSheet"/>
+			  </form>
+		  </div>	
+		  <div class="grid-item">  
+			  <label class="label">Upload the Hall Data file</label>
+			  <form  enctype="multipart/form-data">
+			  <input type="file" id="hallData"/>
+			  </form>
+		  </div>
+		  <div class="grid-item">
+			  <label class="label">Upload the Suspended Students file</label>
+			  <form  enctype="multipart/form-data">
+			  <input type="file" id="suspendFile"/>
+			  </form>
+		  </div>
+		  <div class="grid-item">
+			  <label class="label">Upload the Matrix file</label>
+			  <form  enctype="multipart/form-data">
+			  <input type="file" id="matrixFile"/>
+			  </form>
+		  </div>
+	  </div>
 	  
 	  <button class="btn" value="Upload" onclick="onUpload()">Upload</button>
       <footer>
