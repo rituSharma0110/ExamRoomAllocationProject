@@ -664,123 +664,135 @@ public class GenerateExcelUtil {
 		spreadsheet.addMergedRegion(new CellRangeAddress(names.size() + 9,names.size() + 9,0,1));
 	}
 
-	public List<RowColVO> createMatrix(ArrayList<AlgoOutputVO> outputList, List<StudentVO> studentList,
+	public void createMatrix(ArrayList<AlgoOutputVO> outputList, List<StudentVO> studentList,
 			ArrayList<DatesheetVO> dateSheetList, HashMap<String, String> batchAndCourse, ArrayList<HallDataVO> list,
 			String shift, String startTime, List<RowColVO> matrixList) {
-//		ArrayList<StudentOutputVO> students = new ArrayList<>();
-//		for (int i = 0 ; i< studentList.size(); i++) {
-//			StudentOutputVO student = new StudentOutputVO();
-//			if(studentList.get(i)!=null ) {
-//				student.setStudent(studentList.get(i));
-//				student.setAdded(false);
-//				students.add(student);
-//			}
-//		}
-//		
-//		HashMap<String, String> hallMap = new HashMap<>();
-//		for(int i = 0 ; i < list.size(); i++) {
-//			hallMap.put(list.get(i).getRoomName(), list.get(i).getGender());
-//		}
-//		XSSFWorkbook workbook = new XSSFWorkbook();
-//        for(int i = 0; i < outputList.size(); i++) {
-//        	
-//        	String roomName = outputList.get(i).getClassRoom();
-//        	for(int j = 0 ; j < outputList.get(i).getValues().size(); j++){// this will loop 6 times
-//        		int numberOfStudents = Integer.valueOf(outputList.get(i).getValues().get(j+1));
-//        		if(numberOfStudents != 0) {
-//        			String batch = batchAndCourse.get(outputList.get(i).getValues().get(j));
-//        			
-//        			
-//            			
-//            			
-//            			
-//            			
-//            			headerRow.createCell(0).setCellValue("Class");
-//            			headerRow.createCell(1).setCellValue("Room");
-//            			headerRow.createCell(2).setCellValue("S No.");
-//            			headerRow.createCell(3).setCellValue("Roll No.");
-//            			headerRow.createCell(4).setCellValue("Student Name");
-//            			headerRow.createCell(5).setCellValue("Gender");
-//            			headerRow.createCell(6).setCellValue("Signature");
-//            			headerRow.createCell(7).setCellValue("B-Copies");
-//            			headerRow.createCell(8).setCellValue("Subject");
-//            			
-//            			
-//            			ArrayList<String> names = new ArrayList<>();
-//            			ArrayList<String> rollNo = new ArrayList<>();
-//            			String genderAllowed = hallMap.get(outputList.get(i).getClassRoom());
-//            			for(int studentCounter = 0, l=0 ;  studentCounter<students.size(); studentCounter++) {
-//            				if(!students.get(studentCounter).isAdded() && l<numberOfStudents &&
-//            						students.get(studentCounter).getStudent().getCourses().contains(outputList.get(i).getValues().get(j))) {
-//            					if(students.get(studentCounter).getStudent().getGender().equals(genderAllowed)) {
-//            						names.add(students.get(studentCounter).getStudent().getName());
-//            						rollNo.add(students.get(studentCounter).getStudent().getRollNumber());
-//            						students.get(studentCounter).setAdded(true);
-//            						l++;
-//            						
-//            					}
-//            				}
-//            			}
-//            			
-//            			Row dataRow = null;
-//            			for (int rowCounter = 0 ; rowCounter< names.size(); rowCounter++) {
-//            				dataRow = spreadsheet.createRow(rowCounter+5);
-//            				dataRow.createCell(0).setCellValue(String.valueOf(batch));
-//            				dataRow.createCell(1).setCellValue(outputList.get(i).getClassRoom());
-//            				dataRow.createCell(2).setCellValue(rowCounter + 1);
-//            				dataRow.createCell(3).setCellValue(names.get(rowCounter));
-//            				dataRow.createCell(4).setCellValue(rollNo.get(rowCounter));
-//            				seatingMap.put( rollNo.get(rowCounter), outputList.get(i).getClassRoom());
-//            				dataRow.createCell(5).setCellValue(genderAllowed);
-//            				dataRow.createCell(6).setCellValue("");
-//            				dataRow.createCell(7).setCellValue("");
-//            				dataRow.createCell(8).setCellValue(outputList.get(i).getValues().get(j));
-//            				
-//            				
-//            				
-//            			}
-//            			
-//        			
-//        		}
-//        		
-//        		int ind = matrixList.indexOf(roomName);
-//    			int rows = Integer.valueOf(matrixList.get(ind).getRows());
-//    			int cols = Integer.valueOf(matrixList.get(ind).getCols());
-//    				
-//        			XSSFSheet spreadsheet = workbook.createSheet( "Matrix - " + roomName);
-//        			// FIRST ROW CREATE WITH STYLES 
-//        			
-//        			Row headerRow = spreadsheet.createRow(0);
-//        			Font headerfont = workbook.createFont();
-//        			headerfont.setBold(true);
-//        			
-//        			for(int l = 0 ;l< cols; l++) {
-//        				headerRow.createCell(l+2).setCellValue("Col-" + l);
-//        				for(int k=0; k< rows; k++) {
-//        					
-//        				}
-//        			}
-//        		j++;
-//        		
-//            
-//        	}
-//        }
-//        
-//        // Write the output to a file
-//        FileOutputStream out;
-//		try {
-//			out = new FileOutputStream( new File("C:\\Users\\This pc\\Downloads\\" + shift + " Matrix plan.xlsx"));
-//			 
-//			workbook.write(out);
-//	        out.close();
-//		} catch (FileNotFoundException e) {
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-        
-		return null;
+		ArrayList<StudentOutputVO> students = new ArrayList<>();
+		for (int i = 0 ; i< studentList.size(); i++) {
+			StudentOutputVO student = new StudentOutputVO();
+			if(studentList.get(i)!=null ) {
+				student.setStudent(studentList.get(i));
+				student.setAdded(false);
+				students.add(student);
+			}
+		}
 		
+		HashMap<String, String> hallMap = new HashMap<>();
+		HashMap<String, String> controlContext = new HashMap<>();
+		for(int i = 0 ; i < list.size(); i++) {
+			hallMap.put(list.get(i).getRoomName(), list.get(i).getGender());
+			controlContext.put(list.get(i).getRoomName(), list.get(i).getControlContext());
+		}
+		XSSFWorkbook workbook = new XSSFWorkbook();
+        for(int i = 0; i < outputList.size(); i++) {
+        	
+        	String roomName = outputList.get(i).getClassRoom();
+        	
+        	int ind = -1;
+			for(int l = 0; l< matrixList.size(); l++ ) {
+				if(matrixList.get(l).getRoomName().equals(roomName)) {
+					ind = l;
+					break;
+				}
+			}
+			int rows = Integer.valueOf(matrixList.get(ind).getRows());
+			int cols = Integer.valueOf(matrixList.get(ind).getCols());
+				
+			XSSFSheet spreadsheet = workbook.createSheet( "Matrix - " + roomName );
+			
+			Row headerRow = spreadsheet.createRow(0);
+			Font headerfont = workbook.createFont();
+			headerfont.setBold(true);
+			Row dataRow = null;
+			
+			ArrayList<String> names = new ArrayList<>();
+			ArrayList<String> rollNo = new ArrayList<>();
+			ArrayList<String> subjectCode = new ArrayList<>();
+			
+        	for(int j = 0 ; j < outputList.get(i).getValues().size(); j++){// this will loop 6 times
+        		int numberOfStudents = Integer.valueOf(outputList.get(i).getValues().get(j+1));
+        		if(numberOfStudents != 0) {
+        			String batch = batchAndCourse.get(outputList.get(i).getValues().get(j));
+        			
+        			String genderAllowed = hallMap.get(outputList.get(i).getClassRoom());
+        			for(int studentCounter = 0, l=0 ;  studentCounter<students.size(); studentCounter++) {
+        				if(!students.get(studentCounter).isAdded() && l<numberOfStudents &&
+        						students.get(studentCounter).getStudent().getCourses().contains(outputList.get(i).getValues().get(j))) {
+        					if(students.get(studentCounter).getStudent().getGender().equals(genderAllowed)) {
+        						names.add(students.get(studentCounter).getStudent().getName());
+        						rollNo.add(students.get(studentCounter).getStudent().getRollNumber());
+        						subjectCode.add(outputList.get(i).getValues().get(j));
+        						students.get(studentCounter).setAdded(true);
+        						l++;
+        						
+        					}
+        				}
+        			}
+        			
+        			
+        		}
+        		j++;
+        			
+        			
+        			
+//        			for (int rowCounter = 0 ; rowCounter< names.size(); rowCounter++) {
+//        				dataRow = spreadsheet.createRow(rowCounter+5);
+//        				dataRow.createCell(0).setCellValue(String.valueOf(batch));
+//        				dataRow.createCell(1).setCellValue(outputList.get(i).getClassRoom());
+//        				dataRow.createCell(2).setCellValue(rowCounter + 1);
+//        				dataRow.createCell(3).setCellValue(names.get(rowCounter));
+//        				dataRow.createCell(4).setCellValue(rollNo.get(rowCounter));
+//        				seatingMap.put( rollNo.get(rowCounter), outputList.get(i).getClassRoom());
+//        				dataRow.createCell(5).setCellValue(genderAllowed);
+//        				dataRow.createCell(6).setCellValue("");
+//        				dataRow.createCell(7).setCellValue("");
+//        				dataRow.createCell(8).setCellValue(outputList.get(i).getValues().get(j));
+//        				
+//        			}
+        			
+            			
+        	}
+        	for(int l = 0 ;l< cols; l++) {
+				headerRow.createCell(2*l+2).setCellValue("Column-" + (l+1));
+				spreadsheet.setColumnWidth(2*l+2, 5000);
+				for(int k=1; k<= rows; k++) {
+//					dataRow = spreadsheet.createRow(k);
+//					dataRow.createCell(2*l+2).setCellValue("I");
+				}
+			}
+			ArrayList<String> finalList = new ArrayList<>();
+        	for(int l = 0; l <names.size(); l++) {
+        		
+        	}
+        	
+			for(int l = 1, counter = 0;l<= rows; l++ ) {
+				dataRow = spreadsheet.createRow(l);
+				for(int k=0 ;k< cols; k++ , counter++) {
+					CellStyle cs = workbook.createCellStyle();
+					cs.setWrapText(true);
+					if(counter<names.size()) {
+						dataRow.createCell(2*k+2).setCellValue(rollNo.get(counter) + " " +subjectCode.get(counter));
+						dataRow.getCell(2*k+2).setCellStyle(cs);
+					}
+				}
+			}
+        		
+            
+        }
+        
+        // Write the output to a file
+        FileOutputStream out;
+		try {
+			out = new FileOutputStream( new File("C:\\Users\\This pc\\Downloads\\" + shift + " Matrix plan.xlsx"));
+			 
+			workbook.write(out);
+	        out.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        
 	}
 
 }

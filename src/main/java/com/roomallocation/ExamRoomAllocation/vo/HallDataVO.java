@@ -21,6 +21,9 @@ public class HallDataVO {
 	@SheetColumn("Hall Available")
 	private String isHallAvailable;
 	
+	// Type is string to keep flow simple
+	private String drawingSeatsAvaliable;
+	
 	public String getControlContext() {
 		return controlContext;
 	}
@@ -58,6 +61,12 @@ public class HallDataVO {
 	}
 	public void setIsHallAvailable(String isHallAvailable) {
 		this.isHallAvailable = isHallAvailable;
+	}
+	public String getDrawingSeatsAvaliable() {
+		return drawingSeatsAvaliable;
+	}
+	public void setDrawingSeatsAvaliable(String drawingSeatsAvaliable) {
+		this.drawingSeatsAvaliable = drawingSeatsAvaliable;
 	}
 	
 	

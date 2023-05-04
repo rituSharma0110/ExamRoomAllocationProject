@@ -93,6 +93,9 @@ public class ReadExcelUtil {
 							 dateSheetObj.setSubjectCode(formatter.formatCellValue(cell));
 						 }
 						 
+						 if(firstCell.getStringCellValue().equals("Drawing Subject")) {
+							 dateSheetObj.setDrawingSubjFlag(formatter.formatCellValue(cell));
+						 }
 					  }
 					
 				  }
@@ -100,6 +103,7 @@ public class ReadExcelUtil {
 				 
 				
 			  }
+			 
 			  return dateSheetList;
 	  
 		} catch (Exception e) {
@@ -173,6 +177,10 @@ public class ReadExcelUtil {
 						 
 						 if(firstCell.getStringCellValue().equals("Control")) {
 							 hallDatatObj.setControlContext(formatter.formatCellValue(cell));
+						 }
+						 
+						 if(firstCell.getStringCellValue().equals("Drawing Seats Available")) {
+							 hallDatatObj.setDrawingSeatsAvaliable(formatter.formatCellValue(cell));
 						 }
 						 
 						 
@@ -280,6 +288,7 @@ public class ReadExcelUtil {
 		   					 if(firstCell.getStringCellValue().equals("Roll Number")) {
 		   						 student.setRollNumber(formatter.formatCellValue(cell));
 		   					 }
+		   					 
 		   					 
 		   				 }
 		   				 

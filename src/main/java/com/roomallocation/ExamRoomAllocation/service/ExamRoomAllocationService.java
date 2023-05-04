@@ -138,8 +138,8 @@ public class ExamRoomAllocationService {
 				  excelUtil.createAttendanceList(outputList, studentList, dateSheetList, batchAndCourse, list, new String(shift),
 						  startTime, suspendList);
 				  
-//				  excelUtil.createMatrix(outputList, studentList, dateSheetList, batchAndCourse, list, new String(shift),
-//						  startTime, matrixList);
+				  excelUtil.createMatrix(outputList, studentList, dateSheetList, batchAndCourse, list, new String(shift),
+						  startTime, matrixList);
 				  
 				  excelUtil.createSeatingList(studentList, new String(shift));
 				  

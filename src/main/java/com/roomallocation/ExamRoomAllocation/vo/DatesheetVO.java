@@ -25,6 +25,8 @@ public class DatesheetVO {
 	@SheetColumn("Subject Code")
 	private String subjectCode;
 	
+	private String drawingSubjFlag;
+	
 	public String getDate() {
 		return date;
 	}
@@ -60,6 +62,12 @@ public class DatesheetVO {
 	}
 	public void setSubjectCode(String subjectCode) {
 		this.subjectCode = subjectCode;
+	}
+	public String getDrawingSubjFlag() {
+		return drawingSubjFlag;
+	}
+	public void setDrawingSubjFlag(String drawingSubjFlag) {
+		this.drawingSubjFlag = drawingSubjFlag;
 	}
 	
 	
