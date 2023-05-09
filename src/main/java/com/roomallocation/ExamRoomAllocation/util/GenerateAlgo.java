@@ -243,31 +243,37 @@ public class GenerateAlgo {
 						listOfGirlsStudents.replace(x, a-(p+1));
 						courseList.add(x);
 						courseList.add(String.valueOf(p+1));
+						count-=(p+1);
 					}
 					else {
 						listOfGirlsStudents.replace(x, 0);
 						courseList.add(x);
 						courseList.add(String.valueOf(a));
+						count-=a;
 					}
 					if(b>=(p)) {
 						listOfGirlsStudents.replace(y, b-p);
 						courseList.add(y);
 						courseList.add(String.valueOf(p));
+						count-=p;
 					}
 					else {
 						listOfGirlsStudents.replace(y, 0);
 						courseList.add(y);
 						courseList.add(String.valueOf(b));
+						count-=b;
 					}
 					if(c>=(p)) {
 						listOfGirlsStudents.replace(z, c-p);
 						courseList.add(z);
 						courseList.add(String.valueOf(p));
+						count-=p;
 					}
 					else {
 						listOfGirlsStudents.replace(z, 0);
 						courseList.add(z);
 						courseList.add(String.valueOf(c));
+						count-=c;
 					}		
 				}
 				else if(r==2){
@@ -275,31 +281,37 @@ public class GenerateAlgo {
 						listOfGirlsStudents.replace(x, a-(p+1));
 						courseList.add(x);
 						courseList.add(String.valueOf((p+1)));
+						count-=(p+1);
 					}
 					else {
 						listOfGirlsStudents.replace(x, 0);
 						courseList.add(x);
 						courseList.add(String.valueOf((a)));
+						count-=a;
 					}
 					if(b>=(p+1)) {
 						listOfGirlsStudents.replace(y, b-(p+1));
 						courseList.add(y);
 						courseList.add(String.valueOf((p+1)));
+						count-=(p+1);
 					}
 					else {
 						listOfGirlsStudents.replace(y, 0);
 						courseList.add(y);
 						courseList.add(String.valueOf((b)));
+						count-=b;
 					}
 					if(c>=(p)) {
 						listOfGirlsStudents.replace(z, c-p);
 						courseList.add(z);
 						courseList.add(String.valueOf((p)));
+						count-=p;
 					}
 					else {
 						listOfGirlsStudents.replace(z, 0);
 						courseList.add(z);
 						courseList.add(String.valueOf((c)));
+						count-=c;
 					}		
 				}
 				else{
@@ -307,31 +319,37 @@ public class GenerateAlgo {
 						listOfGirlsStudents.replace(x, a-p);
 						courseList.add(x);
 						courseList.add(String.valueOf((p)));
+						count-=p;
 					}
 					else {
 						listOfGirlsStudents.replace(x, 0);
 						courseList.add(x);
 						courseList.add(String.valueOf((a)));
+						count-=a;
 					}
 					if(b>=(p)) {
 						listOfGirlsStudents.replace(y, b-p);
 						courseList.add(y);
 						courseList.add(String.valueOf((p)));
+						count-=p;
 					}
 					else {
 						listOfGirlsStudents.replace(y, 0);
 						courseList.add(y);
 						courseList.add(String.valueOf((b)));
+						count-=b;
 					}
 					if(c>=(p)) {
 						listOfGirlsStudents.replace(z, c-p);
 						courseList.add(z);
 						courseList.add(String.valueOf((p)));
+						count-=p;
 					}
 					else {
 						listOfGirlsStudents.replace(z, 0);
 						courseList.add(z);
 						courseList.add(String.valueOf((c)));
+						count-=c;
 					}		
 				}
 			}
@@ -370,21 +388,25 @@ public class GenerateAlgo {
 						listOfGirlsStudents.replace(x, m-(p+1));
 						courseList.add(x);
 						courseList.add(String.valueOf(p+1));
+						count-=(p+1);
 					}
 					else {
 						listOfGirlsStudents.replace(x, 0);
 						courseList.add(x);
 						courseList.add(String.valueOf(m));
+						count-=m;
 					}
 					if(n>=(p)) {
 						listOfGirlsStudents.replace(y, n-p);
 						courseList.add(y);
 						courseList.add(String.valueOf(p));
+						count-=p;
 					}
 					else {
 						listOfGirlsStudents.replace(y, 0);
 						courseList.add(y);
 						courseList.add(String.valueOf(n));
+						count-=n;
 					}	
 				}
 				else{
@@ -392,21 +414,25 @@ public class GenerateAlgo {
 						listOfGirlsStudents.replace(x, m-p);
 						courseList.add(x);
 						courseList.add(String.valueOf((p)));
+						count-=p;
 					}
 					else {
 						listOfGirlsStudents.replace(x, 0);
 						courseList.add(x);
 						courseList.add(String.valueOf((m)));
+						count-=m;
 					}
 					if(n>=(p)) {
 						listOfGirlsStudents.replace(y, n-p);
 						courseList.add(y);
 						courseList.add(String.valueOf((p)));
+						count-=p;
 					}
 					else {
 						listOfGirlsStudents.replace(y, 0);
 						courseList.add(y);
 						courseList.add(String.valueOf((n)));
+						count-=n;
 					}
 				}
 			}
@@ -433,18 +459,25 @@ public class GenerateAlgo {
 						listOfGirlsStudents.replace(x, m-p);
 						courseList.add(x);
 						courseList.add(String.valueOf((p)));
+						count-=p;
 					}
 					else {
 						listOfGirlsStudents.replace(x, 0);
 						courseList.add(x);
 						courseList.add(String.valueOf((m)));
+						count-=m;
 					}
 				}
 			else {
 				break;
 			}
 			outputMap.add(room, courseList);
-			hallCapacityForFemale.remove(room);
+			if(count==0) {
+				hallCapacityForFemale.remove(room);
+			}
+			else {
+				hallCapacityForFemale.replace(room, count);	
+			}
 		}
 		
 		while(hallCapacityForMale.size()!=0) {
@@ -521,36 +554,42 @@ public class GenerateAlgo {
 						courseList.add(x);
 						courseList.add(String.valueOf(p+1));
 	//					outputMap.add(room, courseList);	
+						count-=(p+1);
 					}
 					else {
 						listOfBoysStudents.replace(x, 0);
 						courseList.add(x);
 						courseList.add(String.valueOf(a));
 	//					outputMap.add(room, courseList);
+						count-=a;
 					}
 					if(b>=(p)) {
 						listOfBoysStudents.replace(y, b-p);
 						courseList.add(y);
 						courseList.add(String.valueOf(p));
 	//					outputMap.add(room, courseList);
+						count-=p;
 					}
 					else {
 						listOfBoysStudents.replace(y, 0);
 						courseList.add(y);
 						courseList.add(String.valueOf(b));
 	//					outputMap.add(room, courseList);
+						count-=b;
 					}
 					if(c>=(p)) {
 						listOfBoysStudents.replace(z, c-p);
 						courseList.add(z);
 						courseList.add(String.valueOf(p));
 	//					outputMap.add(room, courseList);
+						count-=p;
 					}
 					else {
 						listOfBoysStudents.replace(z, 0);
 						courseList.add(z);
 						courseList.add(String.valueOf(c));
 	//					outputMap.add(room, courseList);
+						count-=c;
 					}		
 				}
 				else if(r==2){
@@ -559,36 +598,42 @@ public class GenerateAlgo {
 						courseList.add(x);
 						courseList.add(String.valueOf((p+1)));
 	//					outputMap.add(room, courseList);
+						count-=(p+1);
 					}
 					else {
 						listOfBoysStudents.replace(x, 0);
 						courseList.add(x);
 						courseList.add(String.valueOf((a)));
 	//					outputMap.add(room, courseList);
+						count-=a;
 					}
 					if(b>=(p+1)) {
 						listOfBoysStudents.replace(y, b-(p+1));
 						courseList.add(y);
 						courseList.add(String.valueOf((p+1)));
 	//					outputMap.add(room, courseList);
+						count-=(p+1);
 					}
 					else {
 						listOfBoysStudents.replace(y, 0);
 						courseList.add(y);
 						courseList.add(String.valueOf((b)));
 	//					outputMap.add(room, courseList);
+						count-=b;
 					}
 					if(c>=(p)) {
 						listOfBoysStudents.replace(z, c-p);
 						courseList.add(z);
 						courseList.add(String.valueOf((p)));
 	//					outputMap.add(room, courseList);
+						count-=p;
 					}
 					else {
 						listOfBoysStudents.replace(z, 0);
 						courseList.add(z);
 						courseList.add(String.valueOf((c)));
 	//					outputMap.add(room, courseList);
+						count-=c;
 					}		
 				}
 				else{
@@ -597,36 +642,42 @@ public class GenerateAlgo {
 						courseList.add(x);
 						courseList.add(String.valueOf((p)));
 	//					outputMap.add(room, courseList);
+						count-=p;
 					}
 					else {
 						listOfBoysStudents.replace(x, 0);
 						courseList.add(x);
 						courseList.add(String.valueOf((a)));
 	//					outputMap.add(room, courseList);
+						count-=a;
 					}
 					if(b>=(p)) {
 						listOfBoysStudents.replace(y, b-p);
 						courseList.add(y);
 						courseList.add(String.valueOf((p)));
 	//					outputMap.add(room, courseList);
+						count-=p;
 					}
 					else {
 						listOfBoysStudents.replace(y, 0);
 						courseList.add(y);
 						courseList.add(String.valueOf((b)));
 	//					outputMap.add(room, courseList);
+						count-=b;
 					}
 					if(c>=(p)) {
 						listOfBoysStudents.replace(z, c-p);
 						courseList.add(z);
 						courseList.add(String.valueOf((p)));
 	//					outputMap.add(room, courseList);
+						count-=p;
 					}
 					else {
 						listOfBoysStudents.replace(z, 0);
 						courseList.add(z);
 						courseList.add(String.valueOf((c)));
 	//					outputMap.add(room, courseList);
+						count-=c;
 					}		
 				}
 			}
@@ -665,21 +716,25 @@ public class GenerateAlgo {
 						listOfBoysStudents.replace(x, m-(p+1));
 						courseList.add(x);
 						courseList.add(String.valueOf(p+1));
+						count-=(p+1);
 					}
 					else {
 						listOfBoysStudents.replace(x, 0);
 						courseList.add(x);
 						courseList.add(String.valueOf(m));
+						count-=m;
 					}
 					if(n>=(p)) {
 						listOfBoysStudents.replace(y, n-p);
 						courseList.add(y);
 						courseList.add(String.valueOf(p));
+						count-=p;
 					}
 					else {
 						listOfBoysStudents.replace(y, 0);
 						courseList.add(y);
 						courseList.add(String.valueOf(n));
+						count-=n;
 					}	
 				}
 				else{
@@ -687,21 +742,25 @@ public class GenerateAlgo {
 						listOfBoysStudents.replace(x, m-p);
 						courseList.add(x);
 						courseList.add(String.valueOf((p)));
+						count-=p;
 					}
 					else {
 						listOfBoysStudents.replace(x, 0);
 						courseList.add(x);
 						courseList.add(String.valueOf((m)));
+						count-=m;
 					}
 					if(n>=(p)) {
 						listOfBoysStudents.replace(y, n-p);
 						courseList.add(y);
 						courseList.add(String.valueOf((p)));
+						count-=p;
 					}
 					else {
 						listOfBoysStudents.replace(y, 0);
 						courseList.add(y);
 						courseList.add(String.valueOf((n)));
+						count-=n;
 					}
 				}
 			}
@@ -728,11 +787,13 @@ public class GenerateAlgo {
 						listOfBoysStudents.replace(x, m-p);
 						courseList.add(x);
 						courseList.add(String.valueOf((p)));
+						count-=p;
 					}
 					else {
 						listOfBoysStudents.replace(x, 0);
 						courseList.add(x);
 						courseList.add(String.valueOf((m)));
+						count-=m;
 					}
 				}
 			else {
@@ -740,7 +801,12 @@ public class GenerateAlgo {
 			}
 		
 			outputMap.add(room, courseList);
+			if(count==0) {
 			hallCapacityForMale.remove(room);
+			}
+			else {
+				hallCapacityForMale.replace(room, count);	
+			}
 		
 		}
 //		for(Entry<String, List<Object>> m  : outputMap.entrySet()){    
@@ -994,31 +1060,37 @@ while(DHCapacityForFemale.size()!=0) {
 						listOfGirlsStudents.replace(x, a-(p+1));
 						courseList.add(x);
 						courseList.add(String.valueOf(p+1));
+						count-=(p+1);
 					}
 					else {
 						listOfGirlsStudents.replace(x, 0);
 						courseList.add(x);
 						courseList.add(String.valueOf(a));
+						count-=a;
 					}
 					if(b>=(p)) {
 						listOfGirlsStudents.replace(y, b-p);
 						courseList.add(y);
 						courseList.add(String.valueOf(p));
+						count-=p;
 					}
 					else {
 						listOfGirlsStudents.replace(y, 0);
 						courseList.add(y);
 						courseList.add(String.valueOf(b));
+						count-=b;
 					}
 					if(c>=(p)) {
 						listOfGirlsStudents.replace(z, c-p);
 						courseList.add(z);
 						courseList.add(String.valueOf(p));
+						count-=p;
 					}
 					else {
 						listOfGirlsStudents.replace(z, 0);
 						courseList.add(z);
 						courseList.add(String.valueOf(c));
+						count-=c;
 					}		
 				}
 				else if(r==2){
@@ -1026,31 +1098,37 @@ while(DHCapacityForFemale.size()!=0) {
 						listOfGirlsStudents.replace(x, a-(p+1));
 						courseList.add(x);
 						courseList.add(String.valueOf((p+1)));
+						count-=(p+1);
 					}
 					else {
 						listOfGirlsStudents.replace(x, 0);
 						courseList.add(x);
 						courseList.add(String.valueOf((a)));
+						count-=a;
 					}
 					if(b>=(p+1)) {
 						listOfGirlsStudents.replace(y, b-(p+1));
 						courseList.add(y);
 						courseList.add(String.valueOf((p+1)));
+						count-=(p+1);
 					}
 					else {
 						listOfGirlsStudents.replace(y, 0);
 						courseList.add(y);
 						courseList.add(String.valueOf((b)));
+						count-=b;
 					}
 					if(c>=(p)) {
 						listOfGirlsStudents.replace(z, c-p);
 						courseList.add(z);
 						courseList.add(String.valueOf((p)));
+						count-=p;
 					}
 					else {
 						listOfGirlsStudents.replace(z, 0);
 						courseList.add(z);
 						courseList.add(String.valueOf((c)));
+						count-=c;
 					}		
 				}
 				else{
@@ -1058,31 +1136,37 @@ while(DHCapacityForFemale.size()!=0) {
 						listOfGirlsStudents.replace(x, a-p);
 						courseList.add(x);
 						courseList.add(String.valueOf((p)));
+						count-=p;
 					}
 					else {
 						listOfGirlsStudents.replace(x, 0);
 						courseList.add(x);
 						courseList.add(String.valueOf((a)));
+						count-=a;
 					}
 					if(b>=(p)) {
 						listOfGirlsStudents.replace(y, b-p);
 						courseList.add(y);
 						courseList.add(String.valueOf((p)));
+						count-=p;
 					}
 					else {
 						listOfGirlsStudents.replace(y, 0);
 						courseList.add(y);
 						courseList.add(String.valueOf((b)));
+						count-=b;
 					}
 					if(c>=(p)) {
 						listOfGirlsStudents.replace(z, c-p);
 						courseList.add(z);
 						courseList.add(String.valueOf((p)));
+						count-=p;
 					}
 					else {
 						listOfGirlsStudents.replace(z, 0);
 						courseList.add(z);
 						courseList.add(String.valueOf((c)));
+						count-=c;
 					}		
 				}
 			}
@@ -1121,21 +1205,25 @@ while(DHCapacityForFemale.size()!=0) {
 						listOfGirlsStudents.replace(x, m-(p+1));
 						courseList.add(x);
 						courseList.add(String.valueOf(p+1));
+						count-=(p+1);
 					}
 					else {
 						listOfGirlsStudents.replace(x, 0);
 						courseList.add(x);
 						courseList.add(String.valueOf(m));
+						count-=m;
 					}
 					if(n>=(p)) {
 						listOfGirlsStudents.replace(y, n-p);
 						courseList.add(y);
 						courseList.add(String.valueOf(p));
+						count-=p;
 					}
 					else {
 						listOfGirlsStudents.replace(y, 0);
 						courseList.add(y);
 						courseList.add(String.valueOf(n));
+						count-=n;
 					}	
 				}
 				else{
@@ -1143,21 +1231,25 @@ while(DHCapacityForFemale.size()!=0) {
 						listOfGirlsStudents.replace(x, m-p);
 						courseList.add(x);
 						courseList.add(String.valueOf((p)));
+						count-=p;
 					}
 					else {
 						listOfGirlsStudents.replace(x, 0);
 						courseList.add(x);
 						courseList.add(String.valueOf((m)));
+						count-=m;
 					}
 					if(n>=(p)) {
 						listOfGirlsStudents.replace(y, n-p);
 						courseList.add(y);
 						courseList.add(String.valueOf((p)));
+						count-=p;
 					}
 					else {
 						listOfGirlsStudents.replace(y, 0);
 						courseList.add(y);
 						courseList.add(String.valueOf((n)));
+						count-=n;
 					}
 				}
 			}
@@ -1184,11 +1276,13 @@ while(DHCapacityForFemale.size()!=0) {
 						listOfGirlsStudents.replace(x, m-p);
 						courseList.add(x);
 						courseList.add(String.valueOf((p)));
+						count-=p;
 					}
 					else {
 						listOfGirlsStudents.replace(x, 0);
 						courseList.add(x);
 						courseList.add(String.valueOf((m)));
+						count-=m;
 					}
 				}
 			else {
@@ -1199,7 +1293,12 @@ while(DHCapacityForFemale.size()!=0) {
 			valueObject.setValues(courseList);
 			outputList.add(valueObject);
 //			System.out.println(hallCapacity.size());
-			hallCapacityForFemale.remove(room);
+			if(count==0) {
+				hallCapacityForFemale.remove(room);
+			}
+			else{
+				hallCapacityForFemale.replace(room, count);
+			}
 		}
 		
 		while(hallCapacityForMale.size()!=0) {
@@ -1276,36 +1375,42 @@ while(DHCapacityForFemale.size()!=0) {
 						courseList.add(x);
 						courseList.add(String.valueOf(p+1));
 	//					outputMap.add(room, courseList);	
+						count-=(p+1);
 					}
 					else {
 						listOfBoysStudents.replace(x, 0);
 						courseList.add(x);
 						courseList.add(String.valueOf(a));
 	//					outputMap.add(room, courseList);
+						count-=a;
 					}
 					if(b>=(p)) {
 						listOfBoysStudents.replace(y, b-p);
 						courseList.add(y);
 						courseList.add(String.valueOf(p));
 	//					outputMap.add(room, courseList);
+						count-=p;
 					}
 					else {
 						listOfBoysStudents.replace(y, 0);
 						courseList.add(y);
 						courseList.add(String.valueOf(b));
 	//					outputMap.add(room, courseList);
+						count-=b;
 					}
 					if(c>=(p)) {
 						listOfBoysStudents.replace(z, c-p);
 						courseList.add(z);
 						courseList.add(String.valueOf(p));
 	//					outputMap.add(room, courseList);
+						count-=p;
 					}
 					else {
 						listOfBoysStudents.replace(z, 0);
 						courseList.add(z);
 						courseList.add(String.valueOf(c));
 	//					outputMap.add(room, courseList);
+						count-=c;
 					}		
 				}
 				else if(r==2){
@@ -1314,36 +1419,42 @@ while(DHCapacityForFemale.size()!=0) {
 						courseList.add(x);
 						courseList.add(String.valueOf((p+1)));
 	//					outputMap.add(room, courseList);
+						count-=(p+1);
 					}
 					else {
 						listOfBoysStudents.replace(x, 0);
 						courseList.add(x);
 						courseList.add(String.valueOf((a)));
 	//					outputMap.add(room, courseList);
+						count-=a;
 					}
 					if(b>=(p+1)) {
 						listOfBoysStudents.replace(y, b-(p+1));
 						courseList.add(y);
 						courseList.add(String.valueOf((p+1)));
 	//					outputMap.add(room, courseList);
+						count-=(p+1);
 					}
 					else {
 						listOfBoysStudents.replace(y, 0);
 						courseList.add(y);
 						courseList.add(String.valueOf((b)));
 	//					outputMap.add(room, courseList);
+						count-=b;
 					}
 					if(c>=(p)) {
 						listOfBoysStudents.replace(z, c-p);
 						courseList.add(z);
 						courseList.add(String.valueOf((p)));
 	//					outputMap.add(room, courseList);
+						count-=p;
 					}
 					else {
 						listOfBoysStudents.replace(z, 0);
 						courseList.add(z);
 						courseList.add(String.valueOf((c)));
 	//					outputMap.add(room, courseList);
+						count-=c;
 					}		
 				}
 				else{
@@ -1352,36 +1463,42 @@ while(DHCapacityForFemale.size()!=0) {
 						courseList.add(x);
 						courseList.add(String.valueOf((p)));
 	//					outputMap.add(room, courseList);
+						count-=p;
 					}
 					else {
 						listOfBoysStudents.replace(x, 0);
 						courseList.add(x);
 						courseList.add(String.valueOf((a)));
 	//					outputMap.add(room, courseList);
+						count-=a;
 					}
 					if(b>=(p)) {
 						listOfBoysStudents.replace(y, b-p);
 						courseList.add(y);
 						courseList.add(String.valueOf((p)));
 	//					outputMap.add(room, courseList);
+						count-=p;
 					}
 					else {
 						listOfBoysStudents.replace(y, 0);
 						courseList.add(y);
 						courseList.add(String.valueOf((b)));
 	//					outputMap.add(room, courseList);
+						count-=b;
 					}
 					if(c>=(p)) {
 						listOfBoysStudents.replace(z, c-p);
 						courseList.add(z);
 						courseList.add(String.valueOf((p)));
 	//					outputMap.add(room, courseList);
+						count-=p;
 					}
 					else {
 						listOfBoysStudents.replace(z, 0);
 						courseList.add(z);
 						courseList.add(String.valueOf((c)));
 	//					outputMap.add(room, courseList);
+						count-=c;
 					}		
 				}
 			}
@@ -1420,21 +1537,25 @@ while(DHCapacityForFemale.size()!=0) {
 						listOfBoysStudents.replace(x, m-(p+1));
 						courseList.add(x);
 						courseList.add(String.valueOf(p+1));
+						count-=(p+1);
 					}
 					else {
 						listOfBoysStudents.replace(x, 0);
 						courseList.add(x);
 						courseList.add(String.valueOf(m));
+						count-=m;
 					}
 					if(n>=(p)) {
 						listOfBoysStudents.replace(y, n-p);
 						courseList.add(y);
 						courseList.add(String.valueOf(p));
+						count-=p;
 					}
 					else {
 						listOfBoysStudents.replace(y, 0);
 						courseList.add(y);
 						courseList.add(String.valueOf(n));
+						count-=n;
 					}	
 				}
 				else{
@@ -1442,21 +1563,25 @@ while(DHCapacityForFemale.size()!=0) {
 						listOfBoysStudents.replace(x, m-p);
 						courseList.add(x);
 						courseList.add(String.valueOf((p)));
+						count-=p;
 					}
 					else {
 						listOfBoysStudents.replace(x, 0);
 						courseList.add(x);
 						courseList.add(String.valueOf((m)));
+						count-=m;
 					}
 					if(n>=(p)) {
 						listOfBoysStudents.replace(y, n-p);
 						courseList.add(y);
 						courseList.add(String.valueOf((p)));
+						count-=p;
 					}
 					else {
 						listOfBoysStudents.replace(y, 0);
 						courseList.add(y);
 						courseList.add(String.valueOf((n)));
+						count-=n;
 					}
 				}
 			}
@@ -1483,11 +1608,13 @@ while(DHCapacityForFemale.size()!=0) {
 						listOfBoysStudents.replace(x, m-p);
 						courseList.add(x);
 						courseList.add(String.valueOf((p)));
+						count-=p;
 					}
 					else {
 						listOfBoysStudents.replace(x, 0);
 						courseList.add(x);
 						courseList.add(String.valueOf((m)));
+						count-=m;
 					}
 				}
 			else {
@@ -1499,8 +1626,12 @@ while(DHCapacityForFemale.size()!=0) {
 			valueObject.setValues(courseList);
 			outputList.add(valueObject);
 //			System.out.println(hallCapacity.size());
-			hallCapacityForMale.remove(room);
-		
+			if(count==0) {
+				hallCapacityForMale.remove(room);
+			}
+			else {
+				hallCapacityForMale.replace(room, count);
+			}
 		}
 		
 //		while(hallCapacityForFemale.size()!=0) {
