@@ -135,6 +135,9 @@ public class ExamRoomAllocationService {
 				  MultiValueMap<String, List<String>> outputMap = new LinkedMultiValueMap<>();
 				  outputMap = generateAlgorithm.generateAlgo(dateSheetList, list, studentList, (i+1));
 				  
+				  ObjectMapper mapper = new ObjectMapper();
+				  System.out.println(mapper.writeValueAsString(outputMap));
+				  
 				  // Converting output of room allocation algo to list of objects
 				  ArrayList<AlgoOutputVO> outputList = generateAlgorithm.generateOutput(dateSheetList, list, studentList, (i+1));
 				  
