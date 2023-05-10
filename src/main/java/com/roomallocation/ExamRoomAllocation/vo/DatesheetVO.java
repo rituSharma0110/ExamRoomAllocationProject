@@ -25,6 +25,8 @@ public class DatesheetVO {
 	@SheetColumn("Subject Code")
 	private String subjectCode;
 	
+	private String examName;
+	
 	private String drawingSubjFlag;
 	
 	public String getDate() {
@@ -68,6 +70,12 @@ public class DatesheetVO {
 	}
 	public void setDrawingSubjFlag(String drawingSubjFlag) {
 		this.drawingSubjFlag = drawingSubjFlag;
+	}
+	public String getExamName() {
+		return examName;
+	}
+	public void setExamName(String examName) {
+		this.examName = examName;
 	}
 	
 	

@@ -62,13 +62,15 @@ public class ExamRoomAllocationService {
 	}
 
 	public String generateSeatingArrangement(MultipartFile[] files, MultipartFile dateSheetFile, MultipartFile hallFile, MultipartFile matrixFile, MultipartFile suspendedStuFile) {
-//		 final String FILE_NAME = "C:\\Users\\This pc\\Downloads\\B.Tech SM7 1.10.xls";
 		
-		List<RowColVO> matrixList = null;
+		// Getting rows and cols in each class -- optional file
+		 List<RowColVO> matrixList = null;
 		 if(matrixFile != null) {
 			 matrixList = readExcelUtil.getMatrix(matrixFile);
 			 
 		 }
+		 
+		 //Getting suspended students list -- optional file
 		 List<SuspendedStuVO> suspendList = null;
 		 if(suspendedStuFile!=null) {
 			suspendList =  readExcelUtil.getSuspendList(suspendedStuFile);
@@ -77,6 +79,7 @@ public class ExamRoomAllocationService {
 		 //Initializing student list of Student VO object 
 		 List<StudentVO> studentList = new ArrayList<>();
 		
+		 // Reading each master registration file
 		 Arrays.asList(files).stream().forEach(file -> {
              try {
             	 List<StudentVO> list = readExcelUtil.getStudentList(file, courseSet);
@@ -88,19 +91,17 @@ public class ExamRoomAllocationService {
          });
 		 try {
 			 
-//			  logger.info(studentList.get(0).getCourses().toString());
-//			  logger.info(studentList.get(267).getCourses().toString());
-			  
-//			  logger.info(Arrays.toString(courseSet.toArray()));
+			  // Initializing arrayList 
 			  ArrayList<ArrayList<HallDataVO>> hallDataList = new ArrayList<ArrayList<HallDataVO>>();
 			  XSSFWorkbook workbook = new XSSFWorkbook(hallFile.getInputStream());
+			  
+			  // Getting datesheet object list 
 			  ArrayList<DatesheetVO> dateSheetList = (ArrayList<DatesheetVO>) readExcelUtil.getDateSheetList(dateSheetFile);
-			  ObjectMapper mapper = new ObjectMapper();
-//				String batchlist = mapper.writeValueAsString(dateSheetList);
-				
-//				System.out.println(batchlist);
+			  String examName = dateSheetList.get(0).getExamName();
+			  // this loops for each shift
 			  XSSFWorkbook seatingChart = new XSSFWorkbook();
-			  for (int i = 0; i < workbook.getNumberOfSheets()-1; i++)
+			  logger.info(String.valueOf(workbook.getNumberOfSheets()));
+			  for (int i = 0; i < workbook.getNumberOfSheets(); i++)
 			  {
 				  ArrayList<String> batch = new ArrayList<>();
 				  ArrayList<String> batchSub = new ArrayList<>();
@@ -121,38 +122,44 @@ public class ExamRoomAllocationService {
 					}
 				  }
 					
-
-				  shift.append((char)(i + 'A') + " ").append(dateSheetList.get(1).getDate().replace("/", "-") + " ");
+//				  Getting hall data for each shift	
 				  XSSFSheet sheet = workbook.getSheetAt(i);
 				  ArrayList<HallDataVO> list  = readExcelUtil.getHallDataList(sheet);
+				  
+				  // shift name and other variables
+				  shift.append((char)(i + 'A') + " ").append(dateSheetList.get(1).getDate().replace("/", "-") + " ");
 				  hallDataList.add(list);
 				  String examDate = dateSheetList.get(1).getDate().replace("/", "-");
+				  
+				  // Getting output from room allocation algo
 				  MultiValueMap<String, List<String>> outputMap = new LinkedMultiValueMap<>();
 				  outputMap = generateAlgorithm.generateAlgo(dateSheetList, list, studentList, (i+1));
 				  
+				  // Converting output of room allocation algo to list of objects
 				  ArrayList<AlgoOutputVO> outputList = generateAlgorithm.generateOutput(dateSheetList, list, studentList, (i+1));
+				  
+				  // Creating seating chart 
 				  excelUtil.seatingChart(outputMap, batch, batchSub, new String(shift), seatingChart, startTime, endTime, 
-						  examDate, studentList, list);
+						  examDate, studentList, list, examName);
 				  
 				  
+				  // Creates attendance list
 				  excelUtil.createAttendanceList(outputList, studentList, dateSheetList, batchAndCourse, list, new String(shift),
-						  startTime, suspendList);
+						  startTime, suspendList, examName);
 				  
-				  excelUtil.createMatrix(outputList, studentList, dateSheetList, batchAndCourse, list, new String(shift),
-						  startTime, matrixList);
+				  // If matrix list is not null -- creates intra - room seat allocation
+				  if(matrixList != null) {
+					  // creates intra - room seat allocation
+					  excelUtil.createMatrix(outputList, studentList, dateSheetList, batchAndCourse, list, new String(shift),
+							  startTime, matrixList);
+				  }
 				  
+				  
+				  // creating seating display or seating list
 				  excelUtil.createSeatingList(studentList, new String(shift));
 				  
 			  }
 			  
-//			  ObjectMapper mapper = new ObjectMapper();
-//			  String dateList = mapper.writeValueAsString(dateSheetList);
-//			  String hallList = mapper.writeValueAsString(hallDataList);
-//			  logger.info(dateList);
-//			  logger.info(hallList);
-			  
-			 
-//			  
 	  
 		} catch (Exception e) {
 			  logger.error(e.getMessage());

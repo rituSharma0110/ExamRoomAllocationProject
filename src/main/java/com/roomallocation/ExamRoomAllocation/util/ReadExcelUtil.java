@@ -47,12 +47,16 @@ public class ReadExcelUtil {
 			  //Initializing student list of Student VO object 
 			  List<DatesheetVO> dateSheetList = new ArrayList<>();
 			  
+			  XSSFRow headerRow = worksheet.getRow(0);
+			  String examName = headerRow.getCell(0).getStringCellValue();
+			  logger.info(examName);
 			  // looping through each row
-			  for(int rowCounter = 0; rowCounter<rows ; rowCounter++) {
+			  for(int rowCounter = 1; rowCounter<rows ; rowCounter++) {
 				  // Getting student data of each roll number (each row)
 				  DatesheetVO dateSheetObj = new DatesheetVO();
+				  dateSheetObj.setExamName(examName);
 				  XSSFRow row = worksheet.getRow(rowCounter);
-				  XSSFRow firstRow = worksheet.getRow(0);
+				  XSSFRow firstRow = worksheet.getRow(1);
 				  int cols = worksheet.getRow(rowCounter).getLastCellNum();
 				  for(int colCounter = 0; colCounter<cols ; colCounter++) {
 					  XSSFCell cell =  row.getCell(colCounter);
@@ -99,7 +103,7 @@ public class ReadExcelUtil {
 					  }
 					
 				  }
-				  dateSheetList.add(rowCounter, dateSheetObj);
+				  dateSheetList.add(dateSheetObj);
 				 
 				
 			  }

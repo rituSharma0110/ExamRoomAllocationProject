@@ -85,7 +85,7 @@ public class GenerateExcelUtil {
         
         FileOutputStream out;
 		try {
-			out = new FileOutputStream( new File("C:\\Users\\sancsaxe\\Downloads\\student_details" + year + ".xlsx"));
+			out = new FileOutputStream( new File("C:\\Users\\This pc\\Downloads\\student_details" + year + ".xlsx"));
 			 
 	        workbook.write(out);
 	        out.close();
@@ -102,7 +102,7 @@ public class GenerateExcelUtil {
 	
 	public byte [] seatingChart(MultiValueMap<String, List<String>> outputMap, ArrayList<String> batch, 
 			ArrayList<String> batchSub, String shift, XSSFWorkbook seatingChart, String startTime, 
-			String endTime, String examDate, List<StudentVO> studentList, ArrayList<HallDataVO> list) throws JsonProcessingException {
+			String endTime, String examDate, List<StudentVO> studentList, ArrayList<HallDataVO> list, String examName) throws JsonProcessingException {
 		
 		HashMap<String, String> controlContext = new HashMap<>();
 		for(int i = 0 ; i < list.size(); i++) {
@@ -146,7 +146,7 @@ public class GenerateExcelUtil {
                 batch.size()+2  //last column  (0-based)
         ));
         
-		firstHeaderRow.createCell(0).setCellValue("CT 2");
+		firstHeaderRow.createCell(0).setCellValue(examName);
 		firstHeaderRow.createCell(1).setCellValue("Branch");
 		secHeaderRow.createCell(0).setCellValue(examDate);
 		secHeaderRow.createCell(1).setCellValue("Course");
@@ -250,7 +250,7 @@ public class GenerateExcelUtil {
        
         FileOutputStream out;
 		try {
-			out = new FileOutputStream( new File("C:\\Users\\sancsaxe\\Downloads\\Seating plan.xlsx"));
+			out = new FileOutputStream( new File("C:\\Users\\This pc\\Downloads\\Seating plan " + examDate + ".xlsx"));
 			 
 			seatingChart.write(out);
 	        out.close();
@@ -268,7 +268,7 @@ public class GenerateExcelUtil {
 	}
 	
 	public byte [] createAttendanceList(ArrayList<AlgoOutputVO> outputList, List<StudentVO> studentList, ArrayList<DatesheetVO> dateSheetList,
-			HashMap<String, String> batchAndCourse, ArrayList<HallDataVO> list, String shift, String startTime, List<SuspendedStuVO> suspendList) {
+			HashMap<String, String> batchAndCourse, ArrayList<HallDataVO> list, String shift, String startTime, List<SuspendedStuVO> suspendList, String examName) {
 		ArrayList<StudentOutputVO> students = new ArrayList<>();
 		for (int i = 0 ; i< studentList.size(); i++) {
 			StudentOutputVO student = new StudentOutputVO();
@@ -361,31 +361,31 @@ public class GenerateExcelUtil {
             			if(mechanical.size()!=0) {
             				XSSFSheet spreadsheet = workbook.createSheet(controlContext.get(roomName) + " " + numberOfSheets);
             				numberOfSheets++;
-            				addStyleToSheet(spreadsheet, workbook, shift, startTime);
+            				addStyleToSheet(spreadsheet, workbook, shift, startTime, examName);
             				createSeparateSheet(workbook, spreadsheet, mechanical, batch, outputList, i, mechRollNo, genderAllowed, j, suspendedRollNo );
             			}
             			if(electrical.size()!=0) {
             				XSSFSheet spreadsheet = workbook.createSheet(controlContext.get(roomName) + " " + numberOfSheets);
             				numberOfSheets++;
-            				addStyleToSheet(spreadsheet, workbook, shift, startTime);
+            				addStyleToSheet(spreadsheet, workbook, shift, startTime, examName);
             				createSeparateSheet(workbook, spreadsheet, electrical, batch, outputList, i, elRollNo, genderAllowed, j, suspendedRollNo );
             			}
             			if(civil.size()!=0) {
             				XSSFSheet spreadsheet = workbook.createSheet(controlContext.get(roomName) + " " + numberOfSheets);
             				numberOfSheets++;
-            				addStyleToSheet(spreadsheet, workbook, shift, startTime);
+            				addStyleToSheet(spreadsheet, workbook, shift, startTime, examName);
             				createSeparateSheet(workbook, spreadsheet, civil, batch, outputList, i, clRollNo, genderAllowed, j, suspendedRollNo );
             			}
             			if(footwear.size()!=0) {
             				XSSFSheet spreadsheet = workbook.createSheet(controlContext.get(roomName) + " " + numberOfSheets);
             				numberOfSheets++;
-            				addStyleToSheet(spreadsheet, workbook, shift, startTime);
+            				addStyleToSheet(spreadsheet, workbook, shift, startTime, examName);
             				createSeparateSheet(workbook, spreadsheet, footwear, batch, outputList, i, fwRollNo, genderAllowed, j, suspendedRollNo );
             			}
             			if(agriculture.size()!=0) {
             				XSSFSheet spreadsheet = workbook.createSheet(controlContext.get(roomName) + " " + numberOfSheets);
             				numberOfSheets++;
-            				addStyleToSheet(spreadsheet, workbook, shift, startTime);
+            				addStyleToSheet(spreadsheet, workbook, shift, startTime, examName);
             				createSeparateSheet(workbook, spreadsheet, agriculture, batch, outputList, i, agRollNo, genderAllowed, j, suspendedRollNo );
             			}
 //            			XSSFSheet spreadsheet = workbook.createSheet(batch + " " + roomName);
@@ -394,7 +394,7 @@ public class GenerateExcelUtil {
             			XSSFSheet spreadsheet = workbook.createSheet(controlContext.get(roomName) + " " + numberOfSheets);
             			numberOfSheets++;
             			// FIRST ROW CREATE WITH STYLES 
-            			addStyleToSheet(spreadsheet, workbook, shift, startTime);
+            			addStyleToSheet(spreadsheet, workbook, shift, startTime, examName);
             			
             			Font cellFonts = workbook.createFont();
             			CellStyle otherCellStyle = workbook.createCellStyle();
@@ -486,7 +486,7 @@ public class GenerateExcelUtil {
         // Write the output to a file
         FileOutputStream out;
 		try {
-			out = new FileOutputStream( new File("C:\\Users\\sancsaxe\\Downloads\\" + shift + " Attendance plan.xlsx"));
+			out = new FileOutputStream( new File("C:\\Users\\This pc\\Downloads\\" + shift + " Attendance plan.xlsx"));
 			 
 			workbook.write(out);
 	        out.close();
@@ -521,7 +521,7 @@ public class GenerateExcelUtil {
 		seatingMap.clear();
 		FileOutputStream out;
 			try {
-				out = new FileOutputStream( new File("C:\\Users\\sancsaxe\\Downloads\\" + shift + "-Seating List.xlsx"));
+				out = new FileOutputStream( new File("C:\\Users\\This pc\\Downloads\\" + shift + "-Seating List.xlsx"));
 				 
 				workbook.write(out);
 		        out.close();
@@ -535,7 +535,7 @@ public class GenerateExcelUtil {
 		
 	}
 	
-	public void addStyleToSheet(XSSFSheet spreadsheet, XSSFWorkbook workbook, String shift, String startTime) {
+	public void addStyleToSheet(XSSFSheet spreadsheet, XSSFWorkbook workbook, String shift, String startTime, String examName) {
 		Row firstRow = spreadsheet.createRow(0);
         // Create a new font and alter it.
         Font font = workbook.createFont();
@@ -556,7 +556,7 @@ public class GenerateExcelUtil {
         Row secRow = spreadsheet.createRow(1);
 	    style.setAlignment(HorizontalAlignment.CENTER);
 	    Cell secCell = secRow.createCell(0);
-	    StringBuilder secondHeader = new StringBuilder("CT-2-");
+	    StringBuilder secondHeader = new StringBuilder(examName).append(" ");
 	    secondHeader.append(shift + "-");
 	    secondHeader.append(startTime);
 	    secCell.setCellValue(secondHeader.toString());
@@ -771,7 +771,7 @@ public class GenerateExcelUtil {
         // Write the output to a file
         FileOutputStream out;
 		try {
-			out = new FileOutputStream( new File("C:\\Users\\sancsaxe\\Downloads\\" + shift + " Matrix plan.xlsx"));
+			out = new FileOutputStream( new File("C:\\Users\\This pc\\Downloads\\" + shift + " Matrix plan.xlsx"));
 			 
 			workbook.write(out);
 	        out.close();
