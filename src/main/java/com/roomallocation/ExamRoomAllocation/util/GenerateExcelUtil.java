@@ -28,6 +28,7 @@ import com.roomallocation.ExamRoomAllocation.vo.AlgoOutputVO;
 import com.roomallocation.ExamRoomAllocation.vo.DatesheetVO;
 import com.roomallocation.ExamRoomAllocation.vo.HallDataVO;
 import com.roomallocation.ExamRoomAllocation.vo.RowColVO;
+import com.roomallocation.ExamRoomAllocation.vo.StudentCount;
 import com.roomallocation.ExamRoomAllocation.vo.StudentOutputVO;
 import com.roomallocation.ExamRoomAllocation.vo.StudentVO;
 import com.roomallocation.ExamRoomAllocation.vo.SuspendedStuVO;
@@ -780,6 +781,53 @@ public class GenerateExcelUtil {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+        
+	}
+
+
+	public void createCountExcel(ArrayList<StudentCount> countList, String fileName) {
+		ArrayList<String> heading = new ArrayList<>();
+		heading.add("SL No.");
+		heading.add("Course");
+		heading.add("Boys Count");
+		heading.add("Girls Count");
+		heading.add("Total");
+		
+		XSSFWorkbook workbook = new XSSFWorkbook();
+        
+        XSSFSheet spreadsheet = workbook.createSheet( "Student details");
+        Row headerRow = spreadsheet.createRow(0);
+        for (int i = 0; i < heading.size(); i++) {
+			Cell cell = headerRow.createCell(i);
+			cell.setCellValue(heading.get(i));
+        }
+        
+       for(int i = 0 ; i< countList.size(); i++) {
+    	   Row dataRow = spreadsheet.createRow(i + 1);
+       	   dataRow.createCell(0).setCellValue(String.valueOf((i+1)));
+       	   dataRow.createCell(1).setCellValue(countList.get(i).getCourse());
+       	   dataRow.createCell(2).setCellValue(countList.get(i).getBoysCount());
+       	   dataRow.createCell(3).setCellValue(countList.get(i).getGirlsCount());
+       	   int total = countList.get(i).getGirlsCount() + countList.get(i).getBoysCount();
+       	   dataRow.createCell(4).setCellValue(total);
+       	   
+       } 
+        
+        
+        FileOutputStream out;
+		try {
+			out = new FileOutputStream( new File("C:\\Users\\This pc\\Downloads\\CountFile " + fileName + ".xlsx"));
+			 
+	        workbook.write(out);
+	        out.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+       
+        System.out.println("Write to excel sheet done....");
         
 	}
 

@@ -171,4 +171,28 @@ public class ExamRoomAllocationService {
 		 return null;
 	}
 
+	
+	public String generateCountFile(MultipartFile[] files, MultipartFile suspendedStuFile) {
+		
+		//Getting suspended students list -- optional file
+		 List<SuspendedStuVO> suspendList = null;
+		 if(suspendedStuFile!=null) {
+			suspendList =  readExcelUtil.getSuspendList(suspendedStuFile);
+		 }
+		 
+		 // to handle error
+		 final List<SuspendedStuVO> finalList = suspendList;
+		 
+		 Arrays.asList(files).stream().forEach(file -> {
+            try {
+             readExcelUtil.createCountExcel(file, finalList);
+           	
+            } catch (IOException e) {
+
+            }
+        });
+		
+		 return null;
+	}
+
 }

@@ -2,6 +2,7 @@ package com.roomallocation.ExamRoomAllocation.util;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
@@ -600,6 +601,258 @@ public class ReadExcelUtil {
 		}
 		 return null;
 	}
+
+	public void createCountExcel(MultipartFile file, List<SuspendedStuVO> suspendList) throws IOException {
+		// TODO Auto-generated method stub
+		 HashSet<String> courseSet = new HashSet<>();
+		 logger.info("Creating Count Excel File");
+		 List<StudentVO> studentList = new ArrayList<>();
+		 DataFormatter formatter = new DataFormatter();
+		 final	String FILE_NAME = file.getOriginalFilename();
+	   	 final String fileExtension = FILE_NAME.substring(FILE_NAME.lastIndexOf(".") + 1);
+	   	 
+	   	 
+	   	ArrayList<String> suspendedRollNo = new ArrayList<>();
+		if(suspendList!=null) {
+			for(int i = 0 ; i < suspendList.size(); i++) {
+				suspendedRollNo.add(suspendList.get(i).getRollNo());
+			}
+			
+		}
+		
+	   	 if(fileExtension.equals("xls")) {
+	   		 
+	   		 HSSFWorkbook workbook = new HSSFWorkbook(file.getInputStream());
+	   		 HSSFSheet worksheet = workbook.getSheetAt(0);
+	   		 
+	   		 //Getting number of rows in a sheet
+	   		 int rows = worksheet.getLastRowNum();
+	   		 System.out.println(rows);
+	   		 
+	   		 // this is to find row from where headers starts
+	   		 int startRow = 0;
+	   		 for(int i = 0; i <= rows; i ++) {
+	   			HSSFRow row = worksheet.getRow(i); 
+	   			
+	   			if(row == null || row.toString() == "" || row.toString() == "null") {
+	   				continue;
+	   			}
+  				HSSFCell cell =  row.getCell(0);
+  				if(cell == null) {
+  					continue;
+  				}
+  				if(cell.getStringCellValue().equals("SL.No.")) {
+  					startRow = i;
+  					break;
+	   			}
+	   			 
+	   		 }
+	   		 
+	   		 int subjCounter = 0;
+	   		 List<StudentVO> currentStudentList = new ArrayList<>();
+	   		 
+	   		 // looping through each row
+	   		 for(int rowCounter = startRow; rowCounter<=rows ; rowCounter++) {
+	   			 // Getting student data of each roll number (each row)
+	   			 StudentVO student = new StudentVO();
+	   			 
+	   			 HSSFRow row = worksheet.getRow(rowCounter);
+	   			 HSSFRow firstRow = worksheet.getRow(startRow);
+	   			 int cols = worksheet.getRow(rowCounter).getLastCellNum();
+	   			 
+	   			 subjCounter = firstRow.getLastCellNum();
+	   			 List<String> subjects = new ArrayList<>();
+	   			 
+	   			 if(rowCounter != startRow ) {
+		   			 for(int colCounter = 0; colCounter<subjCounter ; colCounter++) {
+		   				 HSSFCell cell =  row.getCell(colCounter);
+		   				 
+		   				 //First cell object to get headers 
+		   				 HSSFCell firstCell = firstRow.getCell(colCounter);
+		   				 
+		   				 // to skip error when col is null
+		   				 if(cell==null) {
+		   					 continue;
+		   				 }else {
+		   					 
+		   					 //Getting values from each col
+		   					 if(firstCell.getStringCellValue().equals("Gender")) {
+		   						 student.setGender(formatter.formatCellValue(cell));
+		   					 }
+		   					 if(firstCell.getStringCellValue().equals("Roll Number")) {
+		   						 student.setRollNumber(formatter.formatCellValue(cell));
+		   					 }
+		   				 }
+		   				 
+		   			 }
+		   			}
+		   			if(rowCounter != startRow ) {
+		   				// this is for getting subjects for each student
+			   			 for(int colCounter = subjCounter-1; colCounter<=cols ; colCounter++) {
+			   				 HSSFCell cell =  row.getCell(colCounter);
+			   				 if(cell == null || StringUtils.isNumeric(cell.getStringCellValue())) {
+			   					 continue;
+			   				 }else {
+			   					 subjects.add(cell.getStringCellValue());
+			   					 student.setCourses(subjects);
+			   					 // Hashset for getting all the subjects which will be used to create header for the student_details sheet
+			   					 courseSet.add(cell.getStringCellValue());
+			   				 }
+			   				 
+			   			 }
+	   				}
+	   			
+		   		 if(rowCounter!=startRow) {
+		   			 
+		   			 studentList.add( student);
+		   			 currentStudentList.add(student);
+		   		 }	
+	   			 
+	   		 }
+	   		
+	   		 ArrayList<String> courseList = new ArrayList<>(courseSet);
+	   		 ArrayList<StudentCount> countList = new ArrayList<>();
+	   		 for(int i = 0; i < courseList.size(); i++) {
+	   			 StudentCount countObj = new StudentCount();
+	   			 int boysCount = 0;
+	   			 int girlsCount = 0;
+	   			 for(int j = 0 ; j < studentList.size(); j++) {
+	   				 if(studentList.get(j).getCourses().contains(courseList.get(i)) && studentList.get(j).getGender().equalsIgnoreCase("M")
+	   						 && !suspendedRollNo.contains(studentList.get(j).getRollNumber())) {
+	   					 boysCount++;
+	   				 }else if(studentList.get(j).getCourses().contains(courseList.get(i)) && studentList.get(j).getGender().equalsIgnoreCase("F")
+	   						&& !suspendedRollNo.contains(studentList.get(j).getRollNumber())) {
+	   					 girlsCount++;
+	   				 }
+	   			 }
+	   			countObj.setBoysCount(boysCount);
+	   			countObj.setGirlsCount(girlsCount);
+	   			countObj.setCourse(courseList.get(i));
+	   			
+	   			countList.add(countObj);
+	   		 }
+	   		 
+	   		 String fileName =  FILE_NAME.substring(0, FILE_NAME.lastIndexOf(".") );
+	   		 // this will create count excel sheet
+	   		 excelUtil.createCountExcel(countList, fileName);
+	   		 
+	   	 }else {
+	   		 
+	   		 XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
+	   		 XSSFSheet worksheet = workbook.getSheetAt(0);
+	   		 
+	   		 //Getting number of rows in a sheet
+	   		 int rows = worksheet.getLastRowNum();
+	   		 System.out.println(rows);
+	   		 
+	   		 // this is to find row from where headers starts
+	   		 int startRow = 0;
+	   		 for(int i = 0; i <= rows; i ++) {
+	   			XSSFRow row = worksheet.getRow(i); 
+	   			
+	   			if(row == null || row.toString() == "" || row.toString() == "null") {
+	   				continue;
+	   			}
+  				XSSFCell cell =  row.getCell(0);
+  				if(cell == null) {
+  					continue;
+  				}
+  				if(cell.getStringCellValue().equals("SL.No.")) {
+  					startRow = i;
+  					break;
+	   			}
+	   			 
+	   		 }
+	   		 
+	   		 int subjCounter = 0;
+	   		 List<StudentVO> currentStudentList = new ArrayList<>();
+	   		 
+	   		 // looping through each row
+	   		 for(int rowCounter = startRow; rowCounter<=rows ; rowCounter++) {
+	   			 // Getting student data of each roll number (each row)
+	   			 StudentVO student = new StudentVO();
+	   			 
+	   			 XSSFRow row = worksheet.getRow(rowCounter);
+	   			 XSSFRow firstRow = worksheet.getRow(startRow);
+	   			 int cols = worksheet.getRow(rowCounter).getLastCellNum();
+	   			 
+	   			 subjCounter = firstRow.getLastCellNum();
+	   			 List<String> subjects = new ArrayList<>();
+	   			 
+	   			 if(rowCounter != startRow ) {
+		   			 for(int colCounter = 0; colCounter<subjCounter ; colCounter++) {
+		   				 XSSFCell cell =  row.getCell(colCounter);
+		   				 
+		   				 //First cell object to get headers 
+		   				 XSSFCell firstCell = firstRow.getCell(colCounter);
+		   				 
+		   				 // to skip error when col is null
+		   				 if(cell==null) {
+		   					 continue;
+		   				 }else {
+		   					 
+		   					 //Getting values from each col
+		   					 if(firstCell.getStringCellValue().equals("Gender")) {
+		   						 student.setGender(formatter.formatCellValue(cell));
+		   					 }
+		   					 if(firstCell.getStringCellValue().equals("Roll Number")) {
+		   						 student.setRollNumber(formatter.formatCellValue(cell));
+		   					 }
+		   					 
+		   				 }
+		   				 
+		   			 }
+		   			}
+	   			 logger.info(String.valueOf(subjCounter));
+		   			if(rowCounter != startRow ) {
+		   				// this is for getting subjects for each student
+			   			 for(int colCounter = subjCounter-1; colCounter<=cols ; colCounter++) {
+			   				 XSSFCell cell =  row.getCell(colCounter);
+			   				 if(cell == null || StringUtils.isNumeric(cell.getStringCellValue())) {
+			   					 continue;
+			   				 }else {
+			   					 subjects.add(cell.getStringCellValue());
+			   					 student.setCourses(subjects);
+			   					 // Hashset for getting all the subjects which will be used to create header for the student_details sheet
+			   					 courseSet.add(cell.getStringCellValue());
+			   				 }
+			   				 
+			   			 }
+	   				}
+		   		 
+	   			 studentList.add( student);
+	   			 currentStudentList.add(student);
+	   			 
+	   			ArrayList<String> courseList = new ArrayList<>(courseSet);
+		   		 ArrayList<StudentCount> countList = new ArrayList<>();
+		   		 for(int i = 0; i < courseList.size(); i++) {
+		   			 StudentCount countObj = new StudentCount();
+		   			 int boysCount = 0;
+		   			 int girlsCount = 0;
+		   			 for(int j = 0 ; j < studentList.size(); j++) {
+		   				 if(studentList.get(j).getCourses().contains(courseList.get(i)) && studentList.get(j).getGender().equalsIgnoreCase("M")
+		   						&& !suspendedRollNo.contains(studentList.get(j).getRollNumber())) {
+		   					 boysCount++;
+		   				 }else if(studentList.get(j).getCourses().contains(courseList.get(i)) && studentList.get(j).getGender().equalsIgnoreCase("F")
+		   						&& !suspendedRollNo.contains(studentList.get(j).getRollNumber())) {
+		   					 girlsCount++;
+		   				 }
+		   			 }
+		   			countObj.setBoysCount(boysCount);
+		   			countObj.setGirlsCount(girlsCount);
+		   			countObj.setCourse(courseList.get(i));
+		   			
+		   			countList.add(countObj);
+		   		 }
+		   		 
+		   		 String fileName =  FILE_NAME.substring(0, FILE_NAME.lastIndexOf(".") );
+		   		 // this will create count excel sheet
+		   		 excelUtil.createCountExcel(countList, fileName);
+	   		 
+	   		 }
+	   	 }
+	}
+	   	
 	
 
 }

@@ -77,6 +77,25 @@ public class ExamRoomAllocationController {
 		return new ResponseEntity<String>(response,HttpStatus.OK);
 	}
 	
+	
+	@CrossOrigin(origins = "*", allowedHeaders = "*")
+	@PostMapping(value = "/generateCountFile")
+	@ApiOperation(value = "Generate Student Counts Excel", notes = "This is for generating excel/pdf of seating arrangement")
+	public ResponseEntity<String> generateCountFile(
+			@RequestParam("file") MultipartFile [] files,
+			@RequestParam(value = "suspendFile", required=false) MultipartFile suspendedStuFile){
+		final String methodName = "generateCountFile()";
+		logger.info("{} : Generate Student Counts Excel ",  methodName);
+		String response = new String();
+		try {
+			
+			response = examRoomAllocationService.generateCountFile(files, suspendedStuFile);
+		} catch (Exception e) {
+			return new ResponseEntity<String>(response,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<String>(response,HttpStatus.OK);
+	}
+	
 	@Controller
 	public class WebController {
 	   @RequestMapping(value = "/index")
