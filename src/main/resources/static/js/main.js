@@ -28,8 +28,8 @@ function onUpload() {
     xmlhttp1.onreadystatechange = function () {
         if (this.status == 200) {
             var res = this.responseText;
-            alert("Files Uploaded Successfully!!");
-            window.location.reload();
+            //alert("Files Uploaded Successfully!!");
+            //window.location.reload();
         }
     };
 
@@ -63,8 +63,8 @@ function generateCountFile() {
     xmlhttp1.onreadystatechange = function () {
         if (this.status == 200) {
             var res = this.responseText;
-            alert("Files Uploaded Successfully!!");
-            window.location.reload();
+           // alert("Files Uploaded Successfully!!");
+           // window.location.reload();
         }
     };
 

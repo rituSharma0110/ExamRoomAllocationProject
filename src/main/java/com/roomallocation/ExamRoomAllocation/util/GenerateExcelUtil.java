@@ -86,7 +86,7 @@ public class GenerateExcelUtil {
         
         FileOutputStream out;
 		try {
-			out = new FileOutputStream( new File("C:\\Users\\This pc\\Downloads\\student_details" + year + ".xlsx"));
+			out = new FileOutputStream( new File("student_details" + year + ".xlsx"));
 			 
 	        workbook.write(out);
 	        out.close();
@@ -251,7 +251,7 @@ public class GenerateExcelUtil {
        
         FileOutputStream out;
 		try {
-			out = new FileOutputStream( new File("C:\\Users\\This pc\\Downloads\\Seating plan " + examDate + ".xlsx"));
+			out = new FileOutputStream( new File("Seating plan " + examDate + ".xlsx"));
 			 
 			seatingChart.write(out);
 	        out.close();
@@ -487,7 +487,7 @@ public class GenerateExcelUtil {
         // Write the output to a file
         FileOutputStream out;
 		try {
-			out = new FileOutputStream( new File("C:\\Users\\This pc\\Downloads\\" + shift + " Attendance plan.xlsx"));
+			out = new FileOutputStream( new File(shift + " Attendance plan.xlsx"));
 			 
 			workbook.write(out);
 	        out.close();
@@ -522,7 +522,7 @@ public class GenerateExcelUtil {
 		seatingMap.clear();
 		FileOutputStream out;
 			try {
-				out = new FileOutputStream( new File("C:\\Users\\This pc\\Downloads\\" + shift + "-Seating List.xlsx"));
+				out = new FileOutputStream( new File(shift + "-Seating List.xlsx"));
 				 
 				workbook.write(out);
 		        out.close();
@@ -772,7 +772,7 @@ public class GenerateExcelUtil {
         // Write the output to a file
         FileOutputStream out;
 		try {
-			out = new FileOutputStream( new File("C:\\Users\\This pc\\Downloads\\" + shift + " Matrix plan.xlsx"));
+			out = new FileOutputStream( new File(shift + " Matrix plan.xlsx"));
 			 
 			workbook.write(out);
 	        out.close();
@@ -816,7 +816,7 @@ public class GenerateExcelUtil {
         
         FileOutputStream out;
 		try {
-			out = new FileOutputStream( new File("C:\\Users\\This pc\\Downloads\\CountFile " + fileName + ".xlsx"));
+			out = new FileOutputStream( new File("CountFile " + fileName + ".xlsx"));
 			 
 	        workbook.write(out);
 	        out.close();
