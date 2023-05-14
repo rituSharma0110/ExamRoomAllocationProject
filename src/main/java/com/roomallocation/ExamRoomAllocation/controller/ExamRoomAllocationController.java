@@ -63,15 +63,13 @@ public class ExamRoomAllocationController {
 			@RequestParam("file") MultipartFile [] files,
 			@RequestParam("dateSheetFile") MultipartFile dateSheetFile,
 			@RequestParam("hallFile") MultipartFile hallFile,
-			@RequestParam(value = "suspendFile", required=false) MultipartFile suspendedStuFile,
-			@RequestParam(value = "matrixFile", required=false) MultipartFile matrixFile,
 			@RequestParam(value = "batchMapFile", required=false) MultipartFile batchMapFile){
 		final String methodName = "generateSeatingArrangement()";
 		logger.info("{} : Generate Seating Arrangement ",  methodName);
 		String response = new String();
 		try {
 			
-			response = examRoomAllocationService.generateSeatingArrangement(files, dateSheetFile, hallFile, matrixFile, suspendedStuFile,
+			response = examRoomAllocationService.generateSeatingArrangement(files, dateSheetFile, hallFile, 
 					batchMapFile);
 		} catch (Exception e) {
 			return new ResponseEntity<String>(response,HttpStatus.INTERNAL_SERVER_ERROR);
@@ -92,6 +90,32 @@ public class ExamRoomAllocationController {
 		try {
 			
 			response = examRoomAllocationService.generateCountFile(files, suspendedStuFile);
+		} catch (Exception e) {
+			return new ResponseEntity<String>(response,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<String>(response,HttpStatus.OK);
+	}
+	
+	
+	@CrossOrigin(origins = "*", allowedHeaders = "*")
+	@PostMapping(value = "/generateOtherFiles")
+	@ApiOperation(value = "Generate Student Counts Excel", notes = "This is for generating excel/pdf of seating arrangement")
+	public ResponseEntity<String> generateOtherFiles(
+			@RequestParam(value = "outputFile", required=false) MultipartFile outputFile,
+			@RequestParam("file") MultipartFile [] files,
+			@RequestParam("dateSheetFile") MultipartFile dateSheetFile,
+			@RequestParam("hallFile") MultipartFile hallFile,
+			@RequestParam(value = "suspendFile", required=false) MultipartFile suspendedStuFile,
+			@RequestParam(value = "matrixFile", required=false) MultipartFile matrixFile,
+			@RequestParam(value = "batchMapFile", required=false) MultipartFile batchMapFile
+			){
+		final String methodName = "generateCountFile()";
+		logger.info("{} : Generate Student Counts Excel ",  methodName);
+		String response = new String();
+		try {
+			
+			response = examRoomAllocationService.generateOtherFiles(files, dateSheetFile, hallFile, matrixFile, suspendedStuFile,
+					batchMapFile, outputFile);
 		} catch (Exception e) {
 			return new ResponseEntity<String>(response,HttpStatus.INTERNAL_SERVER_ERROR);
 		}

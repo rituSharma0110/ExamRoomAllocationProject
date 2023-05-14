@@ -279,8 +279,7 @@ public class GenerateExcelUtil {
 		
 	}
 	
-	public byte [] createAttendanceList(ArrayList<AlgoOutputVO> outputList, List<StudentVO> studentList, ArrayList<DatesheetVO> dateSheetList,
-			HashMap<String, String> batchAndCourse, ArrayList<HallDataVO> list, String shift, String startTime, List<SuspendedStuVO> suspendList, String examName) {
+	public byte [] createAttendanceList(ArrayList<AlgoOutputVO> outputList, List<StudentVO> studentList, HashMap<String, String> batchAndCourse, ArrayList<HallDataVO> list, String shift, String startTime, List<SuspendedStuVO> suspendList, String examName) {
 		ArrayList<StudentOutputVO> students = new ArrayList<>();
 		for (int i = 0 ; i< studentList.size(); i++) {
 			StudentOutputVO student = new StudentOutputVO();
@@ -317,7 +316,7 @@ public class GenerateExcelUtil {
         			String batch = batchAndCourse.get(outputList.get(i).getValues().get(j));
         			String roomName = outputList.get(i).getClassRoom();
         			
-        			if(batch.endsWith("BT")) {
+        			if(batch.endsWith("BT") && !batch.equals("1BT")) {
 //        				System.out.println("Inside BT");
         				ArrayList<String> names = new ArrayList<>();
     	        		ArrayList<String> rollNo = new ArrayList<>();
@@ -458,7 +457,7 @@ public class GenerateExcelUtil {
             				dataRow.createCell(5).setCellValue(genderAllowed);
             				dataRow.createCell(6).setCellValue("");
             				dataRow.createCell(7).setCellValue("");
-            				dataRow.createCell(8).setCellValue(outputList.get(i).getValues().get(j));
+            				dataRow.createCell(8).setCellValue(outputList.get(i).getValues().get(j).substring(0,6));
             				for(int l = 0 ; l<=8 ; l++) {
             					dataRow.getCell(l).setCellStyle(otherCellStyle);
             				}
@@ -646,7 +645,7 @@ public class GenerateExcelUtil {
 			dataRow.createCell(5).setCellValue(genderAllowed);
 			dataRow.createCell(6).setCellValue("");
 			dataRow.createCell(7).setCellValue("");
-			dataRow.createCell(8).setCellValue(outputList.get(i).getValues().get(j));
+			dataRow.createCell(8).setCellValue(outputList.get(i).getValues().get(j).substring(0,6));
 			for(int l = 0 ; l<=8 ; l++) {
 				dataRow.getCell(l).setCellStyle(otherCellStyle);
 			}
@@ -676,7 +675,7 @@ public class GenerateExcelUtil {
 	}
 
 	public void createMatrix(ArrayList<AlgoOutputVO> outputList, List<StudentVO> studentList,
-			ArrayList<DatesheetVO> dateSheetList, HashMap<String, String> batchAndCourse, ArrayList<HallDataVO> list,
+			HashMap<String, String> batchAndCourse, ArrayList<HallDataVO> list,
 			String shift, String startTime, List<RowColVO> matrixList) {
 		ArrayList<StudentOutputVO> students = new ArrayList<>();
 		for (int i = 0 ; i< studentList.size(); i++) {
@@ -769,7 +768,7 @@ public class GenerateExcelUtil {
 							dataRow.createCell(2*k+2).setCellValue("-");
 							dataRow.getCell(2*k+2).setCellStyle(style);
 						}else {
-							dataRow.createCell(2*k+2).setCellValue(rollNo.get(counter) + " " + subjectCode.get(counter));
+							dataRow.createCell(2*k+2).setCellValue(rollNo.get(counter) + " " + subjectCode.get(counter).substring(0,6));
 							dataRow.getCell(2*k+2).setCellStyle(style);
 							
 						}

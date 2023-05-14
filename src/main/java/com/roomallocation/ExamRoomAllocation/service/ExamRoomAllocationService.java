@@ -63,20 +63,8 @@ public class ExamRoomAllocationService {
 	}
 
 	public String generateSeatingArrangement(MultipartFile[] files, MultipartFile dateSheetFile, MultipartFile hallFile, 
-			MultipartFile matrixFile, MultipartFile suspendedStuFile, MultipartFile batchMapFile) {
+			MultipartFile batchMapFile) {
 		
-		// Getting rows and cols in each class -- optional file
-		 List<RowColVO> matrixList = null;
-		 if(matrixFile != null) {
-			 matrixList = readExcelUtil.getMatrix(matrixFile);
-			 
-		 }
-		 
-		 //Getting suspended students list -- optional file
-		 List<SuspendedStuVO> suspendList = null;
-		 if(suspendedStuFile!=null) {
-			suspendList =  readExcelUtil.getSuspendList(suspendedStuFile);
-		 }
 		 
 		 List<BatchMapping> mappingList = readExcelUtil.getMappingList(batchMapFile);
 		
@@ -153,20 +141,6 @@ public class ExamRoomAllocationService {
 						  examDate, studentList, list, examName, mappingList);
 				  
 				  
-				  // Creates attendance list
-				  excelUtil.createAttendanceList(outputList, studentList, dateSheetList, batchAndCourse, list, new String(shift),
-						  startTime, suspendList, examName);
-				  
-				  // If matrix list is not null -- creates intra - room seat allocation
-				  if(matrixList != null) {
-					  // creates intra - room seat allocation
-					  excelUtil.createMatrix(outputList, studentList, dateSheetList, batchAndCourse, list, new String(shift),
-							  startTime, matrixList);
-				  }
-				  
-				  
-				  // creating seating display or seating list
-				  excelUtil.createSeatingList(studentList, new String(shift));
 				  
 			  }
 			  
@@ -202,4 +176,119 @@ public class ExamRoomAllocationService {
 		 return null;
 	}
 
+	public String generateOtherFiles(MultipartFile[] files, MultipartFile dateSheetFile, MultipartFile hallFile, 
+			MultipartFile matrixFile, MultipartFile suspendedStuFile, MultipartFile batchMapFile, MultipartFile outputFile) throws IOException {
+		
+		List<BatchMapping> mappingList = readExcelUtil.getMappingList(batchMapFile);
+		ArrayList<AlgoOutputVO> outputList = readExcelUtil.readOutputFile(outputFile, mappingList);
+		
+		List<RowColVO> matrixList = null;
+		 if(matrixFile != null) {
+			 matrixList = readExcelUtil.getMatrix(matrixFile);
+			 
+		 }
+		 
+		 //Getting suspended students list -- optional file
+		 List<SuspendedStuVO> suspendList = null;
+		 if(suspendedStuFile!=null) {
+			suspendList =  readExcelUtil.getSuspendList(suspendedStuFile);
+		 }
+		 
+		
+		 //Initializing student list of Student VO object 
+		 List<StudentVO> studentList = new ArrayList<>();
+		
+		 // Reading each master registration file
+		 Arrays.asList(files).stream().forEach(file -> {
+            try {
+           	 List<StudentVO> list = readExcelUtil.getStudentList(file, mappingList);
+           	 studentList.addAll(list);
+           	
+            } catch (IOException e) {
+
+            }
+        });
+		 System.out.println("Service : " + studentList.get(1).getCourses().get(2));
+		 try {
+			 
+			  // Initializing arrayList 
+			  ArrayList<ArrayList<HallDataVO>> hallDataList = new ArrayList<ArrayList<HallDataVO>>();
+			  XSSFWorkbook workbook = new XSSFWorkbook(hallFile.getInputStream());
+			  
+			  // Getting datesheet object list 
+			  ArrayList<DatesheetVO> dateSheetList = (ArrayList<DatesheetVO>) readExcelUtil.getDateSheetList(dateSheetFile,
+					  mappingList);
+			
+			  String examName = dateSheetList.get(0).getExamName();
+			  // this loops for each shift
+			  XSSFWorkbook seatingChart = new XSSFWorkbook();
+			  logger.info(String.valueOf(workbook.getNumberOfSheets()));
+			  for (int i = 0; i < workbook.getNumberOfSheets(); i++)
+			  {
+				  ArrayList<String> batch = new ArrayList<>();
+				  ArrayList<String> batchSub = new ArrayList<>();
+				  StringBuilder shift = new StringBuilder("Shift-");
+				  String startTime = null;
+				  String endTime = null;
+				  HashMap<String, String> batchAndCourse = new HashMap<>();
+				  for(int j = 0 ; j < dateSheetList.size(); j++) {
+						if(dateSheetList.get(j).getShift()!= null) {
+							if(dateSheetList.get(j).getShift().equals(String.valueOf(i+1))) {
+								batch.add(dateSheetList.get(j).getBatchName());
+								batchSub.add(dateSheetList.get(j).getSubjectCode());
+								startTime = dateSheetList.get(j).getStartTime();
+								endTime = dateSheetList.get(j).getEndTime();
+								batchAndCourse.put( dateSheetList.get(j).getSubjectCode(), dateSheetList.get(j).getBatchName());
+						}
+						
+					}
+				  }
+					
+//				  Getting hall data for each shift	
+				  XSSFSheet sheet = workbook.getSheetAt(i);
+				  ArrayList<HallDataVO> list  = readExcelUtil.getHallDataList(sheet);
+				  
+				  // shift name and other variables
+				  shift.append((char)(i + 'A') + " ").append(dateSheetList.get(1).getDate().replace("/", "-") + " ");
+				  hallDataList.add(list);
+				  String examDate = dateSheetList.get(1).getDate().replace("/", "-");
+				  
+				  // Getting output from room allocation algo
+				  MultiValueMap<String, List<String>> outputMap = new LinkedMultiValueMap<>();
+//				  outputMap = generateAlgorithm.generateAlgo(dateSheetList, list, studentList, (i+1));
+				  
+				  ObjectMapper mapper = new ObjectMapper();
+				  System.out.println(mapper.writeValueAsString(outputMap));
+				  
+				  // Converting output of room allocation algo to list of objects
+//				  ArrayList<AlgoOutputVO> outputList = generateAlgorithm.generateOutput(dateSheetList, list, studentList, (i+1));
+				  
+				  // Creating seating chart 
+				  excelUtil.seatingChart(outputMap, batch, batchSub, new String(shift), seatingChart, startTime, endTime, 
+						  examDate, studentList, list, examName, mappingList);
+				  
+				  
+				  // Creates attendance list
+				  excelUtil.createAttendanceList(outputList, studentList, batchAndCourse, list, new String(shift),
+						  startTime, suspendList, examName);
+				  
+				  // If matrix list is not null -- creates intra - room seat allocation
+				  if(matrixList != null) {
+					  // creates intra - room seat allocation
+					  excelUtil.createMatrix(outputList, studentList, batchAndCourse, list, new String(shift),
+							  startTime, matrixList);
+				  }
+				  
+				  
+				  // creating seating display or seating list
+				  excelUtil.createSeatingList(studentList, new String(shift));
+				  
+			  }
+		
+		 }catch (Exception e) {
+			  logger.error(e.getMessage());
+				
+		}
+		 return null;
+	}
 }

@@ -953,6 +953,69 @@ public class ReadExcelUtil {
 	}
 	 return null;
 	}
+
+	public ArrayList<AlgoOutputVO> readOutputFile(MultipartFile outputFile, List<BatchMapping> mappingList) throws IOException {
+		// TODO Auto-generated method stub
+		  XSSFWorkbook workbook = new XSSFWorkbook(outputFile.getInputStream());
+		  XSSFSheet worksheet = workbook.getSheetAt(0);
+		  
+		  ArrayList<String> abbreviation = new ArrayList<>();
+		  for(int i = 0; i<mappingList.size(); i++) {
+			  abbreviation.add(mappingList.get(i).getAbbreviation());
+		  }
+		  
+		  DataFormatter formatter = new DataFormatter();
+		  
+		  //Getting number of rows in a sheet
+		  int rows = worksheet.getLastRowNum();
+		  System.out.println(rows);
+		  
+		  //Initializing student list of Student VO object 
+		  ArrayList<AlgoOutputVO> outputList = new ArrayList<>();
+		  
+		  // looping through each row
+		  for(int rowCounter = 7; rowCounter<rows ; rowCounter++) {
+			  // Getting student data of each roll number (each row)
+			  AlgoOutputVO algoObj = new AlgoOutputVO();
+			  XSSFRow row = worksheet.getRow(rowCounter);
+			  if(row.getCell(0).getStringCellValue().equals("EN") || row.getCell(0).getStringCellValue().equals("AR")) {
+				  continue;
+			  }
+			  algoObj.setClassRoom(row.getCell(1).getStringCellValue());
+			  System.out.println(row.getCell(1).getStringCellValue());
+			  XSSFRow firstRow = worksheet.getRow(1);
+			  XSSFRow secondRow = worksheet.getRow(2);
+			  int cols = worksheet.getRow(rowCounter).getLastCellNum();
+			  ArrayList<String> list = new ArrayList<>();
+			  for(int colCounter = 2; colCounter<cols-1 ; colCounter++) {
+//				  System.out.println(colCounter);
+				  XSSFCell cell =  row.getCell(colCounter);
+				  // to skip error when col is null
+				  if(cell==null) {
+//					  System.out.println("null");
+				  }else {
+//					 System.out.println(formatter.formatCellValue(cell));
+					  if(!abbreviation.contains(firstRow.getCell(colCounter).getStringCellValue().substring(1))) {
+						  list.add(secondRow.getCell(colCounter).getStringCellValue());
+					  }else {
+						  list.add(secondRow.getCell(colCounter).getStringCellValue()+ "" + firstRow.getCell(colCounter).getStringCellValue().substring(1));
+					  }
+					 list.add(formatter.formatCellValue(cell));
+					 algoObj.setValues(list);
+					 
+				  }
+				
+			  }
+			  outputList.add(algoObj);
+			 
+			
+		  }
+		 
+		  ObjectMapper mapper = new ObjectMapper();
+		  System.out.println(mapper.writeValueAsString(outputList));	  
+		  return outputList;
+		
+	}
 	   	
 	
 
