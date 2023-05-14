@@ -1,6 +1,6 @@
 package com.roomallocation.ExamRoomAllocation.vo;
 
-public class dummyHallList {
+public class DummyHallList {
 
 	private HallDataVO hallData;
 	

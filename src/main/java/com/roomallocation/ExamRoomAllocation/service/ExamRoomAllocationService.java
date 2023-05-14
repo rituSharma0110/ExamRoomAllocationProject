@@ -23,6 +23,7 @@ import com.roomallocation.ExamRoomAllocation.util.GenerateAlgo;
 import com.roomallocation.ExamRoomAllocation.util.GenerateExcelUtil;
 import com.roomallocation.ExamRoomAllocation.util.ReadExcelUtil;
 import com.roomallocation.ExamRoomAllocation.vo.AlgoOutputVO;
+import com.roomallocation.ExamRoomAllocation.vo.BatchMapping;
 import com.roomallocation.ExamRoomAllocation.vo.DatesheetVO;
 import com.roomallocation.ExamRoomAllocation.vo.HallDataVO;
 import com.roomallocation.ExamRoomAllocation.vo.RowColVO;
@@ -61,7 +62,8 @@ public class ExamRoomAllocationService {
 		return healthCheck;
 	}
 
-	public String generateSeatingArrangement(MultipartFile[] files, MultipartFile dateSheetFile, MultipartFile hallFile, MultipartFile matrixFile, MultipartFile suspendedStuFile) {
+	public String generateSeatingArrangement(MultipartFile[] files, MultipartFile dateSheetFile, MultipartFile hallFile, 
+			MultipartFile matrixFile, MultipartFile suspendedStuFile, MultipartFile batchMapFile) {
 		
 		// Getting rows and cols in each class -- optional file
 		 List<RowColVO> matrixList = null;
@@ -75,6 +77,8 @@ public class ExamRoomAllocationService {
 		 if(suspendedStuFile!=null) {
 			suspendList =  readExcelUtil.getSuspendList(suspendedStuFile);
 		 }
+		 
+		 List<BatchMapping> mappingList = readExcelUtil.getMappingList(batchMapFile);
 		
 		 //Initializing student list of Student VO object 
 		 List<StudentVO> studentList = new ArrayList<>();
@@ -82,13 +86,14 @@ public class ExamRoomAllocationService {
 		 // Reading each master registration file
 		 Arrays.asList(files).stream().forEach(file -> {
              try {
-            	 List<StudentVO> list = readExcelUtil.getStudentList(file, courseSet);
+            	 List<StudentVO> list = readExcelUtil.getStudentList(file, mappingList);
             	 studentList.addAll(list);
             	
              } catch (IOException e) {
 
              }
          });
+		 System.out.println("Service : " + studentList.get(1).getCourses().get(2));
 		 try {
 			 
 			  // Initializing arrayList 
@@ -96,7 +101,9 @@ public class ExamRoomAllocationService {
 			  XSSFWorkbook workbook = new XSSFWorkbook(hallFile.getInputStream());
 			  
 			  // Getting datesheet object list 
-			  ArrayList<DatesheetVO> dateSheetList = (ArrayList<DatesheetVO>) readExcelUtil.getDateSheetList(dateSheetFile);
+			  ArrayList<DatesheetVO> dateSheetList = (ArrayList<DatesheetVO>) readExcelUtil.getDateSheetList(dateSheetFile,
+					  mappingList);
+			
 			  String examName = dateSheetList.get(0).getExamName();
 			  // this loops for each shift
 			  XSSFWorkbook seatingChart = new XSSFWorkbook();
@@ -143,7 +150,7 @@ public class ExamRoomAllocationService {
 				  
 				  // Creating seating chart 
 				  excelUtil.seatingChart(outputMap, batch, batchSub, new String(shift), seatingChart, startTime, endTime, 
-						  examDate, studentList, list, examName);
+						  examDate, studentList, list, examName, mappingList);
 				  
 				  
 				  // Creates attendance list

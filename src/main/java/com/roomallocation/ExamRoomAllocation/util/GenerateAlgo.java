@@ -13,11 +13,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.roomallocation.ExamRoomAllocation.vo.AlgoOutputVO;
 import com.roomallocation.ExamRoomAllocation.vo.DatesheetVO;
 import com.roomallocation.ExamRoomAllocation.vo.HallDataVO;
 import com.roomallocation.ExamRoomAllocation.vo.StudentVO;
-import com.roomallocation.ExamRoomAllocation.vo.dummyHallList;
+import com.roomallocation.ExamRoomAllocation.vo.DummyHallList;
 
 @Component
 public class GenerateAlgo {
@@ -32,9 +34,9 @@ public class GenerateAlgo {
 		HashMap<String, Integer> hallCapacityForFemale = new HashMap<>();
 //		HashMap<String, Integer> DHCapacityForMale = new HashMap<>();
 //		HashMap<String, Integer> DHCapacityForFemale = new HashMap<>();
-		ArrayList<dummyHallList> dummyHallDataList = new ArrayList<>();
+		ArrayList<DummyHallList> dummyHallDataList = new ArrayList<>();
 		for(int i=0; i< hallDataList.size();i++) {
-			dummyHallList var = new dummyHallList();
+			DummyHallList var = new DummyHallList();
 			var.setHallData(hallDataList.get(i));
 			var.setAdded(false);
 			dummyHallDataList.add(var);
@@ -65,6 +67,13 @@ public class GenerateAlgo {
 				listOfGirlsStudents.put(dateSheetList.get(i).getSubjectCode(), countGirls);
 //				listOfDHBoys.put(dateSheetList.get(i).getSubjectCode(), countDHBoys);
 //				listOfDHGirls.put(dateSheetList.get(i).getSubjectCode(), countDHGirls);
+//				ObjectMapper mapper =  new ObjectMapper();
+//				try {
+//					System.out.println(mapper.writeValueAsString(listOfGirlsStudents));
+//				} catch (JsonProcessingException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
 			}
 			
 		}
@@ -72,7 +81,7 @@ public class GenerateAlgo {
 		
 		int val = 0;
 		for(int i = 0; i < hallDataList.size(); i++) {
-			if(hallDataList.get(i).getIsHallAvailable().substring(0,1).equalsIgnoreCase("Y")&&hallDataList.get(i).getGender().equalsIgnoreCase("m")&&hallDataList.get(i).getDrawingSeatsAvaliable().equals("0")) {
+			if(hallDataList.get(i).getIsHallAvailable().substring(0,1).equalsIgnoreCase("Y")&&hallDataList.get(i).getGender().equalsIgnoreCase("m")) {
 				val = Integer.valueOf(hallDataList.get(i).getCapacity());
 				hallCapacityForMale.put(hallDataList.get(i).getRoomName(), val);
 			}

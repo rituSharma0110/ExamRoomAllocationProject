@@ -8,6 +8,7 @@ function onUpload() {
     fd.append('hallFile', $('#hallData')[0].files[0]);
     fd.append('suspendFile', $('#suspendFile')[0].files[0]);
     fd.append('matrixFile', $('#matrixFile')[0].files[0]);
+    fd.append('batchMapFile', $('#batchMapFile')[0].files[0]);
     console.log(fd)
     var xmlhttp1;
   try {
@@ -38,9 +39,9 @@ function onUpload() {
 
 function generateCountFile() {
 	var fd = new FormData();
-	var totalfiles = document.getElementById('myfile').files.length;
+	var totalfiles = document.getElementById('masterfile').files.length;
    	for (var index = 0; index < totalfiles; index++) {
-      fd.append("file", document.getElementById('myfile').files[index]);
+      fd.append("file", document.getElementById('masterfile').files[index]);
    	}
    	fd.append('suspendFile', $('#suspendFile')[0].files[0]);
     console.log(fd)

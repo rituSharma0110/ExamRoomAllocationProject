@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -25,6 +26,7 @@ import org.springframework.util.MultiValueMap;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.roomallocation.ExamRoomAllocation.vo.AlgoOutputVO;
+import com.roomallocation.ExamRoomAllocation.vo.BatchMapping;
 import com.roomallocation.ExamRoomAllocation.vo.DatesheetVO;
 import com.roomallocation.ExamRoomAllocation.vo.HallDataVO;
 import com.roomallocation.ExamRoomAllocation.vo.RowColVO;
@@ -39,7 +41,7 @@ public class GenerateExcelUtil {
 	
 	HashMap<String, String> seatingMap = new HashMap<String, String>();
 	
-	public void createSortedExcel(ArrayList courseList, List<StudentVO> studentList, int year) {
+	public void createSortedExcel(ArrayList courseList, List<StudentVO> studentList, int year, String mapperName) {
 		ArrayList<String> heading = new ArrayList<>();
 		heading.add("Sl No.");
 		heading.add("Student Name");
@@ -48,7 +50,6 @@ public class GenerateExcelUtil {
 		heading.add("Specialization");
 		heading.add("Year");
 		heading.addAll(courseList);
-		
 		
 		XSSFWorkbook workbook = new XSSFWorkbook();
         
@@ -86,7 +87,7 @@ public class GenerateExcelUtil {
         
         FileOutputStream out;
 		try {
-			out = new FileOutputStream( new File("student_details" + year + ".xlsx"));
+			out = new FileOutputStream( new File("Student_details" + mapperName + year + ".xlsx"));
 			 
 	        workbook.write(out);
 	        out.close();
@@ -103,7 +104,8 @@ public class GenerateExcelUtil {
 	
 	public byte [] seatingChart(MultiValueMap<String, List<String>> outputMap, ArrayList<String> batch, 
 			ArrayList<String> batchSub, String shift, XSSFWorkbook seatingChart, String startTime, 
-			String endTime, String examDate, List<StudentVO> studentList, ArrayList<HallDataVO> list, String examName) throws JsonProcessingException {
+			String endTime, String examDate, List<StudentVO> studentList, ArrayList<HallDataVO> list, String examName,
+			List<BatchMapping> mappingList) throws JsonProcessingException {
 		
 		HashMap<String, String> controlContext = new HashMap<>();
 		for(int i = 0 ; i < list.size(); i++) {
@@ -180,7 +182,7 @@ public class GenerateExcelUtil {
         j=2;
         for (int i = 0 ; i < batchSub.size(); i++, j++) {
         	Cell cell = secHeaderRow.createCell(j);
-			cell.setCellValue(batchSub.get(i));
+			cell.setCellValue(batchSub.get(i).substring(0,6));
 			cell.setCellStyle(otherStyle);
 			int girlsCount = 0;
 			int boysCount = 0;
@@ -203,6 +205,7 @@ public class GenerateExcelUtil {
         HashSet <String> controlAdded = new HashSet<>();
         MultiValueMap<String, List<String>>  valueMap = outputMap;
         for (int k = 0 ; k< valueMap.size(); k++, l++) {
+//        	System.out.println("k" + k);
         int total = 0;
     	Row dataRow = sheet.createRow(l);
     	if(!controlAdded.contains(controlContext.get(valueMap.keySet().toArray()[k].toString()))) {
@@ -223,9 +226,17 @@ public class GenerateExcelUtil {
     	}
     	dataRow.createCell(1).setCellValue(valueMap.keySet().toArray()[k].toString());
         	for (int i = 0 ; i < batchSub.size(); i++) {
-        		if( valueMap.values().toArray()[k].toString().contains(batchSub.get(i))) {
-        			int ind = valueMap.values().toArray()[k].toString().indexOf(batchSub.get(i));
-        			String valString = valueMap.values().toArray()[k].toString().substring(ind+8, ind+10);
+        		int skipValue = 0;
+        		String classValues = valueMap.values().toArray()[k].toString().replace("[", "");
+        		String[] classes = classValues.split(", ");
+        		
+        		List<String> classList = Arrays.asList(classes);
+        		if( classList.contains(batchSub.get(i))) {
+        			
+//        			int ind = valueMap.values().toArray()[k].toString().indexOf(batchSub.get(i));
+        			int ind = classList.indexOf(batchSub.get(i));
+//        			String valString = valueMap.values().toArray()[k].toString().substring(ind+ skipValue + 8, ind + skipValue +10);
+        			String valString = classList.get(ind+1);
         			valString = valString.replace(",","");
         			valString = valString.replace("]", "");
         			int val = Integer.valueOf(valString);

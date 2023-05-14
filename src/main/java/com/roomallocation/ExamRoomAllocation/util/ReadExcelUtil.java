@@ -11,6 +11,7 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.CellReference;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -34,7 +35,7 @@ public class ReadExcelUtil {
 	
 	private static final Logger logger = (Logger) LoggerFactory.getLogger(ExamRoomAllocationService.class);
 	
-	public List<DatesheetVO> getDateSheetList(MultipartFile dateSheetFile){
+	public List<DatesheetVO> getDateSheetList(MultipartFile dateSheetFile, List<BatchMapping> mappingList){
 		 try {
 			  XSSFWorkbook workbook = new XSSFWorkbook(dateSheetFile.getInputStream());
 			  XSSFSheet worksheet = workbook.getSheetAt(0);
@@ -53,6 +54,7 @@ public class ReadExcelUtil {
 			  logger.info(examName);
 			  // looping through each row
 			  for(int rowCounter = 1; rowCounter<=rows ; rowCounter++) {
+				  String abbreviation = "";
 				  // Getting student data of each roll number (each row)
 				  DatesheetVO dateSheetObj = new DatesheetVO();
 				  dateSheetObj.setExamName(examName);
@@ -90,12 +92,20 @@ public class ReadExcelUtil {
 							 dateSheetObj.setEndTime(formatter.formatCellValue(cell));
 						 }
 						 
+						 
 						 if(firstCell.getStringCellValue().equals("Batch Name")) {
+							 for(int i = 0; i< mappingList.size(); i++) {
+								 if(mappingList.get(i).getAbbreviation().equals(formatter.formatCellValue(cell).substring(1))) {
+									 abbreviation = formatter.formatCellValue(cell).substring(1);
+									 break;
+								 }
+							 }
 							 dateSheetObj.setBatchName(formatter.formatCellValue(cell));
 						 }
 						 
 						 if(firstCell.getStringCellValue().equals("Subject Code")) {
-							 dateSheetObj.setSubjectCode(formatter.formatCellValue(cell));
+							 String batchName = formatter.formatCellValue(cell) + "" + abbreviation;
+							 dateSheetObj.setSubjectCode(batchName);
 						 }
 						 
 						 if(firstCell.getStringCellValue().equals("Drawing Subject")) {
@@ -205,18 +215,35 @@ public class ReadExcelUtil {
 		 return null;
 	}
 	
-	public List<StudentVO> getStudentList(MultipartFile file, HashSet<String> courseSet) throws IOException{
+	public List<StudentVO> getStudentList(MultipartFile file, List<BatchMapping> mappingList) throws IOException{
 		logger.info("start");
+		 HashSet<String> courseSet = new HashSet<>();
 		 List<StudentVO> studentList = new ArrayList<>();
 		 DataFormatter formatter = new DataFormatter();
 		 final	String FILE_NAME = file.getOriginalFilename();
 	   	 final String fileExtension = FILE_NAME.substring(FILE_NAME.lastIndexOf(".") + 1);
 	   	 String semester = "";
 	   	 
+	   	String mapperName = "";
 	   	 if(fileExtension.equals("xls")) {
 	   		 
 	   		 HSSFWorkbook workbook = new HSSFWorkbook(file.getInputStream());
 	   		 HSSFSheet worksheet = workbook.getSheetAt(0);
+	   		 
+	   		 mapperName = workbook.getSheetAt(0).getRow(1).getCell(CellReference.convertColStringToIndex("E")).getStringCellValue().replace("Report for Program:- ", "");
+	   		 
+//	   		 System.out.println("MapperName :  " + mapperName );
+	   		 boolean isOtherThanBT = false;
+	   		 String abbreviation = "";
+	   		 for(int i = 0; i< mappingList.size(); i++) {
+//	   			 System.out.println((mappingList.get(i).getBatchName()));
+	   			 if(mappingList.get(i).getBatchName().equals(mapperName)) {
+	   				 isOtherThanBT = true;
+	   				 abbreviation = mappingList.get(i).getAbbreviation();
+//	   				 System.out.println(abbreviation);
+	   				 break;
+	   			 }
+	   		 }
 	   		 
 	   		 //Getting number of rows in a sheet
 	   		 int rows = worksheet.getLastRowNum();
@@ -306,10 +333,19 @@ public class ReadExcelUtil {
 			   				 if(cell == null || StringUtils.isNumeric(cell.getStringCellValue())) {
 			   					 continue;
 			   				 }else {
-			   					 subjects.add(cell.getStringCellValue());
-			   					 student.setCourses(subjects);
+			   					 if(isOtherThanBT) {
+			   						 String subjectName = cell.getStringCellValue() + "" + abbreviation;
+			   						 subjects.add(subjectName);
+			   						 student.setCourses(subjects);
+			   						 courseSet.add(subjectName);
+//			   						 System.out.println("student: " +  subjectName);
+			   					 }else if(!isOtherThanBT){
+			   						 subjects.add( cell.getStringCellValue());
+			   						 student.setCourses(subjects); 
+//			   						 System.out.println("other :" +  cell.getStringCellValue() + "" + abbreviation);
+			   						 courseSet.add(cell.getStringCellValue());
+			   					 }
 			   					 // Hashset for getting all the subjects which will be used to create header for the student_details sheet
-			   					 courseSet.add(cell.getStringCellValue());
 			   				 }
 			   				 
 			   			 }
@@ -320,18 +356,18 @@ public class ReadExcelUtil {
 		   			 studentList.add( student);
 		   			 currentStudentList.add(student);
 		   		 }	
-//	   			 ObjectMapper mapper = new ObjectMapper();
-//	   			 System.out.println(studentList.get(1).getCourses().get(2));
-//	   			System.out.println(studentList.get(1).getCourses().get(272));
+//	   			
 	   			 
 	   		 }
+	   		
+//   			System.out.println(studentList.get(1).getCourses().get(272));
 	   		 // this is for getting year -- any other way??
 	   		 semester = currentStudentList.get(1).getCourses().get(1).substring(3,4);
 //	   		 int yearInd = FILE_NAME.indexOf("SM");
 //	   		 String year = FILE_NAME.substring(yearInd+2,yearInd+3);
 	   		 ArrayList<String> courseList = new ArrayList<>(courseSet);
 	   		 // this will create sorted excel sheet
-	   		 excelUtil.createSortedExcel(courseList, currentStudentList, Integer.valueOf(semester));
+	   		 excelUtil.createSortedExcel(courseList, studentList, Integer.valueOf(semester), mapperName);
 	   	 }else {
 	   		 
 	   		 XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
@@ -444,12 +480,13 @@ public class ReadExcelUtil {
 //	   		 String year = FILE_NAME.substring(yearInd+2,yearInd+3);
 	   		 ArrayList<String> courseList = new ArrayList<>(courseSet);
 	   		 // this will create sorted excel sheet
-	   		 excelUtil.createSortedExcel(courseList, currentStudentList, Integer.valueOf(semester));
-	   		 
+	   		 excelUtil.createSortedExcel(courseList, currentStudentList, Integer.valueOf(semester), mapperName);
+	   		
 	   		 return studentList;
 	   		 
 	   	 }
-	   	
+	   	 ObjectMapper mapper = new ObjectMapper();
+		 System.out.println(studentList.get(1).getCourses().get(2));
 		return studentList;
 	}
 
@@ -851,6 +888,70 @@ public class ReadExcelUtil {
 	   		 
 	   		 }
 	   	 }
+	}
+
+	public List<BatchMapping> getMappingList(MultipartFile batchMapFile) {
+		try {
+		 XSSFWorkbook workbook = new XSSFWorkbook(batchMapFile.getInputStream());
+		  XSSFSheet worksheet = workbook.getSheetAt(0);
+		  
+		  DataFormatter formatter = new DataFormatter();
+		  
+		  //Getting number of rows in a sheet
+		  int rows = worksheet.getLastRowNum();
+		  System.out.println(rows);
+		  
+		  //Initializing student list of Student VO object 
+		  List<BatchMapping> batchList = new ArrayList<>();
+		  
+		  XSSFRow headerRow = worksheet.getRow(0);
+		  // looping through each row
+		  for(int rowCounter = 0; rowCounter<=rows ; rowCounter++) {
+			  // Getting student data of each roll number (each row)
+			  BatchMapping batchMapObj = new BatchMapping();
+			  XSSFRow row = worksheet.getRow(rowCounter);
+			  XSSFRow firstRow = worksheet.getRow(0);
+			  int cols = worksheet.getRow(rowCounter).getLastCellNum();
+			  for(int colCounter = 0; colCounter<cols ; colCounter++) {
+				  XSSFCell cell =  row.getCell(colCounter);
+				  // to skip error when col is null
+				  if(cell==null) {
+					  
+				  }else {
+					 
+					 //First cell object to get headers 
+					  XSSFCell firstCell = firstRow.getCell(colCounter);
+					 if(firstCell==null) {
+						 continue;
+					 }
+					 
+					 //Getting values from each col
+					 if(firstCell.getStringCellValue().equals("Batch")) {
+						 batchMapObj.setBatchName(formatter.formatCellValue(cell));
+					 }
+					 
+					 if(firstCell.getStringCellValue().equals("Abbr")) {
+						 batchMapObj.setAbbreviation((formatter.formatCellValue(cell)));
+					 }
+					 
+					 
+				  }
+				
+			  }
+			  batchList.add(batchMapObj);
+			 
+			
+		  }
+		 
+		  ObjectMapper mapper = new ObjectMapper();
+		  System.out.println(mapper.writeValueAsString(batchList));	  
+		  return batchList;
+ 
+	} catch (Exception e) {
+		  logger.error(e.getMessage());
+		
+	}
+	 return null;
 	}
 	   	
 	
