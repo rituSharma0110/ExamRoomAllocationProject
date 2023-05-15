@@ -125,6 +125,7 @@ public class ExamRoomAllocationService {
 				  shift.append((char)(i + 'A') + " ").append(dateSheetList.get(1).getDate().replace("/", "-") + " ");
 				  hallDataList.add(list);
 				  String examDate = dateSheetList.get(1).getDate().replace("/", "-");
+				  System.out.println(examDate);
 				  
 				  // Getting output from room allocation algo
 				  MultiValueMap<String, List<String>> outputMap = new LinkedMultiValueMap<>();
@@ -248,13 +249,18 @@ public class ExamRoomAllocationService {
 				  XSSFSheet sheet = workbook.getSheetAt(i);
 				  ArrayList<HallDataVO> list  = readExcelUtil.getHallDataList(sheet);
 				  
+				  
 				  // shift name and other variables
+				  
+				  StringBuilder headerName = new StringBuilder("Shift-");
+				  headerName.append((char)(i + 'A') + "        ").append(dateSheetList.get(1).getDate().replace("/", "-") + "       ");
+				  
 				  shift.append((char)(i + 'A') + " ").append(dateSheetList.get(1).getDate().replace("/", "-") + " ");
 				  hallDataList.add(list);
 				  
 				  // Creates attendance list
 				  excelUtil.createAttendanceList(outputList, studentList, batchAndCourse, list, new String(shift),
-						  startTime, suspendList, examName);
+						  startTime, suspendList, examName, new String(headerName));
 				  
 				  // If matrix list is not null -- creates intra - room seat allocation
 				  if(matrixList != null) {

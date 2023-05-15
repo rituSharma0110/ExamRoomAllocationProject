@@ -44,7 +44,7 @@ public class ReadExcelUtil {
 			  
 			  //Getting number of rows in a sheet
 			  int rows = worksheet.getLastRowNum();
-			  System.out.println(rows);
+			  System.out.println("In Datesheet: "+ rows);
 			  
 			  //Initializing student list of Student VO object 
 			  List<DatesheetVO> dateSheetList = new ArrayList<>();
@@ -77,7 +77,7 @@ public class ReadExcelUtil {
 						 
 						 //Getting values from each col
 						 if(firstCell.getStringCellValue().equals("Date")) {
-							 dateSheetObj.setDate(formatter.formatCellValue(cell));
+							 dateSheetObj.setDate(cell.getStringCellValue());
 						 }
 						 
 						 if(firstCell.getStringCellValue().equals("Shift")) {
@@ -104,7 +104,7 @@ public class ReadExcelUtil {
 						 }
 						 
 						 if(firstCell.getStringCellValue().equals("Subject Code")) {
-							 String batchName = formatter.formatCellValue(cell) + "" + abbreviation;
+							 String batchName = formatter.formatCellValue(cell).substring(0,6) + "" + abbreviation;
 							 dateSheetObj.setSubjectCode(batchName);
 						 }
 						 

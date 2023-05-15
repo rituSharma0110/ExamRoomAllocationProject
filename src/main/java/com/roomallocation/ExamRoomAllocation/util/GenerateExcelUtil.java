@@ -255,6 +255,12 @@ public class GenerateExcelUtil {
         			if(val!=0) {
         				dataRow.createCell(2+i).setCellValue(val);
         			}
+//        			CellRangeAddress regionOne = new CellRangeAddress(l, l+1, i, i+1);
+//        			RegionUtil.setBorderBottom(CellStyle.BORDER_MEDIUM, regionOne, sheet, seatingChart);
+//        	        RegionUtil.setBorderLeft(CellStyle.BORDER_MEDIUM, regionOne, sheet, seatingChart);
+//        	        RegionUtil.setBorderRight(CellStyle.BORDER_MEDIUM, regionOne, sheet, seatingChart);
+//        	        RegionUtil.setBorderTop(CellStyle.BORDER_MEDIUM, regionOne, sheet, seatingChart);
+        			
         		}
 	        }
         	dataRow.createCell(2+batch.size()).setCellValue(total);
@@ -290,7 +296,7 @@ public class GenerateExcelUtil {
 		
 	}
 	
-	public byte [] createAttendanceList(ArrayList<AlgoOutputVO> outputList, List<StudentVO> studentList, HashMap<String, String> batchAndCourse, ArrayList<HallDataVO> list, String shift, String startTime, List<SuspendedStuVO> suspendList, String examName) {
+	public byte [] createAttendanceList(ArrayList<AlgoOutputVO> outputList, List<StudentVO> studentList, HashMap<String, String> batchAndCourse, ArrayList<HallDataVO> list, String shift, String startTime, List<SuspendedStuVO> suspendList, String examName, String headerName) {
 		ArrayList<StudentOutputVO> students = new ArrayList<>();
 		for (int i = 0 ; i< studentList.size(); i++) {
 			StudentOutputVO student = new StudentOutputVO();
@@ -383,31 +389,31 @@ public class GenerateExcelUtil {
             			if(mechanical.size()!=0) {
             				XSSFSheet spreadsheet = workbook.createSheet(controlContext.get(roomName) + " " + numberOfSheets);
             				numberOfSheets++;
-            				addStyleToSheet(spreadsheet, workbook, shift, startTime, examName);
+            				addStyleToSheet(spreadsheet, workbook, shift, startTime, examName, headerName);
             				createSeparateSheet(workbook, spreadsheet, mechanical, batch, outputList, i, mechRollNo, genderAllowed, j, suspendedRollNo );
             			}
             			if(electrical.size()!=0) {
             				XSSFSheet spreadsheet = workbook.createSheet(controlContext.get(roomName) + " " + numberOfSheets);
             				numberOfSheets++;
-            				addStyleToSheet(spreadsheet, workbook, shift, startTime, examName);
+            				addStyleToSheet(spreadsheet, workbook, shift, startTime, examName, headerName);
             				createSeparateSheet(workbook, spreadsheet, electrical, batch, outputList, i, elRollNo, genderAllowed, j, suspendedRollNo );
             			}
             			if(civil.size()!=0) {
             				XSSFSheet spreadsheet = workbook.createSheet(controlContext.get(roomName) + " " + numberOfSheets);
             				numberOfSheets++;
-            				addStyleToSheet(spreadsheet, workbook, shift, startTime, examName);
+            				addStyleToSheet(spreadsheet, workbook, shift, startTime, examName, headerName);
             				createSeparateSheet(workbook, spreadsheet, civil, batch, outputList, i, clRollNo, genderAllowed, j, suspendedRollNo );
             			}
             			if(footwear.size()!=0) {
             				XSSFSheet spreadsheet = workbook.createSheet(controlContext.get(roomName) + " " + numberOfSheets);
             				numberOfSheets++;
-            				addStyleToSheet(spreadsheet, workbook, shift, startTime, examName);
+            				addStyleToSheet(spreadsheet, workbook, shift, startTime, examName, headerName);
             				createSeparateSheet(workbook, spreadsheet, footwear, batch, outputList, i, fwRollNo, genderAllowed, j, suspendedRollNo );
             			}
             			if(agriculture.size()!=0) {
             				XSSFSheet spreadsheet = workbook.createSheet(controlContext.get(roomName) + " " + numberOfSheets);
             				numberOfSheets++;
-            				addStyleToSheet(spreadsheet, workbook, shift, startTime, examName);
+            				addStyleToSheet(spreadsheet, workbook, shift, startTime, examName, headerName);
             				createSeparateSheet(workbook, spreadsheet, agriculture, batch, outputList, i, agRollNo, genderAllowed, j, suspendedRollNo );
             			}
 //            			XSSFSheet spreadsheet = workbook.createSheet(batch + " " + roomName);
@@ -416,10 +422,12 @@ public class GenerateExcelUtil {
             			XSSFSheet spreadsheet = workbook.createSheet(controlContext.get(roomName) + " " + numberOfSheets);
             			numberOfSheets++;
             			// FIRST ROW CREATE WITH STYLES 
-            			addStyleToSheet(spreadsheet, workbook, shift, startTime, examName);
+            			addStyleToSheet(spreadsheet, workbook, shift, startTime, examName, headerName);
             			
             			Font cellFonts = workbook.createFont();
             			CellStyle otherCellStyle = workbook.createCellStyle();
+
+            			otherCellStyle.setAlignment(HorizontalAlignment.CENTER);
             			otherCellStyle.setFont(cellFonts);
             			otherCellStyle.setBorderTop(BorderStyle.THIN);
             			otherCellStyle.setBorderRight(BorderStyle.THIN);
@@ -444,7 +452,7 @@ public class GenerateExcelUtil {
             			
             			// this is to set style for Sno. col
             			CellStyle snoCellStyle = workbook.createCellStyle();
-            			snoCellStyle.setAlignment(HorizontalAlignment.CENTER);
+            			snoCellStyle.setAlignment(HorizontalAlignment.LEFT);
             			snoCellStyle.setFont(cellFonts);
             			snoCellStyle.setBorderTop(BorderStyle.THIN);
             			snoCellStyle.setBorderRight(BorderStyle.THIN);
@@ -472,7 +480,7 @@ public class GenerateExcelUtil {
             				for(int l = 0 ; l<=8 ; l++) {
             					dataRow.getCell(l).setCellStyle(otherCellStyle);
             				}
-            				dataRow.getCell(2).setCellStyle(snoCellStyle);
+            				dataRow.getCell(4).setCellStyle(snoCellStyle);
             				if(suspendedRollNo.size()!=0 && suspendedRollNo.contains(rollNo.get(rowCounter))) {
             					for(int l = 0 ; l<=8 ; l++) {
                 					dataRow.getCell(l).setCellStyle(style);
@@ -557,7 +565,7 @@ public class GenerateExcelUtil {
 		
 	}
 	
-	public void addStyleToSheet(XSSFSheet spreadsheet, XSSFWorkbook workbook, String shift, String startTime, String examName) {
+	public void addStyleToSheet(XSSFSheet spreadsheet, XSSFWorkbook workbook, String shift, String startTime, String examName, String headerName) {
 		Row firstRow = spreadsheet.createRow(0);
         // Create a new font and alter it.
         Font font = workbook.createFont();
@@ -578,8 +586,8 @@ public class GenerateExcelUtil {
         Row secRow = spreadsheet.createRow(1);
 	    style.setAlignment(HorizontalAlignment.CENTER);
 	    Cell secCell = secRow.createCell(0);
-	    StringBuilder secondHeader = new StringBuilder(examName).append(" ");
-	    secondHeader.append(shift + "-");
+	    StringBuilder secondHeader = new StringBuilder(examName).append("     ");
+	    secondHeader.append("      " + headerName).append("      ");
 	    secondHeader.append(startTime);
 	    secCell.setCellValue(secondHeader.toString());
 	    secCell.setCellStyle(style);
@@ -613,6 +621,7 @@ public class GenerateExcelUtil {
 		headerRow.createCell(8).setCellValue("Subject");
 		CellStyle cellStyle = workbook.createCellStyle();
 		cellStyle.setFont(headerfont);
+		cellStyle.setAlignment(HorizontalAlignment.CENTER);
 		cellStyle.setBorderTop(BorderStyle.THIN);
 		cellStyle.setBorderRight(BorderStyle.THIN);
 		cellStyle.setBorderBottom(BorderStyle.THIN);
