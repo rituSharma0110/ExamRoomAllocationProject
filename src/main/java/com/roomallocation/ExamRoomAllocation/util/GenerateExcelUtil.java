@@ -180,6 +180,9 @@ public class GenerateExcelUtil {
         totalCell.setCellValue("TOTAL");
         totalCell.setCellStyle(style);
         j=2;
+        int totalBoysCount = 0;
+        int totalGirlsCount = 0;
+        int totalStudents = 0;
         for (int i = 0 ; i < batchSub.size(); i++, j++) {
         	Cell cell = secHeaderRow.createCell(j);
 			cell.setCellValue(batchSub.get(i).substring(0,6));
@@ -193,12 +196,20 @@ public class GenerateExcelUtil {
 	    			girlsCount++;
 	    		}
         	}
+			
+			totalGirlsCount += girlsCount;
+			totalBoysCount += boysCount;
 			thirdHeaderRow.createCell(j).setCellValue(boysCount);
 			fourthHeaderRow.createCell(j).setCellValue(girlsCount);
 			fiftHeaderRow.createCell(j).setCellValue(girlsCount + boysCount);
 			
         }
-        secHeaderRow.createCell(batchSub.size() + 2).setCellStyle(otherStyle);;
+        totalStudents = totalBoysCount + totalGirlsCount;
+        thirdHeaderRow.createCell(j).setCellValue(totalBoysCount);
+        fourthHeaderRow.createCell(j).setCellValue(totalGirlsCount);
+        fiftHeaderRow.createCell(j).setCellValue(totalStudents);
+        secHeaderRow.createCell(batchSub.size() + 2).setCellStyle(otherStyle);
+        
         
         j = 2;
         int l = 6;

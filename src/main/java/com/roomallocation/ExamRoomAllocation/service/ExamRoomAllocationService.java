@@ -251,22 +251,6 @@ public class ExamRoomAllocationService {
 				  // shift name and other variables
 				  shift.append((char)(i + 'A') + " ").append(dateSheetList.get(1).getDate().replace("/", "-") + " ");
 				  hallDataList.add(list);
-				  String examDate = dateSheetList.get(1).getDate().replace("/", "-");
-				  
-				  // Getting output from room allocation algo
-				  MultiValueMap<String, List<String>> outputMap = new LinkedMultiValueMap<>();
-//				  outputMap = generateAlgorithm.generateAlgo(dateSheetList, list, studentList, (i+1));
-				  
-				  ObjectMapper mapper = new ObjectMapper();
-				  System.out.println(mapper.writeValueAsString(outputMap));
-				  
-				  // Converting output of room allocation algo to list of objects
-//				  ArrayList<AlgoOutputVO> outputList = generateAlgorithm.generateOutput(dateSheetList, list, studentList, (i+1));
-				  
-				  // Creating seating chart 
-				  excelUtil.seatingChart(outputMap, batch, batchSub, new String(shift), seatingChart, startTime, endTime, 
-						  examDate, studentList, list, examName, mappingList);
-				  
 				  
 				  // Creates attendance list
 				  excelUtil.createAttendanceList(outputList, studentList, batchAndCourse, list, new String(shift),

@@ -321,6 +321,10 @@ public class ReadExcelUtil {
 		   						 student.setRollNumber(formatter.formatCellValue(cell));
 		   					 }
 		   					 
+		   					 if(firstCell.getStringCellValue().equals("Student Name(Hindi)")) {
+		   						 // do nothing
+		   					 }
+		   					 
 		   					 
 		   				 }
 		   				 
