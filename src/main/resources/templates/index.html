@@ -7,11 +7,16 @@
       <title>Exam Room Allocation</title>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script> 
    </head>
-   <body>
+   <div>
 	   <header>
 		   <h1 class="header">Exam Room Allocation</h1>
 	   </header>
       <h4 class="heading">Welcome to The Portal</h4>
+      <div id="choice">	  
+	      <button class="btn" onclick="toCountFile()">Generate Student Count File</button>
+	      <button class="btn" onclick="toAllocateRoom()">Exam Room Allocation</button>
+	  </div>
+      <div id="first">
       <h3 >Upload Master registration files to generate Student Count File</h3>
       <div class="grid-container">
 		  <div class="grid-item">
@@ -28,7 +33,9 @@
 		  </div>
 	  </div>
 		  <button class="btn" value="Upload files" onclick="generateCountFile()">Upload</button>
-		  
+		  <button class="btn" onclick="toRefresh()">Back</button>
+	</div>
+		<div id="second">  
 	   <h3 >Upload mentioned files to generate Room Allocation File</h3>
       <div class="grid-container">
 		  <div class="grid-item">
@@ -60,8 +67,9 @@
 	  </div>
 	  
 	  <button class="btn" value="Upload" onclick="onUpload()">Upload</button>
-	  
-	  
+		  <button class="btn" onclick="toRefresh()">Back</button>
+	  </div>
+	  <div id="third">
 	  <h3 >Upload files to generate other files</h3>
       <div class="grid-container">
 		  <div class="grid-item">
@@ -109,7 +117,8 @@
 		  
 	  </div>
 		  <button class="btn" value="Upload files" onclick="generateOtherFiles()">Upload</button>
-	  
+		  <button class="btn" onclick="toRefresh()">Back</button>
+	  </div>
       <footer>
 		  <p class="footer">Exam Room Allocation: It is a software to allocate room for the examinations according to the course code, branch and class.</p>
 	  </footer>

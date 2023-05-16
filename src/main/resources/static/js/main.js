@@ -109,3 +109,21 @@ function generateOtherFiles() {
 
     xmlhttp1.send(fd);
 }
+
+function toCountFile(){
+	document.getElementById("choice").style.display="none";
+	document.getElementById("first").style.display="block";
+	document.getElementById("second").style.display="none";
+	document.getElementById("third").style.display="none";
+}
+
+function toAllocateRoom(){
+	document.getElementById("choice").style.display="none";
+	document.getElementById("first").style.display="none";
+	document.getElementById("second").style.display="block";
+	document.getElementById("third").style.display="block";
+}
+
+function toRefresh(){
+	window.location.reload();
+}

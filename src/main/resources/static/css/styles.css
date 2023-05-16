@@ -71,3 +71,10 @@ footer{
 	padding: 50px;
 	margin: 0px;
 }
+#first, #second, #third{
+	display: none;
+}
+
+#choice{
+	padding:40px 10px 150px 10px;
+}
