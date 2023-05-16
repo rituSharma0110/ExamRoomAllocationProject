@@ -366,7 +366,7 @@ public class ReadExcelUtil {
 	   		
 //   			System.out.println(studentList.get(1).getCourses().get(272));
 	   		 // this is for getting year -- any other way??
-	   		 semester = currentStudentList.get(1).getCourses().get(1).substring(3,4);
+	   		 semester = currentStudentList.get(1).getCourses().get(0).substring(3,4);
 //	   		 int yearInd = FILE_NAME.indexOf("SM");
 //	   		 String year = FILE_NAME.substring(yearInd+2,yearInd+3);
 	   		 ArrayList<String> courseList = new ArrayList<>(courseSet);
@@ -490,7 +490,7 @@ public class ReadExcelUtil {
 	   		 
 	   	 }
 	   	 ObjectMapper mapper = new ObjectMapper();
-		 System.out.println(studentList.get(1).getCourses().get(2));
+		 System.out.println(studentList.get(1).getCourses().get(0));
 		return studentList;
 	}
 
@@ -958,10 +958,12 @@ public class ReadExcelUtil {
 	 return null;
 	}
 
-	public ArrayList<AlgoOutputVO> readOutputFile(MultipartFile outputFile, List<BatchMapping> mappingList) throws IOException {
+	public ArrayList<AlgoOutputVO> readOutputFile(MultipartFile outputFile, List<BatchMapping> mappingList, int i2) throws IOException {
 		// TODO Auto-generated method stub
 		  XSSFWorkbook workbook = new XSSFWorkbook(outputFile.getInputStream());
-		  XSSFSheet worksheet = workbook.getSheetAt(0);
+		  
+		  
+		  XSSFSheet worksheet = workbook.getSheetAt(i2);
 		  
 		  ArrayList<String> abbreviation = new ArrayList<>();
 		  for(int i = 0; i<mappingList.size(); i++) {

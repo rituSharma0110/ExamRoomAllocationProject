@@ -328,9 +328,13 @@ public class GenerateExcelUtil {
         for(int i = 0; i < outputList.size(); i++) {
         	
         	for(int j = 0 ; j < outputList.get(i).getValues().size(); j++){// this will loop 6 times
+        		System.out.println(j);
         		int numberOfStudents = Integer.valueOf(outputList.get(i).getValues().get(j+1));
         		if(numberOfStudents != 0) {
+        			System.out.println("outputList : "+outputList.get(i).getValues().get(j));
+        			System.out.println("batchAndCourse : "+batchAndCourse);
         			String batch = batchAndCourse.get(outputList.get(i).getValues().get(j));
+        			System.out.println(batch);
         			String roomName = outputList.get(i).getClassRoom();
         			
         			if(batch.endsWith("BT") && !batch.equals("1BT")) {

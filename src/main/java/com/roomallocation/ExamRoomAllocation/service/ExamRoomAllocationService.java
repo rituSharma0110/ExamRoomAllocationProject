@@ -81,7 +81,7 @@ public class ExamRoomAllocationService {
 
              }
          });
-		 System.out.println("Service : " + studentList.get(1).getCourses().get(2));
+		 System.out.println("Service : " + studentList.get(1).getCourses().get(0));
 		 try {
 			 
 			  // Initializing arrayList 
@@ -113,7 +113,7 @@ public class ExamRoomAllocationService {
 								endTime = dateSheetList.get(j).getEndTime();
 								batchAndCourse.put( dateSheetList.get(j).getSubjectCode(), dateSheetList.get(j).getBatchName());
 						}
-						
+							System.out.println("batch & Course are upar waalaaaaa: " + batchAndCourse);
 					}
 				  }
 					
@@ -181,7 +181,6 @@ public class ExamRoomAllocationService {
 			MultipartFile matrixFile, MultipartFile suspendedStuFile, MultipartFile batchMapFile, MultipartFile outputFile) throws IOException {
 		
 		List<BatchMapping> mappingList = readExcelUtil.getMappingList(batchMapFile);
-		ArrayList<AlgoOutputVO> outputList = readExcelUtil.readOutputFile(outputFile, mappingList);
 		
 		List<RowColVO> matrixList = null;
 		 if(matrixFile != null) {
@@ -209,7 +208,7 @@ public class ExamRoomAllocationService {
 
             }
         });
-		 System.out.println("Service : " + studentList.get(1).getCourses().get(2));
+		 System.out.println("Service : " + studentList.get(1).getCourses().get(0));
 		 try {
 			 
 			  // Initializing arrayList 
@@ -226,6 +225,7 @@ public class ExamRoomAllocationService {
 			  logger.info(String.valueOf(workbook.getNumberOfSheets()));
 			  for (int i = 0; i < workbook.getNumberOfSheets(); i++)
 			  {
+				  ArrayList<AlgoOutputVO> outputList = readExcelUtil.readOutputFile(outputFile, mappingList,i);
 				  ArrayList<String> batch = new ArrayList<>();
 				  ArrayList<String> batchSub = new ArrayList<>();
 				  StringBuilder shift = new StringBuilder("Shift-");
@@ -243,6 +243,7 @@ public class ExamRoomAllocationService {
 						}
 						
 					}
+						System.out.println("batch & Course are : " + batchAndCourse);
 				  }
 					
 //				  Getting hall data for each shift	
