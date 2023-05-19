@@ -113,7 +113,6 @@ public class ExamRoomAllocationService {
 								endTime = dateSheetList.get(j).getEndTime();
 								batchAndCourse.put( dateSheetList.get(j).getSubjectCode(), dateSheetList.get(j).getBatchName());
 						}
-							System.out.println("batch & Course are upar waalaaaaa: " + batchAndCourse);
 					}
 				  }
 					
@@ -133,9 +132,6 @@ public class ExamRoomAllocationService {
 				  
 				  ObjectMapper mapper = new ObjectMapper();
 				  System.out.println(mapper.writeValueAsString(outputMap));
-				  
-				  // Converting output of room allocation algo to list of objects
-				  ArrayList<AlgoOutputVO> outputList = generateAlgorithm.generateOutput(dateSheetList, list, studentList, (i+1));
 				  
 				  // Creating seating chart 
 				  excelUtil.seatingChart(outputMap, batch, batchSub, new String(shift), seatingChart, startTime, endTime, 
@@ -243,7 +239,6 @@ public class ExamRoomAllocationService {
 						}
 						
 					}
-						System.out.println("batch & Course are : " + batchAndCourse);
 				  }
 					
 //				  Getting hall data for each shift	

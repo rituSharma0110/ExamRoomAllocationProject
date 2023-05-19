@@ -98,6 +98,8 @@ public class ReadExcelUtil {
 								 if(mappingList.get(i).getAbbreviation().equals(formatter.formatCellValue(cell).substring(1))) {
 									 abbreviation = formatter.formatCellValue(cell).substring(1);
 									 break;
+								 }else {
+									 abbreviation = formatter.formatCellValue(cell);
 								 }
 							 }
 							 dateSheetObj.setBatchName(formatter.formatCellValue(cell));
@@ -224,7 +226,8 @@ public class ReadExcelUtil {
 	   	 final String fileExtension = FILE_NAME.substring(FILE_NAME.lastIndexOf(".") + 1);
 	   	 String semester = "";
 	   	 
-	   	String mapperName = "";
+	   	 String mapperName = "";
+	   	 String year = "";
 	   	 if(fileExtension.equals("xls")) {
 	   		 
 	   		 HSSFWorkbook workbook = new HSSFWorkbook(file.getInputStream());
@@ -232,8 +235,15 @@ public class ReadExcelUtil {
 	   		 
 	   		 mapperName = workbook.getSheetAt(0).getRow(1).getCell(CellReference.convertColStringToIndex("E")).getStringCellValue().replace("Report for Program:- ", "");
 	   		 
+	   		 int sem = Integer.valueOf(workbook.getSheetAt(0).getRow(2).getCell(CellReference.convertColStringToIndex("E")).getStringCellValue().replaceAll("[^0-9]", ""));
+	   		 if(sem % 2==0) {
+	   			 year = String.valueOf(sem/2);
+	   		 }else {
+	   			 year = String.valueOf(sem/2 + 1);
+	   		 }
 //	   		 System.out.println("MapperName :  " + mapperName );
 	   		 boolean isOtherThanBT = false;
+	   		 boolean isBVOC = false;
 	   		 String abbreviation = "";
 	   		 for(int i = 0; i< mappingList.size(); i++) {
 //	   			 System.out.println((mappingList.get(i).getBatchName()));
@@ -242,6 +252,8 @@ public class ReadExcelUtil {
 	   				 abbreviation = mappingList.get(i).getAbbreviation();
 //	   				 System.out.println(abbreviation);
 	   				 break;
+	   			 }else if(mapperName.equals("B.VOC.")) {
+	   				 isBVOC= true;
 	   			 }
 	   		 }
 	   		 
@@ -271,6 +283,7 @@ public class ReadExcelUtil {
 	   		 int subjCounter = 0;
 	   		 List<StudentVO> currentStudentList = new ArrayList<>();
 	   		 
+	   		 String branch = "";
 	   		 // looping through each row
 	   		 for(int rowCounter = startRow; rowCounter<=rows ; rowCounter++) {
 	   			 // Getting student data of each roll number (each row)
@@ -302,6 +315,24 @@ public class ReadExcelUtil {
 		   					 }
 		   					 
 		   					 if(firstCell.getStringCellValue().equals("Branch")) {
+		   						 if(isBVOC) {
+		   							 if(formatter.formatCellValue(cell).equals("AI & ROBOTICS")) {
+		   								 branch = "AI";
+		   							 }else if(formatter.formatCellValue(cell).equals("AUTOMOBILE")) {
+		   								 branch = "AU";
+		   							 }else if(formatter.formatCellValue(cell).equals("DIGITAL MANUFACTURING")) {
+		   								 branch = "DM";
+		   							 }else if(formatter.formatCellValue(cell).equals("RENEWABLE ENERGY")) {
+		   								 branch = "RE";
+		   							 }else if(formatter.formatCellValue(cell).equals("WATER, SANITATION AND WASTE MANAGEMENT")) {
+		   								 branch = "WS";
+		   							 }
+		   							 
+		   						 }else if(mapperName.equals("B.ARCH.")) {
+		   							 branch = "";
+		   						 }else {
+		   							 branch = formatter.formatCellValue(cell).substring(0,1);
+		   						 }
 		   						 student.setBranch(formatter.formatCellValue(cell));
 		   					 }
 		   					 
@@ -341,12 +372,40 @@ public class ReadExcelUtil {
 			   						 String subjectName = cell.getStringCellValue() + "" + abbreviation;
 			   						 subjects.add(subjectName);
 			   						 student.setCourses(subjects);
-			   						 courseSet.add(subjectName);
+			   						 
+			   						 // this is to add course without appending
+			   						 subjects.add(cell.getStringCellValue());
+			   						 student.setCourses(subjects);
+			   						 
+			   						 courseSet.add(cell.getStringCellValue());
 //			   						 System.out.println("student: " +  subjectName);
+			   					 }else if(isBVOC) {
+			   						 String subjectName = cell.getStringCellValue() + "" + year + "" + branch;
+			   						 subjects.add(subjectName);
+			   						 student.setCourses(subjects);
+			   						 student.setCourses(subjects);
+			   						 
+			   						 // this is to add course without appending
+			   						 subjects.add(cell.getStringCellValue());
+			   						 student.setCourses(subjects);
+			   						 
+			   						 courseSet.add(cell.getStringCellValue());
+			   						 
 			   					 }else if(!isOtherThanBT){
-			   						 subjects.add( cell.getStringCellValue());
-			   						 student.setCourses(subjects); 
-//			   						 System.out.println("other :" +  cell.getStringCellValue() + "" + abbreviation);
+			   						 
+			   						 // this is to add 1BT
+			   						 String subjectName = cell.getStringCellValue() + "" + year + "" + branch;
+			   						 subjects.add(subjectName);
+			   						 student.setCourses(subjects);
+//			   						 System.out.println(mapperName.replaceAll("[^a-zA-Z0-9]", "").substring(0,2));
+			   						 // this is to add 1M
+			   						 subjectName = cell.getStringCellValue() + "" + year + "" + mapperName.replaceAll("[^a-zA-Z0-9]", "").substring(0,2);
+			   						 subjects.add(subjectName);
+			   						 student.setCourses(subjects);
+			   						 // this is to add course without appending
+			   						 subjects.add(cell.getStringCellValue());
+			   						 student.setCourses(subjects);
+			   						 
 			   						 courseSet.add(cell.getStringCellValue());
 			   					 }
 			   					 // Hashset for getting all the subjects which will be used to create header for the student_details sheet
