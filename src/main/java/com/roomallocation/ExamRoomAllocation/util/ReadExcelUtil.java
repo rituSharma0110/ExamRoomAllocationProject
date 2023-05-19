@@ -1028,6 +1028,8 @@ public class ReadExcelUtil {
 		  for(int i = 0; i<mappingList.size(); i++) {
 			  abbreviation.add(mappingList.get(i).getAbbreviation());
 		  }
+		  ObjectMapper mapper = new ObjectMapper();
+		  System.out.println(mapper.writeValueAsString(abbreviation));
 		  
 		  DataFormatter formatter = new DataFormatter();
 		  
@@ -1061,7 +1063,7 @@ public class ReadExcelUtil {
 				  }else {
 //					 System.out.println(formatter.formatCellValue(cell));
 					  if(!abbreviation.contains(firstRow.getCell(colCounter).getStringCellValue().substring(1))) {
-						  list.add(secondRow.getCell(colCounter).getStringCellValue());
+						  list.add(secondRow.getCell(colCounter).getStringCellValue() + "" + firstRow.getCell(colCounter).getStringCellValue());
 					  }else {
 						  list.add(secondRow.getCell(colCounter).getStringCellValue()+ "" + firstRow.getCell(colCounter).getStringCellValue().substring(1));
 					  }
@@ -1076,7 +1078,7 @@ public class ReadExcelUtil {
 			
 		  }
 		 
-		  ObjectMapper mapper = new ObjectMapper();
+//		  ObjectMapper mapper = new ObjectMapper();
 		  System.out.println(mapper.writeValueAsString(outputList));	  
 		  return outputList;
 		
