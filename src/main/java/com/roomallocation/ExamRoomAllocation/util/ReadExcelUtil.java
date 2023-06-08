@@ -2,7 +2,6 @@ package com.roomallocation.ExamRoomAllocation.util;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
@@ -131,14 +130,10 @@ public class ReadExcelUtil {
 	}
 	
 	public ArrayList<HallDataVO> getHallDataList(XSSFSheet worksheet){
-//		final String FILE_NAME = "C:\\Users\\This pc\\Downloads\\Hall Data.xlsx";
+		
 		 try {
-//			  FileInputStream excelFile = new FileInputStream(new File(FILE_NAME));
-//			  XSSFWorkbook workbook = new XSSFWorkbook(sheet.getInputStream());
-//			  XSSFSheet worksheet = workbook.getSheetAt(0);
 			  
 			  DataFormatter formatter = new DataFormatter();
-			  
 			  
 			  //Getting number of rows in a sheet
 			  int rows = worksheet.getLastRowNum();
@@ -157,7 +152,6 @@ public class ReadExcelUtil {
 				  int cols = worksheet.getRow(rowCounter).getLastCellNum();
 				  for(int colCounter = 0; colCounter<cols ; colCounter++) {
 					  XSSFCell cell =  row.getCell(colCounter);
-//					  logger.info("Inside read excel util");
 					  // to skip error when col is null
 					  if(cell==null) {
 						  
@@ -172,7 +166,6 @@ public class ReadExcelUtil {
 						 //Getting values from each col
 						 if(firstCell.getStringCellValue().equals("Room Name")) {
 							 hallDatatObj.setRoomName(formatter.formatCellValue(cell));
-//							 logger.info(formatter.formatCellValue(cell));
 						 }
 						 
 						 if(firstCell.getStringCellValue().equals("Faculty")) {
@@ -184,7 +177,6 @@ public class ReadExcelUtil {
 						 }
 						 
 						 if(firstCell.getStringCellValue().equals("Capacity")) {
-//							 System.out.println(cell.getNumericCellValue());
 							 hallDatatObj.setCapacity(formatter.formatCellValue(cell));
 						 }
 						 
@@ -241,16 +233,13 @@ public class ReadExcelUtil {
 	   		 }else {
 	   			 year = String.valueOf(sem/2 + 1);
 	   		 }
-//	   		 System.out.println("MapperName :  " + mapperName );
 	   		 boolean isOtherThanBT = false;
 	   		 boolean isBVOC = false;
 	   		 String abbreviation = "";
 	   		 for(int i = 0; i< mappingList.size(); i++) {
-//	   			 System.out.println((mappingList.get(i).getBatchName()));
 	   			 if(mappingList.get(i).getBatchName().equals(mapperName)) {
 	   				 isOtherThanBT = true;
 	   				 abbreviation = mappingList.get(i).getAbbreviation();
-//	   				 System.out.println(abbreviation);
 	   				 break;
 	   			 }else if(mapperName.equals("B.VOC.")) {
 	   				 isBVOC= true;
@@ -378,7 +367,6 @@ public class ReadExcelUtil {
 			   						 student.setCourses(subjects);
 			   						 
 			   						 courseSet.add(cell.getStringCellValue());
-//			   						 System.out.println("student: " +  subjectName);
 			   					 }else if(isBVOC) {
 			   						 String subjectName = cell.getStringCellValue() + "" + year + "" + branch;
 			   						 subjects.add(subjectName);
@@ -397,7 +385,6 @@ public class ReadExcelUtil {
 			   						 String subjectName = cell.getStringCellValue() + "" + year + "" + branch;
 			   						 subjects.add(subjectName);
 			   						 student.setCourses(subjects);
-//			   						 System.out.println(mapperName.replaceAll("[^a-zA-Z0-9]", "").substring(0,2));
 			   						 // this is to add 1M
 			   						 subjectName = cell.getStringCellValue() + "" + year + "" + mapperName.replaceAll("[^a-zA-Z0-9]", "").substring(0,2);
 			   						 subjects.add(subjectName);
@@ -408,7 +395,6 @@ public class ReadExcelUtil {
 			   						 
 			   						 courseSet.add(cell.getStringCellValue());
 			   					 }
-			   					 // Hashset for getting all the subjects which will be used to create header for the student_details sheet
 			   				 }
 			   				 
 			   			 }
@@ -423,11 +409,8 @@ public class ReadExcelUtil {
 	   			 
 	   		 }
 	   		
-//   			System.out.println(studentList.get(1).getCourses().get(272));
 	   		 // this is for getting year -- any other way??
 	   		 semester = currentStudentList.get(1).getCourses().get(0).substring(3,4);
-//	   		 int yearInd = FILE_NAME.indexOf("SM");
-//	   		 String year = FILE_NAME.substring(yearInd+2,yearInd+3);
 	   		 ArrayList<String> courseList = new ArrayList<>(courseSet);
 	   		 // this will create sorted excel sheet
 	   		 excelUtil.createSortedExcel(courseList, studentList, Integer.valueOf(semester), mapperName);
@@ -539,8 +522,6 @@ public class ReadExcelUtil {
 	   		 }
 	   		 // this is for getting year -- any other way??
 	   		 semester = currentStudentList.get(1).getCourses().get(1).substring(3,4);
-//	   		 int yearInd = FILE_NAME.indexOf("SM");
-//	   		 String year = FILE_NAME.substring(yearInd+2,yearInd+3);
 	   		 ArrayList<String> courseList = new ArrayList<>(courseSet);
 	   		 // this will create sorted excel sheet
 	   		 excelUtil.createSortedExcel(courseList, currentStudentList, Integer.valueOf(semester), mapperName);
@@ -548,7 +529,7 @@ public class ReadExcelUtil {
 	   		 return studentList;
 	   		 
 	   	 }
-	   	 ObjectMapper mapper = new ObjectMapper();
+	   	 
 		 System.out.println(studentList.get(1).getCourses().get(0));
 		return studentList;
 	}
@@ -708,7 +689,7 @@ public class ReadExcelUtil {
 		 logger.info("Creating Count Excel File");
 		 List<StudentVO> studentList = new ArrayList<>();
 		 DataFormatter formatter = new DataFormatter();
-		 final	String FILE_NAME = file.getOriginalFilename();
+		 final String FILE_NAME = file.getOriginalFilename();
 	   	 final String fileExtension = FILE_NAME.substring(FILE_NAME.lastIndexOf(".") + 1);
 	   	 
 	   	 
@@ -1045,7 +1026,8 @@ public class ReadExcelUtil {
 			  // Getting student data of each roll number (each row)
 			  AlgoOutputVO algoObj = new AlgoOutputVO();
 			  XSSFRow row = worksheet.getRow(rowCounter);
-			  if(row.getCell(0).getStringCellValue().equals("EN") || row.getCell(0).getStringCellValue().equals("AR")) {
+			  if(row.getCell(0).getStringCellValue().equals("EN") || row.getCell(0).getStringCellValue().equals("AR")
+					  || row.getCell(0).getStringCellValue().equals("EDU") || row.getCell(0).getStringCellValue().equals("SOE")) {
 				  continue;
 			  }
 			  algoObj.setClassRoom(row.getCell(1).getStringCellValue());
@@ -1055,13 +1037,11 @@ public class ReadExcelUtil {
 			  int cols = worksheet.getRow(rowCounter).getLastCellNum();
 			  ArrayList<String> list = new ArrayList<>();
 			  for(int colCounter = 2; colCounter<cols-1 ; colCounter++) {
-//				  System.out.println(colCounter);
 				  XSSFCell cell =  row.getCell(colCounter);
 				  // to skip error when col is null
-				  if(cell==null) {
+				  if(cell==null || formatter.formatCellValue(cell).equals("")) {
 //					  System.out.println("null");
 				  }else {
-//					 System.out.println(formatter.formatCellValue(cell));
 					  if(!abbreviation.contains(firstRow.getCell(colCounter).getStringCellValue().substring(1))) {
 						  list.add(secondRow.getCell(colCounter).getStringCellValue() + "" + firstRow.getCell(colCounter).getStringCellValue());
 					  }else {
@@ -1078,8 +1058,7 @@ public class ReadExcelUtil {
 			
 		  }
 		 
-//		  ObjectMapper mapper = new ObjectMapper();
-		  System.out.println(mapper.writeValueAsString(outputList));	  
+//		  System.out.println(mapper.writeValueAsString(outputList));	  
 		  return outputList;
 		
 	}

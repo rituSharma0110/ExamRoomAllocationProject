@@ -49,7 +49,6 @@ public class ExamRoomAllocationService {
 	private static final Logger logger = (Logger) LoggerFactory.getLogger(ExamRoomAllocationService.class);
 	
 	HashSet<String> courseSet = new HashSet<>();
-
 	
 	public String healthCheck() {
 		// TODO Auto-generated method stub
@@ -65,7 +64,6 @@ public class ExamRoomAllocationService {
 	public String generateSeatingArrangement(MultipartFile[] files, MultipartFile dateSheetFile, MultipartFile hallFile, 
 			MultipartFile batchMapFile) {
 		
-		 
 		 List<BatchMapping> mappingList = readExcelUtil.getMappingList(batchMapFile);
 		
 		 //Initializing student list of Student VO object 
@@ -81,9 +79,9 @@ public class ExamRoomAllocationService {
 
              }
          });
-		 System.out.println("Service : " + studentList.get(1).getCourses().get(0));
+//		 System.out.println("Service : " + studentList.get(1).getCourses().get(0));
+		 
 		 try {
-			 
 			  // Initializing arrayList 
 			  ArrayList<ArrayList<HallDataVO>> hallDataList = new ArrayList<ArrayList<HallDataVO>>();
 			  XSSFWorkbook workbook = new XSSFWorkbook(hallFile.getInputStream());
@@ -116,7 +114,7 @@ public class ExamRoomAllocationService {
 					}
 				  }
 					
-//				  Getting hall data for each shift	
+				  // Getting hall data for each shift	
 				  XSSFSheet sheet = workbook.getSheetAt(i);
 				  ArrayList<HallDataVO> list  = readExcelUtil.getHallDataList(sheet);
 				  
@@ -136,8 +134,6 @@ public class ExamRoomAllocationService {
 				  // Creating seating chart 
 				  excelUtil.seatingChart(outputMap, batch, batchSub, new String(shift), seatingChart, startTime, endTime, 
 						  examDate, studentList, list, examName, mappingList);
-				  
-				  
 				  
 			  }
 			  
@@ -247,7 +243,6 @@ public class ExamRoomAllocationService {
 				  
 				  
 				  // shift name and other variables
-				  
 				  StringBuilder headerName = new StringBuilder("Shift-");
 				  headerName.append((char)(i + 'A') + "        ").append(dateSheetList.get(1).getDate().replace("/", "-") + "       ");
 				  
@@ -264,7 +259,6 @@ public class ExamRoomAllocationService {
 					  excelUtil.createMatrix(outputList, studentList, batchAndCourse, list, new String(shift),
 							  startTime, matrixList);
 				  }
-				  
 				  
 				  // creating seating display or seating list
 				  excelUtil.createSeatingList(studentList, new String(shift));

@@ -2,9 +2,9 @@ package com.roomallocation.ExamRoomAllocation.controller;
 
 import static com.roomallocation.ExamRoomAllocation.constants.ExamRoomAllocationConstants.BASE_URL;
 import static com.roomallocation.ExamRoomAllocation.constants.ExamRoomAllocationConstants.HEALTHCHECK_URL;
-
-import java.io.IOException;
-import java.util.Arrays;
+import static com.roomallocation.ExamRoomAllocation.constants.ExamRoomAllocationConstants.GENERATE_SEATING_ARRANGEMENT;
+import static com.roomallocation.ExamRoomAllocation.constants.ExamRoomAllocationConstants.GENERATE_COUNT_FILE;
+import static com.roomallocation.ExamRoomAllocation.constants.ExamRoomAllocationConstants.GENERATE_OTHER_FILES;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.stereotype.Controller;
 
-import com.google.common.io.Files;
 import com.roomallocation.ExamRoomAllocation.service.ExamRoomAllocationService;
 
 import ch.qos.logback.classic.Logger;
@@ -35,11 +34,11 @@ public class ExamRoomAllocationController {
 	
 	private static final Logger logger = (Logger) LoggerFactory.getLogger(ExamRoomAllocationController.class);
 	
-	// Basic Health check to be added
 
 	@Autowired
 	private ExamRoomAllocationService examRoomAllocationService;
 	                                           
+	// Basic Health check 
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
 	@GetMapping(value = HEALTHCHECK_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "Health Check", notes = "This is the health check service.")
@@ -57,7 +56,7 @@ public class ExamRoomAllocationController {
 	}
 	
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
-	@PostMapping(value = "/generateSeatingArrangement")
+	@PostMapping(value = GENERATE_SEATING_ARRANGEMENT)
 	@ApiOperation(value = "Generate Seating Arrangement pdf", notes = "This is for generating excel/pdf of seating arrangement")
 	public ResponseEntity<String> generateSeatingArrangement(
 			@RequestParam("file") MultipartFile [] files,
@@ -79,7 +78,7 @@ public class ExamRoomAllocationController {
 	
 	
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
-	@PostMapping(value = "/generateCountFile")
+	@PostMapping(value = GENERATE_COUNT_FILE)
 	@ApiOperation(value = "Generate Student Counts Excel", notes = "This is for generating excel/pdf of seating arrangement")
 	public ResponseEntity<String> generateCountFile(
 			@RequestParam("file") MultipartFile [] files,
@@ -98,7 +97,7 @@ public class ExamRoomAllocationController {
 	
 	
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
-	@PostMapping(value = "/generateOtherFiles")
+	@PostMapping(value = GENERATE_OTHER_FILES)
 	@ApiOperation(value = "Generate Student Counts Excel", notes = "This is for generating excel/pdf of seating arrangement")
 	public ResponseEntity<String> generateOtherFiles(
 			@RequestParam(value = "outputFile", required=false) MultipartFile outputFile,
