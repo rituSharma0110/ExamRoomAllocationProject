@@ -79,7 +79,6 @@ public class ExamRoomAllocationService {
 
              }
          });
-//		 System.out.println("Service : " + studentList.get(1).getCourses().get(0));
 		 
 		 try {
 			  // Initializing arrayList 
@@ -93,7 +92,6 @@ public class ExamRoomAllocationService {
 			  String examName = dateSheetList.get(0).getExamName();
 			  // this loops for each shift
 			  XSSFWorkbook seatingChart = new XSSFWorkbook();
-			  logger.info(String.valueOf(workbook.getNumberOfSheets()));
 			  for (int i = 0; i < workbook.getNumberOfSheets(); i++)
 			  {
 				  ArrayList<String> batch = new ArrayList<>();
@@ -122,14 +120,17 @@ public class ExamRoomAllocationService {
 				  shift.append((char)(i + 'A') + " ").append(dateSheetList.get(1).getDate().replace("/", "-") + " ");
 				  hallDataList.add(list);
 				  String examDate = dateSheetList.get(1).getDate().replace("/", "-");
-				  System.out.println(examDate);
 				  
 				  // Getting output from room allocation algo
 				  MultiValueMap<String, List<String>> outputMap = new LinkedMultiValueMap<>();
 				  outputMap = generateAlgorithm.generateAlgo(dateSheetList, list, studentList, (i+1));
 				  
-				  ObjectMapper mapper = new ObjectMapper();
-				  System.out.println(mapper.writeValueAsString(outputMap));
+				  if(outputMap.isEmpty()) 
+					  continue;
+				  
+				  // You can use object mapper to print the output of hashmap of objects
+//				  ObjectMapper mapper = new ObjectMapper();
+//				  System.out.println(mapper.writeValueAsString(outputMap));
 				  
 				  // Creating seating chart 
 				  excelUtil.seatingChart(outputMap, batch, batchSub, new String(shift), seatingChart, startTime, endTime, 
@@ -200,7 +201,6 @@ public class ExamRoomAllocationService {
 
             }
         });
-		 System.out.println("Service : " + studentList.get(1).getCourses().get(0));
 		 try {
 			 
 			  // Initializing arrayList 
@@ -214,7 +214,6 @@ public class ExamRoomAllocationService {
 			  String examName = dateSheetList.get(0).getExamName();
 			  // this loops for each shift
 			  XSSFWorkbook seatingChart = new XSSFWorkbook();
-			  logger.info(String.valueOf(workbook.getNumberOfSheets()));
 			  for (int i = 0; i < workbook.getNumberOfSheets(); i++)
 			  {
 				  ArrayList<AlgoOutputVO> outputList = readExcelUtil.readOutputFile(outputFile, mappingList,i);

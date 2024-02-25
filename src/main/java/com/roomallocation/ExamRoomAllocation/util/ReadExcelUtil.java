@@ -36,21 +36,20 @@ public class ReadExcelUtil {
 	
 	public List<DatesheetVO> getDateSheetList(MultipartFile dateSheetFile, List<BatchMapping> mappingList){
 		 try {
-			  XSSFWorkbook workbook = new XSSFWorkbook(dateSheetFile.getInputStream());
+			@SuppressWarnings("resource")
+			XSSFWorkbook workbook = new XSSFWorkbook(dateSheetFile.getInputStream());
 			  XSSFSheet worksheet = workbook.getSheetAt(0);
 			  
 			  DataFormatter formatter = new DataFormatter();
 			  
 			  //Getting number of rows in a sheet
 			  int rows = worksheet.getLastRowNum();
-			  System.out.println("In Datesheet: "+ rows);
 			  
 			  //Initializing student list of Student VO object 
 			  List<DatesheetVO> dateSheetList = new ArrayList<>();
 			  
 			  XSSFRow headerRow = worksheet.getRow(0);
 			  String examName = headerRow.getCell(0).getStringCellValue();
-			  logger.info(examName);
 			  // looping through each row
 			  for(int rowCounter = 1; rowCounter<=rows ; rowCounter++) {
 				  String abbreviation = "";
@@ -120,10 +119,12 @@ public class ReadExcelUtil {
 				
 			  }
 			 
+			  System.out.println("In ReadExcelUtility : Datesheet excel read successfully and created to object list ");
+			  
 			  return dateSheetList;
 	  
 		} catch (Exception e) {
-			  logger.error(e.getMessage());
+			  logger.error("In ReadExcelUtility : Datesheet excel read : " + e.getMessage());
 			
 		}
 		 return null;
@@ -137,7 +138,6 @@ public class ReadExcelUtil {
 			  
 			  //Getting number of rows in a sheet
 			  int rows = worksheet.getLastRowNum();
-			  System.out.println(rows);
 			  
 			  //Initializing student list of Student VO object 
 			  ArrayList<HallDataVO> hallDataList = new ArrayList<>();
@@ -200,17 +200,17 @@ public class ReadExcelUtil {
 				 
 				
 			  }
+			  System.out.println("In ReadExcelUtility : Halldata excel read successfully and created to object list ");
 			  return hallDataList;
 	  
 		} catch (Exception e) {
-			  logger.error(e.getMessage());
+			  logger.error("In ReadExcelUtility : Halldata excel read : " + e.getMessage());
 			
 		}
 		 return null;
 	}
 	
 	public List<StudentVO> getStudentList(MultipartFile file, List<BatchMapping> mappingList) throws IOException{
-		logger.info("start");
 		 HashSet<String> courseSet = new HashSet<>();
 		 List<StudentVO> studentList = new ArrayList<>();
 		 DataFormatter formatter = new DataFormatter();
@@ -248,7 +248,6 @@ public class ReadExcelUtil {
 	   		 
 	   		 //Getting number of rows in a sheet
 	   		 int rows = worksheet.getLastRowNum();
-	   		 System.out.println(rows);
 	   		 
 	   		 // this is to find row from where headers starts
 	   		 int startRow = 0;
@@ -416,12 +415,12 @@ public class ReadExcelUtil {
 	   		 excelUtil.createSortedExcel(courseList, studentList, Integer.valueOf(semester), mapperName);
 	   	 }else {
 	   		 
-	   		 XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
+	   		 @SuppressWarnings("resource")
+			 XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
 	   		 XSSFSheet worksheet = workbook.getSheetAt(0);
 	   		 
 	   		 //Getting number of rows in a sheet
 	   		 int rows = worksheet.getLastRowNum();
-	   		 System.out.println(rows);
 	   		 
 	   		 // this is to find row from where headers starts
 	   		 int startRow = 0;
@@ -499,7 +498,6 @@ public class ReadExcelUtil {
 		   				 
 		   			 }
 		   			}
-	   			 logger.info(String.valueOf(subjCounter));
 		   			if(rowCounter != startRow ) {
 		   				// this is for getting subjects for each student
 			   			 for(int colCounter = subjCounter-1; colCounter<=cols ; colCounter++) {
@@ -526,16 +524,17 @@ public class ReadExcelUtil {
 	   		 // this will create sorted excel sheet
 	   		 excelUtil.createSortedExcel(courseList, currentStudentList, Integer.valueOf(semester), mapperName);
 	   		
+	   		 System.out.println("In ReadExcelUtility : Master registration excel read successfully and created to object list ");
 	   		 return studentList;
 	   		 
 	   	 }
 	   	 
-		 System.out.println(studentList.get(1).getCourses().get(0));
 		return studentList;
 	}
 
 	public List<RowColVO> getMatrix(MultipartFile matrixFile) {
 		try {
+			  @SuppressWarnings("resource")
 			  XSSFWorkbook workbook = new XSSFWorkbook(matrixFile.getInputStream());
 			  XSSFSheet worksheet = workbook.getSheetAt(0);
 			  
@@ -543,7 +542,6 @@ public class ReadExcelUtil {
 			  
 			  //Getting number of rows in a sheet
 			  int rows = worksheet.getLastRowNum();
-			  System.out.println(rows);
 			  
 			  //Initializing student list of Student VO object 
 			  List<RowColVO> rowColList = new ArrayList<>();
@@ -589,12 +587,12 @@ public class ReadExcelUtil {
 				 
 				
 			  }
-			  ObjectMapper mapper = new ObjectMapper();
-			  System.out.println(mapper.writeValueAsString(rowColList));
+//			  ObjectMapper mapper = new ObjectMapper();
+			  System.out.println("In ReadExcelUtility : Matrix excel file read successfully and created to object list ");
 			  return rowColList;
 	  
 		} catch (Exception e) {
-			  logger.error(e.getMessage());
+			  logger.error("In ReadExcelUtility : Matrix excel file read : " + e.getMessage());
 			
 		}
 		 return null;
@@ -603,6 +601,7 @@ public class ReadExcelUtil {
 	
 	public List<SuspendedStuVO> getSuspendList(MultipartFile suspendedStuFile) {
 		try {
+			  @SuppressWarnings("resource")
 			  XSSFWorkbook workbook = new XSSFWorkbook(suspendedStuFile.getInputStream());
 			  XSSFSheet worksheet = workbook.getSheetAt(0);
 			  
@@ -610,7 +609,6 @@ public class ReadExcelUtil {
 			  
 			  //Getting number of rows in a sheet
 			  int rows = worksheet.getLastRowNum();
-			  System.out.println(rows);
 			  
 			  int startRow = 0;
 		   		 for(int i = 0; i <= rows; i ++) {
@@ -630,7 +628,6 @@ public class ReadExcelUtil {
 		   			 
 		   		 }
 			  
-		   		 System.out.println(startRow);
 			  //Initializing student list of Student VO object 
 			  List<SuspendedStuVO> suspendList = new ArrayList<>();
 			  
@@ -641,7 +638,6 @@ public class ReadExcelUtil {
 				  XSSFRow row = worksheet.getRow(rowCounter);
 		   		  XSSFRow firstRow = worksheet.getRow(startRow);
 		   		  int cols = worksheet.getRow(rowCounter).getLastCellNum();
-				  System.out.println(cols);
 				  for(int colCounter = 0; colCounter<cols ; colCounter++) {
 					  XSSFCell cell =  row.getCell(colCounter);
 					  if(cell==null) {
@@ -672,12 +668,12 @@ public class ReadExcelUtil {
 				 
 				
 			  }
-			  ObjectMapper mapper = new ObjectMapper();
-			  System.out.println(mapper.writeValueAsString(suspendList));
+//			  ObjectMapper mapper = new ObjectMapper();
+			  System.out.println("In ReadExcelUtility : Suspended students excel read successfully and created to object list ");
 			  return suspendList;
 //	  
 		} catch (Exception e) {
-			  logger.error(e.getMessage());
+			  logger.error("In ReadExcelUtility : Suspended students excel read : " + e.getMessage());
 			
 		}
 		 return null;
@@ -686,7 +682,6 @@ public class ReadExcelUtil {
 	public void createCountExcel(MultipartFile file, List<SuspendedStuVO> suspendList) throws IOException {
 		// TODO Auto-generated method stub
 		 HashSet<String> courseSet = new HashSet<>();
-		 logger.info("Creating Count Excel File");
 		 List<StudentVO> studentList = new ArrayList<>();
 		 DataFormatter formatter = new DataFormatter();
 		 final String FILE_NAME = file.getOriginalFilename();
@@ -708,7 +703,6 @@ public class ReadExcelUtil {
 	   		 
 	   		 //Getting number of rows in a sheet
 	   		 int rows = worksheet.getLastRowNum();
-	   		 System.out.println(rows);
 	   		 
 	   		 // this is to find row from where headers starts
 	   		 int startRow = 0;
@@ -824,7 +818,6 @@ public class ReadExcelUtil {
 	   		 
 	   		 //Getting number of rows in a sheet
 	   		 int rows = worksheet.getLastRowNum();
-	   		 System.out.println(rows);
 	   		 
 	   		 // this is to find row from where headers starts
 	   		 int startRow = 0;
@@ -884,7 +877,6 @@ public class ReadExcelUtil {
 		   				 
 		   			 }
 		   			}
-	   			 logger.info(String.valueOf(subjCounter));
 		   			if(rowCounter != startRow ) {
 		   				// this is for getting subjects for each student
 			   			 for(int colCounter = subjCounter-1; colCounter<=cols ; colCounter++) {
@@ -936,19 +928,18 @@ public class ReadExcelUtil {
 
 	public List<BatchMapping> getMappingList(MultipartFile batchMapFile) {
 		try {
-		 XSSFWorkbook workbook = new XSSFWorkbook(batchMapFile.getInputStream());
+		  @SuppressWarnings("resource")
+		  XSSFWorkbook workbook = new XSSFWorkbook(batchMapFile.getInputStream());
 		  XSSFSheet worksheet = workbook.getSheetAt(0);
 		  
 		  DataFormatter formatter = new DataFormatter();
 		  
 		  //Getting number of rows in a sheet
 		  int rows = worksheet.getLastRowNum();
-		  System.out.println(rows);
 		  
 		  //Initializing student list of Student VO object 
 		  List<BatchMapping> batchList = new ArrayList<>();
 		  
-		  XSSFRow headerRow = worksheet.getRow(0);
 		  // looping through each row
 		  for(int rowCounter = 0; rowCounter<=rows ; rowCounter++) {
 			  // Getting student data of each roll number (each row)
@@ -987,36 +978,33 @@ public class ReadExcelUtil {
 			
 		  }
 		 
-		  ObjectMapper mapper = new ObjectMapper();
-		  System.out.println(mapper.writeValueAsString(batchList));	  
+//		  ObjectMapper mapper = new ObjectMapper();
+		  System.out.println("In ReadExcelUtility : Batch Map excel read successfully and created to object list "); 
 		  return batchList;
  
 	} catch (Exception e) {
-		  logger.error(e.getMessage());
+		  logger.error("In ReadExcelUtility : Batch Map excel read : " + e.getMessage());
 		
 	}
 	 return null;
 	}
 
 	public ArrayList<AlgoOutputVO> readOutputFile(MultipartFile outputFile, List<BatchMapping> mappingList, int i2) throws IOException {
-		// TODO Auto-generated method stub
-		  XSSFWorkbook workbook = new XSSFWorkbook(outputFile.getInputStream());
-		  
-		  
+		
+		@SuppressWarnings("resource")
+		XSSFWorkbook workbook = new XSSFWorkbook(outputFile.getInputStream());
 		  XSSFSheet worksheet = workbook.getSheetAt(i2);
 		  
 		  ArrayList<String> abbreviation = new ArrayList<>();
 		  for(int i = 0; i<mappingList.size(); i++) {
 			  abbreviation.add(mappingList.get(i).getAbbreviation());
 		  }
-		  ObjectMapper mapper = new ObjectMapper();
-		  System.out.println(mapper.writeValueAsString(abbreviation));
+//		  ObjectMapper mapper = new ObjectMapper();
 		  
 		  DataFormatter formatter = new DataFormatter();
 		  
 		  //Getting number of rows in a sheet
 		  int rows = worksheet.getLastRowNum();
-		  System.out.println(rows);
 		  
 		  //Initializing student list of Student VO object 
 		  ArrayList<AlgoOutputVO> outputList = new ArrayList<>();
@@ -1031,7 +1019,6 @@ public class ReadExcelUtil {
 				  continue;
 			  }
 			  algoObj.setClassRoom(row.getCell(1).getStringCellValue());
-			  System.out.println(row.getCell(1).getStringCellValue());
 			  XSSFRow firstRow = worksheet.getRow(1);
 			  XSSFRow secondRow = worksheet.getRow(2);
 			  int cols = worksheet.getRow(rowCounter).getLastCellNum();
@@ -1058,7 +1045,7 @@ public class ReadExcelUtil {
 			
 		  }
 		 
-//		  System.out.println(mapper.writeValueAsString(outputList));	  
+	      System.out.println("In ReadExcelUtility : Output object read successfully");	  
 		  return outputList;
 		
 	}

@@ -97,7 +97,7 @@ public class GenerateExcelUtil {
 		}
 
        
-        System.out.println("Write to excel sheet done....");
+        System.out.println("Write to excel sheet done, Sorted Excel file for " + mapperName + year + " created");
         
 	}
 	
@@ -308,7 +308,7 @@ public class GenerateExcelUtil {
 		}
 
        
-        System.out.println("Write to excel sheet done....");
+        System.out.println("Write to excel sheet done, Seating chart/plan created");
 		
 		return null;
 		
@@ -346,13 +346,9 @@ public class GenerateExcelUtil {
         for(int i = 0; i < outputList.size(); i++) {
         	
         	for(int j = 0 ; j < outputList.get(i).getValues().size(); j++){// this will loop 6 times
-        		System.out.println(j);
         		int numberOfStudents = Integer.valueOf(outputList.get(i).getValues().get(j+1));
         		if(numberOfStudents != 0) {
-        			System.out.println("outputList : "+outputList.get(i).getValues().get(j));
-        			System.out.println("batchAndCourse : "+batchAndCourse);
         			String batch = batchAndCourse.get(outputList.get(i).getValues().get(j));
-        			System.out.println(batch);
         			String roomName = outputList.get(i).getClassRoom();
         			
         			if(batch.endsWith("BT") && !batch.equals("1BT")) {
@@ -545,6 +541,7 @@ public class GenerateExcelUtil {
 			e.printStackTrace();
 		}
         
+		System.out.println("Write to excel sheet done, Attendance sheet for " + shift + " created");
 		return null;
         
 		
@@ -580,6 +577,7 @@ public class GenerateExcelUtil {
 				e.printStackTrace();
 			}
 	        
+			System.out.println("Write to excel sheet done, Seating List for " + shift + " created");
 			return null;
 		
 	}
@@ -844,7 +842,7 @@ public class GenerateExcelUtil {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-        
+		System.out.println("Write to excel sheet done, Matrix file for " + shift + " created");
 	}
 
 
@@ -890,7 +888,7 @@ public class GenerateExcelUtil {
 		}
 
        
-        System.out.println("Write to excel sheet done....");
+        System.out.println("Write to excel sheet done, Count files for " + fileName + " master registration file created");
         
 	}
 

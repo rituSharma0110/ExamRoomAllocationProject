@@ -22,6 +22,9 @@ public class GenerateAlgo {
 	
 	public MultiValueMap<String, List<String>> generateAlgo(ArrayList<DatesheetVO> dateSheetList, ArrayList<HallDataVO> hallDataList, 
 			List<StudentVO> studentList, int shiftNumber) {
+		// this contains the seating plan with each classes and courses
+		MultiValueMap<String, List<String>> outputMap = new LinkedMultiValueMap<>();
+		
 		HashMap<String, Integer> listOfGirlsStudents = new HashMap<>();
 		HashMap<String, Integer> listOfBoysStudents = new HashMap<>();
 		HashMap<String, Integer> hallCapacityForMale = new HashMap<>();
@@ -53,6 +56,9 @@ public class GenerateAlgo {
 			
 		}
 
+		if(listOfBoysStudents.isEmpty() && listOfGirlsStudents.isEmpty()) {
+			return outputMap;
+		}
 		
 		int val = 0;
 		for(int i = 0; i < hallDataList.size(); i++) {
@@ -67,9 +73,8 @@ public class GenerateAlgo {
 		}
 		
 
-		MultiValueMap<String, List<String>> outputMap = new LinkedMultiValueMap<>();
 		
-//		System.out.println("Loop starting...");
+		
 		boolean isDrawingGirlsAvailabe = true;
 		while(hallCapacityForFemale.size()!=0) {
 			ArrayList<String> courseList = new ArrayList<>();
@@ -87,7 +92,6 @@ public class GenerateAlgo {
 								}	
 							}
 						}
-						System.out.println(DHGCount);
 						if(DHGCount!=0) {
 							subCode=dateSheetList.get(i).getSubjectCode();
 							int index=0;
@@ -126,10 +130,8 @@ public class GenerateAlgo {
 			}
 			isDrawingGirlsAvailabe = false;
 
-//			System.out.print("In Loop...");
 		}
 
-//			System.out.print("Loop ending...");
 			
 			LinkedHashMap<String, Integer> studentMap = listOfGirlsStudents.entrySet()
 		            .stream()
@@ -155,11 +157,14 @@ public class GenerateAlgo {
 					room = entry.getKey();
 				}
 			}
-			int a,b,c,d;
+			int a,b,c,d = 0;
 			a = studentMap.get(studentMap.keySet().toArray()[0]);
 			b = studentMap.get(studentMap.keySet().toArray()[1]);
 			c = studentMap.get(studentMap.keySet().toArray()[2]);
-			d = studentMap.get(studentMap.keySet().toArray()[3]);
+			if(studentMap.keySet().size()>3){
+				d = studentMap.get(studentMap.keySet().toArray()[3]);
+			}
+			
 			String remain = null;
 			
 			for (Map.Entry<String, Integer> entry : studentMap.entrySet()) {
@@ -463,7 +468,6 @@ public class GenerateAlgo {
 								}	
 							}
 						}
-						System.out.println(DHBCount);
 						if(DHBCount!=0) {
 							subCode=dateSheetList.get(i).getSubjectCode();
 							int index=0;
@@ -476,7 +480,6 @@ public class GenerateAlgo {
 										index=m;
 									}
 								}
-								System.out.println("Room : " + room + " has " + value + " capacity");
 								if(DHBCount>=value) {
 									listOfBoysStudents.replace(subCode, DHBCount-value);
 									courseDHList.add(subCode);
@@ -504,10 +507,8 @@ public class GenerateAlgo {
 			}
 				isDrawingBoyssAvailabe = false;
 
-			System.out.print("In Loop...");
 		}
 
-			System.out.print("Loop ending...");
 			LinkedHashMap<String, Integer> studentMap = listOfBoysStudents.entrySet()
 		            .stream()
 		            .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
@@ -532,11 +533,14 @@ public class GenerateAlgo {
 					room = entry.getKey();
 				}
 			}
-			int a,b,c,d;
+			int a,b,c,d = 0;
 			a = studentMap.get(studentMap.keySet().toArray()[0]);
 			b = studentMap.get(studentMap.keySet().toArray()[1]);
 			c = studentMap.get(studentMap.keySet().toArray()[2]);
-			d = studentMap.get(studentMap.keySet().toArray()[3]);
+			if(studentMap.keySet().size()>3){
+				d = studentMap.get(studentMap.keySet().toArray()[3]);
+			}
+			
 			String remain = null;
 			
 			for (Map.Entry<String, Integer> entry : studentMap.entrySet()) {
@@ -580,58 +584,51 @@ public class GenerateAlgo {
 	                }
 	            }
 	            studentMap.remove(z);
-	            if(x.equals("OMH281")) {
-					System.out.println("OMH Students: "+listOfBoysStudents.get(x));
-				}
-	            if(y.equals("OMH281")) {
-					System.out.println("OMH Students: "+listOfBoysStudents.get(y));
-				}
-	            if(z.equals("OMH281")) {
-					System.out.println("OMH Students: "+listOfBoysStudents.get(z));
-				}
+//	            if(x.equals("OMH281")) {
+//					System.out.println("OMH Students: "+listOfBoysStudents.get(x));
+//				}
+//	            if(y.equals("OMH281")) {
+//					System.out.println("OMH Students: "+listOfBoysStudents.get(y));
+//				}
+//	            if(z.equals("OMH281")) {
+//					System.out.println("OMH Students: "+listOfBoysStudents.get(z));
+//				}
 				
-//				System.out.println(x + " : " + y + " : " + z + " : " + room);
 				if(r==1){
 					if(a>=(p+1)) {
 						listOfBoysStudents.replace(x, a-(p+1));
 						courseList.add(x);
 						courseList.add(String.valueOf(p+1));
-	//					outputMap.add(room, courseList);	
 						count-=(p+1);
 					}
 					else {
 						listOfBoysStudents.replace(x, 0);
 						courseList.add(x);
 						courseList.add(String.valueOf(a));
-	//					outputMap.add(room, courseList);
 						count-=a;
 					}
 					if(b>=(p)) {
 						listOfBoysStudents.replace(y, b-p);
 						courseList.add(y);
 						courseList.add(String.valueOf(p));
-	//					outputMap.add(room, courseList);
 						count-=p;
 					}
 					else {
 						listOfBoysStudents.replace(y, 0);
 						courseList.add(y);
 						courseList.add(String.valueOf(b));
-	//					outputMap.add(room, courseList);
 						count-=b;
 					}
 					if(c>=(p)) {
 						listOfBoysStudents.replace(z, c-p);
 						courseList.add(z);
 						courseList.add(String.valueOf(p));
-	//					outputMap.add(room, courseList);
 						count-=p;
 					}
 					else {
 						listOfBoysStudents.replace(z, 0);
 						courseList.add(z);
 						courseList.add(String.valueOf(c));
-	//					outputMap.add(room, courseList);
 						count-=c;
 					}		
 				}
@@ -640,42 +637,36 @@ public class GenerateAlgo {
 						listOfBoysStudents.replace(x, a-(p+1));
 						courseList.add(x);
 						courseList.add(String.valueOf((p+1)));
-	//					outputMap.add(room, courseList);
 						count-=(p+1);
 					}
 					else {
 						listOfBoysStudents.replace(x, 0);
 						courseList.add(x);
 						courseList.add(String.valueOf((a)));
-	//					outputMap.add(room, courseList);
 						count-=a;
 					}
 					if(b>=(p+1)) {
 						listOfBoysStudents.replace(y, b-(p+1));
 						courseList.add(y);
 						courseList.add(String.valueOf((p+1)));
-	//					outputMap.add(room, courseList);
 						count-=(p+1);
 					}
 					else {
 						listOfBoysStudents.replace(y, 0);
 						courseList.add(y);
 						courseList.add(String.valueOf((b)));
-	//					outputMap.add(room, courseList);
 						count-=b;
 					}
 					if(c>=(p)) {
 						listOfBoysStudents.replace(z, c-p);
 						courseList.add(z);
 						courseList.add(String.valueOf((p)));
-	//					outputMap.add(room, courseList);
 						count-=p;
 					}
 					else {
 						listOfBoysStudents.replace(z, 0);
 						courseList.add(z);
 						courseList.add(String.valueOf((c)));
-	//					outputMap.add(room, courseList);
 						count-=c;
 					}		
 				}
@@ -684,42 +675,36 @@ public class GenerateAlgo {
 						listOfBoysStudents.replace(x, a-p);
 						courseList.add(x);
 						courseList.add(String.valueOf((p)));
-	//					outputMap.add(room, courseList);
 						count-=p;
 					}
 					else {
 						listOfBoysStudents.replace(x, 0);
 						courseList.add(x);
 						courseList.add(String.valueOf((a)));
-	//					outputMap.add(room, courseList);
 						count-=a;
 					}
 					if(b>=(p)) {
 						listOfBoysStudents.replace(y, b-p);
 						courseList.add(y);
 						courseList.add(String.valueOf((p)));
-	//					outputMap.add(room, courseList);
 						count-=p;
 					}
 					else {
 						listOfBoysStudents.replace(y, 0);
 						courseList.add(y);
 						courseList.add(String.valueOf((b)));
-	//					outputMap.add(room, courseList);
 						count-=b;
 					}
 					if(c>=(p)) {
 						listOfBoysStudents.replace(z, c-p);
 						courseList.add(z);
 						courseList.add(String.valueOf((p)));
-	//					outputMap.add(room, courseList);
 						count-=p;
 					}
 					else {
 						listOfBoysStudents.replace(z, 0);
 						courseList.add(z);
 						courseList.add(String.valueOf((c)));
-	//					outputMap.add(room, courseList);
 						count-=c;
 					}		
 				}
@@ -863,11 +848,12 @@ public class GenerateAlgo {
 				hallCapacityForMale.remove(room);
 			}
 		
-		for(Map.Entry m : outputMap.entrySet()){    
-            System.out.println(m.getKey()+" "+m.getValue());    
-        }
-		
-		
+//		for(Map.Entry m : outputMap.entrySet()){    
+//            System.out.println(m.getKey()+" "+m.getValue());    
+//        }
+//		
+//		
+		System.out.println("Return from Algorithm");
 		return outputMap;
 	}
 	

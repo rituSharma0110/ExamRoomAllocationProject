@@ -55,6 +55,9 @@ public class ExamRoomAllocationController {
 		return new ResponseEntity<String>(healthCheck,HttpStatus.OK);
 	}
 	
+	/*
+	 * This is for generating seating arrangement plan
+	 */
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
 	@PostMapping(value = GENERATE_SEATING_ARRANGEMENT)
 	@ApiOperation(value = "Generate Seating Arrangement pdf", notes = "This is for generating excel/pdf of seating arrangement")
@@ -76,7 +79,9 @@ public class ExamRoomAllocationController {
 		return new ResponseEntity<String>(response,HttpStatus.OK);
 	}
 	
-	
+	/*
+	 * This is for generating count of male and female students for each master registration file
+	 */
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
 	@PostMapping(value = GENERATE_COUNT_FILE)
 	@ApiOperation(value = "Generate Student Counts Excel", notes = "This is for generating excel/pdf of seating arrangement")
@@ -95,10 +100,12 @@ public class ExamRoomAllocationController {
 		return new ResponseEntity<String>(response,HttpStatus.OK);
 	}
 	
-	
+	/*
+	 * This is for generating other files such as attendance sheets, seat matrix and seating display 
+	 */
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
 	@PostMapping(value = GENERATE_OTHER_FILES)
-	@ApiOperation(value = "Generate Student Counts Excel", notes = "This is for generating excel/pdf of seating arrangement")
+	@ApiOperation(value = "Generate files such as attendance sheets, seat matrix and seating display ", notes = "This is for generating excel/pdf of seating arrangement")
 	public ResponseEntity<String> generateOtherFiles(
 			@RequestParam(value = "outputFile", required=false) MultipartFile outputFile,
 			@RequestParam("file") MultipartFile [] files,
@@ -108,7 +115,7 @@ public class ExamRoomAllocationController {
 			@RequestParam(value = "matrixFile", required=false) MultipartFile matrixFile,
 			@RequestParam(value = "batchMapFile", required=false) MultipartFile batchMapFile
 			){
-		final String methodName = "generateCountFile()";
+		final String methodName = "generategenerateOtherFilesCountFile()";
 		logger.info("{} : Generate Student Counts Excel ",  methodName);
 		String response = new String();
 		try {
